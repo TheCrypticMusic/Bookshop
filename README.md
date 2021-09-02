@@ -1,9 +1,10 @@
 # Bookshop
-Bookshop project that will feature a functioning front-end and backend
+Bookshop project that features a functioning front-end and backend (Using JavaScript)
 
 Features: 
 
 User Accounts - the ability for the user to amend current details, E.g email, password and username
+Login & Register Page
 Cookie Implemetation  
 MongoDB
 
