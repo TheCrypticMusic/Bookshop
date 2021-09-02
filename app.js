@@ -68,7 +68,6 @@ const hbs = expressHbs.create({
   defaultLayout: "layout",
   layoutsDir: path.join(__dirname, "views/layouts"),
   partialsDir: path.join(__dirname, "views/partials"),
-  helpers: require("./handlebars/helpers/hbsHelpers"),
 });
 
 app.engine("handlebars", hbs.engine);

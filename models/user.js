@@ -39,6 +39,9 @@ userSchema.pre("save", async function(next) {
       return next()
   })})
 
+  userSchema.methods.encryptNewPassword = function(userPassword, callback) {
+    return callback(null, bcrypt.hashSync(userPassword, 10))
+}
 
 
 userSchema.methods.verifyPasswords = function(userPassword, callback) {

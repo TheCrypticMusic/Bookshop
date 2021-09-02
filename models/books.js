@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
 
-/**
- *
- * @param {String} titleOfBook
- * @param {String} typeOfBook
- */
 const skuCreator = (titleOfBook, typeOfBook) => {
   // grab first letter of the type of book
   const firstLetterOfType = typeOfBook[0] + typeOfBook[typeOfBook.length - 1];
@@ -36,13 +31,9 @@ const bookSchema = new mongoose.Schema({
 bookSchema.pre("save", async function (next) {
   const book = this;
   for (let index = 0; index < book.skus.length; index++) {
-    book.skus[index].sku = await skuCreator(
-      book.title,
-      book.skus[index].type,
-    );
-
+    book.skus[index].sku = await skuCreator(book.title, book.skus[index].type);
   }
-  next()
+  next();
 });
 
 const Book = mongoose.model("Book", bookSchema);
