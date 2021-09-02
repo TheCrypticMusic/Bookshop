@@ -6,7 +6,9 @@ Features:
 User Accounts - the ability for the user to amend current details, E.g email, password and username
 
 Login & Register Page
-Cookie Implemetation  
+
+Cookie Implemetation
+
 MongoDB
 
 Upcoming Features:
