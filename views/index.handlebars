@@ -1,0 +1,44 @@
+
+  <div class="image-container">
+    <img class="main-image" src="images/books.jpg">
+  </div>
+  <div class="main-content-container">
+
+    <header class="header-row">
+      <h2 class="header-title">Bestsellers</h2>
+    </header>
+    <div class="row">
+    {{#each books }}
+      <div class="col">
+        <div class="book">
+          <div class="image-wrap">
+            <div class="image-container-book">
+              <img class="book-cover" src="{{ this.imagePath }}">
+            </div>
+          </div>
+          <div class="book-details">
+            <div class="book-title"> 
+              <h4>{{ this.title }}</h4>
+            </div>
+            <div class="book-author">
+              <small>{{ this.author }}</small>
+            </div>
+            <div class="book-price">
+              {{#with this.skus}}
+              <small class="text-faded">£{{ sku }}</small>
+              {{/with}}
+            </div>
+            <div class="basket">
+              <button id="book-button" type="submit">Add to basket</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+
+    <header class="header-row">
+      <h2 class="header-title">Recently Added</h2>
+    </header>
+
+
+  </div>
