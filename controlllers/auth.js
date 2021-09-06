@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const passport = require("passport");
 const crypto = require("crypto");
+const Basket = require("../models/basket")
 
 const generateAuthToken = () => {
   return crypto.randomBytes(30).toString("hex");
@@ -33,6 +34,7 @@ exports.register = async (req, res) => {
 
 exports.login = (req, res, next) => {
   res.cookie("token", generateAuthToken(), { maxAge: 60000 });
+
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",

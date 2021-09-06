@@ -26,7 +26,7 @@ mongoose.connect("mongodb://localhost:27017/shopping", {
 const db = mongoose.connection;
 db.on("Error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
-  console.log("success");
+  console.log("Database Opened Succcesfully")
 });
 
 const publicDirectory = path.join(__dirname, "./public");
@@ -52,6 +52,7 @@ app.use(
       httpOnly: true,
       secure: false,
       sameSite: true,
+      // 1 day cookie
       maxAge: 24 * 60 * 60 * 1000,
     },
     store: MongoStore.create({
@@ -68,7 +69,10 @@ const hbs = expressHbs.create({
   defaultLayout: "layout",
   layoutsDir: path.join(__dirname, "views/layouts"),
   partialsDir: path.join(__dirname, "views/partials"),
+  helpers: require("./config/handlebars-helpers")
 });
+
+
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
@@ -84,6 +88,8 @@ app.use("/", require("./routes/pages"));
 app.use("/auth", require("./routes/auth"));
 
 app.use("/amendments", require("./routes/amendments"))
+
+app.use("/add-to-basket", require("./routes/addToBasket"))
 
 app.listen(5002, () => {
   console.log("Server started on Port 5002");

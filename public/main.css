@@ -307,7 +307,11 @@ hr.personal-divider {
     color: #222525;
 }
 
-
+#add-to-basket-button {
+    border: none;
+    background: none;
+    color: #f8f5f2;
+}
 
 .genre-nav {
     padding-left: 5rem;
@@ -331,6 +335,7 @@ hr.personal-divider {
     padding: 0.5rem;
     font-size: x-small;
     width: 100%;
+
 }
 
 #book-button:hover {
@@ -613,6 +618,7 @@ div.book-title h4 {
 div.basket {
     position: absolute;
     width: 100%;
-    top: 8rem
+    top: 8rem;
+    display: inherit;
     
 }

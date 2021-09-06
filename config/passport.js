@@ -28,6 +28,7 @@ passport.use(
               message: "Incorrect email or password.",
             });
           }
+        
           return done(null, user);
         });
       });
@@ -36,14 +37,13 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log("serializeUser", user)
-  
+
+
   done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
   User.findById(id, function (err, user) {
-    console.log("deserializeUser", user)
     done(null, user);
   });
 });

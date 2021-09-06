@@ -8,6 +8,7 @@
       <h2 class="header-title">Bestsellers</h2>
     </header>
     <div class="row">
+
     {{#each books }}
       <div class="col">
         <div class="book">
@@ -24,12 +25,16 @@
               <small>{{ this.author }}</small>
             </div>
             <div class="book-price">
-              {{#with this.skus}}
-              <small class="text-faded">£{{ sku }}</small>
-              {{/with}}
+              {{#each skus }}
+                {{#indexOf @index}}
+              <small class="text-faded">£{{ price }}</small>
+                {{/indexOf}}
+              {{/each}}
             </div>
             <div class="basket">
-              <button id="book-button" type="submit">Add to basket</button>
+              <form action="/add-to-basket/{{this._id}}" id="book-button" method="POST">
+              <button id="add-to-basket-button" role="button">Add to basket</a>
+              </form>
             </div>
           </div>
         </div>
