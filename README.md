@@ -11,9 +11,14 @@ Cookie Implemetation
 
 MongoDB
 
+Basket/ Cart system
+
+
 **Upcoming Features:**
 
-Basket/ Cart system
+Basket view
+
+Fake payments
 
 Wishlist
 
