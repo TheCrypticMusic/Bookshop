@@ -17,7 +17,7 @@ const skuSchema = new mongoose.Schema({
   sku: { type: String, required: false },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
-  type: { type: String, requred: true },
+  type: { type: String, required: true },
 });
 
 const bookSchema = new mongoose.Schema({

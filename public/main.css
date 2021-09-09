@@ -45,11 +45,18 @@ h2 {
 h3 {
     font-size: 20px;
     line-height: 28px;
+    
 }
 
 h4 {
     font-size: 17px;
     line-height: 20px;
+}
+
+h5 {
+
+    font-size: 15px;
+    line-height: 17px;
 }
 
 small {
@@ -538,6 +545,45 @@ hr.personal-divider {
         padding-left: 0 !important;
     }
 
+    body > div.main-content-container > div > ul > li {
+        text-align: center;
+    }
+
+    body > div.main-content-container > div > ul > li> div {
+        display: inline-block;
+    }
+
+    body > div.main-content-container > div > ul > li > div > div.book-info-basket {
+        width: auto;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        padding-top: 1rem;
+    }
+
+    body > div.main-content-container > div > ul > li > div > div.book-qty-basket {
+        width: auto;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 1rem;
+    }
+
+    body > div.main-content-container > div > ul > li > div > div.book-basket-price {
+        width: auto;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 1rem;
+    }
+
+    body > div.main-content-container {
+        margin-left: 2rem;
+        margin-right: 2rem;
+    }
+
+    .book-cover-basket {
+        height: 200px !important;
+    }
+
 }
 
 .image-wrap {
@@ -621,4 +667,62 @@ div.basket {
     top: 8rem;
     display: inherit;
     
+}
+
+
+
+.single-book {
+    list-style: none;
+    border: 1px solid;
+    border-style: groove none groove none;
+
+
+}
+
+.book-list {
+    padding-left: 0rem;
+}
+
+.book-cover-basket-wrap {
+    height: 100%;
+
+}
+
+.book-cover-basket {
+    height: 150px;
+
+}
+
+
+.book-basket-container {
+    display: flex;
+    padding: 0.8rem;
+    width: 100%;
+}
+
+.book-info-basket {
+    margin-left: 1.5rem;
+    width: 25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.bold-book-info {
+    font-weight: bold;
+}
+
+.book-qty-basket {
+    width: 15rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.book-basket-price {
+    width: 10rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.flex-price {
+    display: flex;
 }

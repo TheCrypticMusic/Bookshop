@@ -5,7 +5,7 @@ module.exports = {
         }
       return options.inverse(this);
     },
-    bar: function(){
-      return "BAR!";
+    padNumber: function(price){
+      return price.toFixed(2)
     }
   }

@@ -30,9 +30,11 @@ db.once("open", function () {
 });
 
 const publicDirectory = path.join(__dirname, "./public");
+const scriptDirectory = path.join(__dirname, "./scripts")
 
 // Allow nodejs to use styles, js, html in the public folder
 app.use(express.static(publicDirectory));
+app.use(express.static(scriptDirectory))
 
 // Parse URL-Encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: false }));
@@ -69,7 +71,8 @@ const hbs = expressHbs.create({
   defaultLayout: "layout",
   layoutsDir: path.join(__dirname, "views/layouts"),
   partialsDir: path.join(__dirname, "views/partials"),
-  helpers: require("./config/handlebars-helpers")
+  helpers: require("./config/handlebars-helpers"),
+  
 });
 
 

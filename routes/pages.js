@@ -46,7 +46,7 @@ router.get("/register", (req, res, next) => {
 
 router.get("/login", (req, res, next) => {
 	res.render("login"
-	// { csrfToken: req.csrfToken() });
+		// { csrfToken: req.csrfToken() });
 	)
 });
 
@@ -55,14 +55,29 @@ router.get("/logout", (req, res, next) => {
 	res.redirect("/");
 });
 
-router.get("/basket", (req, res, next) => {
-	res.render("basket");
+router.get("/basket", isAuthenticated, async (req, res, next) => {
+	const userId = req.session.passport.user
+
+	if (userId) {
+		await Basket.findOne({ userId }, (err, userBasket) => {
+			if (!err) {
+
+				if (userBasket) {
+					const basketItems = userBasket.items
+					const subTotal = userBasket.subTotal
+					return res.render("basket", { basketItems: basketItems, subTotal: subTotal })
+				} else {
+					return res.render("basket", { basketItems: 0})
+				}
+			}
+		}).lean()
+	}
 });
 
 router.get("/add-to-basket/:id", (req, res, next) => {
 	console.log("test")
-	return res.render("index", 
-	// { csrfToken: req.csrfToken()})
+	return res.render("index",
+		// { csrfToken: req.csrfToken()})
 	)
 })
 
