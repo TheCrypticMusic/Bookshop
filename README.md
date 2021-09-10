@@ -13,10 +13,10 @@ MongoDB
 
 Basket/ Cart system
 
+Basket view
 
 **Upcoming Features:**
 
-Basket view
 
 Fake payments
 
