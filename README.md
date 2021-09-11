@@ -5,7 +5,7 @@ Bookshop project that features a functioning front-end and backend. Built with:
 
 • Express.js
 
-• MongoDB in conjuction with Mongoose
+• MongoDB in conjunction with Mongoose
 
 • Handlebars
 
