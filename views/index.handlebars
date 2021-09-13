@@ -1,48 +1,95 @@
-  <div class="image-container">
-    <img class="main-image" src="images/books.jpg">
-  </div>
-  <div class="main-content-container">
+<div class="image-container">
+  <img class="main-image" src="images/books.jpg">
+</div>
+<div class="main-content-container">
 
-    <header class="header-row">
-      <h2 class="header-title">Bestsellers</h2>
-    </header>
-    <div class="row">
-
+  <header class="header-row">
+    <h2 class="header-title">Bestsellers</h2>
+  </header>
+  <div class="row">
     {{#each books }}
-      <div class="col">
-        <div class="book">
-          <div class="image-wrap">
-            <div class="image-container-book">
-              <img class="book-cover" src="{{ this.imagePath }}">
-            </div>
+    {{#each skus}}
+    {{#bestsellers category}}
+    <div class="col">
+      <div class="book">
+        <div class="image-wrap">
+          <div class="image-container-book">
+            <img class="book-cover" src="{{ ../imagePath }}">
           </div>
-          <div class="book-details">
-            <div class="book-title"> 
-              <h4>{{ this.title }}</h4>
-            </div>
-            <div class="book-author">
-              <small>{{ this.author }}</small>
-            </div>
-            <div class="book-price">
-              {{#each skus }}
-                {{#indexOf @index}}
-              <small class="text-faded">£{{ price }}</small>
-                {{/indexOf}}
-              {{/each}}
-            </div>
-            <div class="basket">
-              <form action="/add-to-basket/{{this._id}}" id="book-button" method="POST">
-              <button id="add-to-basket-button" role="button">Add to basket</a>
-              </form>
-            </div>
+        </div>
+        <div class="book-details">
+          <div class="book-title">
+            <h4>{{ ../title }}</h4>
+          </div>
+          <div class="book-author">
+            <small>{{ ../author }}</small>
+          </div>
+
+          <div class="book-type">
+            <small class="text-faded">{{ type }}</small>
+          </div>
+          <div class="book-price">
+
+            <small class="text-faded">£{{ price }}</small>
+
+
+          </div>
+          <div class="basket">
+            <form action="/add-to-basket/{{ ../_id }}" id="book-button" method="POST">
+
+              <button id="add-to-basket-button" role="button">Add to basket</button>
+              <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
+              <input type="hidden" id="bookType" name="bookType" value="{{type}}">
+              <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
+    
+            </form>
           </div>
         </div>
       </div>
-      {{/each}}
-
+    </div>
+    {{/bestsellers}}
+    {{/each}}
+    {{/each}}
     <header class="header-row">
       <h2 class="header-title">Recently Added</h2>
     </header>
-
-
+    {{#each books }}
+    {{#each skus}}
+    {{#recentlyAdded category}}
+    <div class="col">
+      <div class="book">
+        <div class="image-wrap">
+          <div class="image-container-book">
+            <img class="book-cover" src="{{ ../imagePath }}">
+          </div>
+        </div>
+        <div class="book-details">
+          <div class="book-title">
+            <h4>{{ ../title }}</h4>
+          </div>
+          <div class="book-author">
+            <small>{{ ../author }}</small>
+          </div>
+          <div class="book-type">
+            <small class="text-faded">{{ type }}</small>
+          </div>
+          <div class="book-price">
+            <small class="text-faded">£{{ price }}</small>
+          </div>
+          <div class="basket">
+            <form action="/add-to-basket/{{../_id}}" id="book-button" method="POST">
+              <button id="add-to-basket-button" role="button">Add to basket</button>
+              <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
+              <input type="hidden" id="bookType" name="bookType" value="{{type}}">
+              <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
+      
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/recentlyAdded}}
+    {{/each}}
+    {{/each}}
+  </div>
   </div>

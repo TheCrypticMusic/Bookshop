@@ -1,6 +1,7 @@
 // ***** BASKET SCRIPTS ***** //
 
 const formatPrice = (strPrice) => {
+    console.log(strPrice)
     return strPrice.toFixed(2);
 };
 

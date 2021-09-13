@@ -75,11 +75,20 @@ router.get("/basket", isAuthenticated, async (req, res, next) => {
 });
 
 router.get("/add-to-basket/:id", (req, res, next) => {
-	console.log("test")
+
 	return res.render("index",
 		// { csrfToken: req.csrfToken()})
 	)
 })
+
+
+router.get("/remove-from-basket/:id", (req, res, next) => {
+
+	return res.render("/basket",
+		// { csrfToken: req.csrfToken()})
+	)
+})
+
 
 
 router.get("/account", isAuthenticated, (req, res, next) => {

@@ -633,12 +633,12 @@ hr.personal-divider {
     font-size: small;
     color: rgb(92, 100, 114);
     position: absolute;
-    top: 4rem
+    top: 5rem
 }
 .book-price {
     color: rgb(92, 100, 114);
     position: absolute;
-    top: 6rem
+    top: 8rem
   
 }
 
@@ -664,7 +664,7 @@ div.book-title h4 {
 div.basket {
     position: absolute;
     width: 100%;
-    top: 8rem;
+    top: 10rem;
     display: inherit;
     
 }
@@ -725,4 +725,52 @@ div.basket {
 
 .flex-price {
     display: flex;
+}
+
+.book-type {
+    position: absolute;
+    top: 6.5rem;
+    color: rgb(92, 100, 114);
+}
+
+
+.credit {
+    padding-top: 1rem;
+    padding-left: 1rem;
+    color: #f8f5f2;
+    display: block;
+}
+
+.disclaimer {
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+    color: #f8f5f2;
+  
+}
+
+.page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#footer {
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+    height: 2.5rem;
+    padding-top: 2.5rem;
+
+}
+
+.content-wrap {
+    padding-bottom: 2.5rem;
+
+}
+
+.footer-full-width {
+    background-color: #232323;
+}
+
+#footer-container {
+    padding-bottom: 1rem;
 }

@@ -7,5 +7,17 @@ module.exports = {
     },
     padNumber: function(price){
       return price.toFixed(2)
-    }
+    },
+    bestsellers: function(cat, options) {
+      if ("Bestsellers" == cat) {
+        return options.fn(this);
+        }
+      return options.inverse(this);
+    },
+    recentlyAdded: function(cat, options) {
+      if ("Recently Added" == cat) {
+        return options.fn(this);
+        }
+      return options.inverse(this);
+    },
   }

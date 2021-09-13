@@ -7,7 +7,6 @@ const session = require("express-session");
 const passport = require("passport");
 const flash = require("connect-flash");
 const mongoose = require("mongoose");
-
 const MongoStore = require("connect-mongo");
 
 dotenv.config({
@@ -93,6 +92,7 @@ app.use("/auth", require("./routes/auth"));
 app.use("/amendments", require("./routes/amendments"))
 
 app.use("/add-to-basket", require("./routes/addToBasket"))
+app.use("/remove-from-basket", require("./routes/removeFromBasket"))
 
 app.listen(5002, () => {
   console.log("Server started on Port 5002");

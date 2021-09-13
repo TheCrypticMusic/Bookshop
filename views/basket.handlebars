@@ -1,4 +1,3 @@
-
 <div class="main-content-container">
    <header class="header-row">
       <h2 class="header-title">Current Basket</h2>
@@ -23,7 +22,9 @@
                      <h4 class="bold-book-info">{{ bookTitle }}</h3>
                   </div>
                   <div class="book-author-basket">
-                     <h5>{{ bookAuthor }}</h4>
+                     <h5>{{ bookAuthor }}</h5>
+                     <h5>{{bookType}}</h5>
+
                   </div>
                </div>
                <div class="book-qty-basket">
@@ -47,8 +48,11 @@
                   <h5 class="currency">£</h5>
        
                   <h5 class="total-price" id="total-price">{{padNumber total }}</h5>
-            
+
                   </div>
+                  <form method="POST" action="remove-from-basket/{{bookSkuId}}">
+                     <button type="submit"></button>
+                  </form>
                </div>
             </div>
          </li>

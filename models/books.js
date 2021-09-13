@@ -15,16 +15,19 @@ const skuCreator = (titleOfBook, typeOfBook) => {
 
 const skuSchema = new mongoose.Schema({
   sku: { type: String, required: false },
+  category: { type: String },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   type: { type: String, required: true },
 });
+
 
 const bookSchema = new mongoose.Schema({
   imagePath: { type: String, required: true },
   title: { type: String, required: true },
   author: { type: String, required: true },
   genre: { type: String, required: true },
+
   skus: [skuSchema],
 });
 

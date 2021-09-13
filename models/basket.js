@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const basketItemSchema = new mongoose.Schema({
     bookImage: { type: String, required: true },
-    bookId: { type: String, required: true },
+    bookSkuId: { type: mongoose.Schema.Types.ObjectId, ref: "Book Sku Id" },
+    bookType: { type: String, required: true },
     bookTitle: { type: String, required: true },
     bookAuthor: { type: String, required: true },
     quantity: { type: Number, required: true },
@@ -19,10 +20,10 @@ const basketSchema = new mongoose.Schema({
     },
 });
 
-basketSchema.methods.add = function (bookId, bookImage, bookTitle, bookAuthor, quantity, price) {
+basketSchema.methods.add = function (bookSkuId, bookType, bookImage, bookTitle, bookAuthor, quantity, price) {
 
     let bookCartIndex = this.items.findIndex(
-        (book) => book.bookId == bookId
+        (book) => book.bookSkuId == bookSkuId
     );
     if (bookCartIndex > -1) {
         let bookItem = this.items[bookCartIndex];
@@ -38,7 +39,8 @@ basketSchema.methods.add = function (bookId, bookImage, bookTitle, bookAuthor, q
     } else {
         this.items.push({
             bookImage: bookImage,
-            bookId: bookId,
+            bookSkuId: bookSkuId,
+            bookType: bookType,
             bookTitle: bookTitle,
             bookAuthor: bookAuthor,
             quantity: quantity,
