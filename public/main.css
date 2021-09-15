@@ -103,7 +103,7 @@ div.personal-details-header {
 #active {
     background: #d7d7d732;;
 }
-svg {
+.account-svg {
     margin-right: 1rem;
 }
 
@@ -773,4 +773,24 @@ div.basket {
 
 #footer-container {
     padding-bottom: 1rem;
+}
+
+.cancel-change {
+    padding-left: 1rem;
+}
+
+.checkout {
+    display: flex;
+    justify-content: end;
+    width: 50%;
+    padding-bottom: 1rem;
+}
+
+.flex-checkout-price {
+    display: flex;
+}
+
+.basket-price {
+    display: flex;
+    width: 50%;
 }

@@ -2,6 +2,7 @@ const Basket = require("../models/basket");
 const router = require("../routes/pages");
 const Book = require("../models/books");
 
+//////////// REWRITE TO USE BASKET ID //////////////
 exports.removeItemFromBasket = async (req, res, next) => {
     const skuId = req.params.id;
 
@@ -23,7 +24,7 @@ exports.removeItemFromBasket = async (req, res, next) => {
                 if (err) {
                     return err;
                 }
-                console.log(userBasket.items[index].bookTitle, "successfully removed")
+                console.log(userBasket.items[index].bookTitle, "successfully removed");
             }
         );
         await Basket.updateOne(
@@ -33,7 +34,7 @@ exports.removeItemFromBasket = async (req, res, next) => {
                 if (err) {
                     return err;
                 }
-                console.log("Subtotal is now", userBasket.subTotal)
+                console.log("Subtotal is now", userBasket.subTotal);
             }
         );
         res.redirect("/basket");

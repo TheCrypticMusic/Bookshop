@@ -65,7 +65,9 @@ router.get("/basket", isAuthenticated, async (req, res, next) => {
 				if (userBasket) {
 					const basketItems = userBasket.items
 					const subTotal = userBasket.subTotal
-					return res.render("basket", { basketItems: basketItems, subTotal: subTotal })
+					const basketId = userBasket._id
+			
+					return res.render("basket", { basketItems: basketItems, subTotal: subTotal, basketId: basketId})
 				} else {
 					return res.render("basket", { basketItems: 0})
 				}
@@ -90,27 +92,47 @@ router.get("/remove-from-basket/:id", (req, res, next) => {
 })
 
 
+router.get("/update-basket/:id", (req, res, next) => {
+
+	return res.render("/basket",
+		// { csrfToken: req.csrfToken()})
+	)
+})
 
 router.get("/account", isAuthenticated, (req, res, next) => {
 	User.findById(req.user.id, (err, result) => {
 		if (err) {
 			return err;
 		} else {
-			return res.render("account", { user: result });
+			return res.render("account", {layout: "account-layout", user: result });
 		}
 	}).lean();
 });
 
+router.get("/address", isAuthenticated, (req, res, next) => {
+	User.findById(req.user.id, (err, result) => {
+		if (err) {
+			return err;
+		} else {
+			return res.render("address", {layout: "account-layout", user: result });
+		}
+	}).lean();
+});
+
+
 router.get("/amendments/email", isAuthenticated, (req, res, next) => {
-	return res.render("email", { csrfToken: req.csrfToken() });
+	return res.render("email", {layout: "account-layout"})
+	// { csrfToken: req.csrfToken() });
 });
 
 router.get("/amendments/password", isAuthenticated, (req, res, next) => {
-	return res.render("password", { csrfToken: req.csrfToken() });
+	return res.render("password", {layout: "account-layout"}) 
+	// { csrfToken: req.csrfToken() });
 });
 
 router.get("/amendments/username", isAuthenticated, (req, res, next) => {
-	return res.render("username", { csrfToken: req.csrfToken() });
+	return res.render("username", {layout: "account-layout"})
+	// { csrfToken: req.csrfToken() });
 });
 
 module.exports = router;

@@ -93,6 +93,7 @@ app.use("/amendments", require("./routes/amendments"))
 
 app.use("/add-to-basket", require("./routes/addToBasket"))
 app.use("/remove-from-basket", require("./routes/removeFromBasket"))
+app.use("/update-basket", require("./routes/updateBasket"))
 
 app.listen(5002, () => {
   console.log("Server started on Port 5002");
