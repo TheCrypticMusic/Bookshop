@@ -779,18 +779,16 @@ div.basket {
     padding-left: 1rem;
 }
 
-.checkout {
-    display: flex;
-    justify-content: end;
-    width: 50%;
-    padding-bottom: 1rem;
-}
 
-.flex-checkout-price {
-    display: flex;
+.table-checkout-price {
+    display: table;
 }
 
 .basket-price {
-    display: flex;
-    width: 50%;
+    display: table-cell;
+    width: 90%;
+}
+
+.checkout {
+    padding: 1rem
 }

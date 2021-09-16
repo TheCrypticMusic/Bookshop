@@ -1,7 +1,7 @@
 <div class="main-content-container">
    <header class="header-row">
       <h2 class="header-title">Current Basket</h2>
-         <div class="flex-checkout-price">
+         <div class="table-checkout-price">
             <div class="basket-price">
                <div class="flex-price">
                   <h4 class="currency">Total Value: £</h4>
@@ -9,17 +9,13 @@
                </div>
             </div>
             <div class="checkout">
-        
-                  <form method="POST" action="update-basket/{{basketId}}">
-                     <button type="submit" class="btn btn-success">Checkout</button>
-                  </form>
+                     <button type="submit" class="btn btn-success btn">Checkout</button>
                </div>
          </div>
    </header>
-
    <div id={{basketId}} class="basket-view">
       
-      <ul class="book-list">
+      <ul class="book-list" id="test">
        
          {{#each basketItems}}
          
@@ -41,7 +37,7 @@
                <div class="book-qty-basket">
                   <form action="#">
                      <label for="quantity">Qty</label>
-                     <input type="number" class="qty" id="quantity" name="quantity" value="{{ quantity }}" min="1" max="99">
+                     <input type="number" class="qty" id="quantity" name="quantity" value="{{ quantity }}" min="1" max="99" autocomplete="off">
           
                   </form>
                </div>
@@ -58,7 +54,7 @@
                   <div class="flex-price">
                   <h5 class="currency">£</h5>
        
-                  <h5 class="total-price" id="total-price">{{padNumber total }}</h5>
+                  <h5 class="subtotal-price" id="subtotal-price">{{padNumber total }}</h5>
 
                   </div>
                   <form method="POST" action="remove-from-basket/{{bookSkuId}}">

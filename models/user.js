@@ -7,7 +7,6 @@ const bcrypt = require("bcryptjs");
 const addressSchema = new mongoose.Schema({
   addressLine1: { type: String, required: false },
   addressLine2: { type: String, required: false },
-  addressLine3: { type: String, required: false },
   town: { type: String, required: false },
   postcode: { type: String, required: false },
 })
@@ -15,7 +14,6 @@ const addressSchema = new mongoose.Schema({
 const shippingAddressSchema = new mongoose.Schema({
   addressLine1: { type: String, required: false },
   addressLine2: { type: String, required: false },
-  addressLine3: { type: String, required: false },
   town: { type: String, required: false },
   postcode: { type: String, required: false },
 })
@@ -26,8 +24,8 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  address: [addressSchema],
-  shippingAddress: [shippingAddressSchema],
+  address: addressSchema,
+  shippingAddress: shippingAddressSchema,
 });
 
 userSchema.pre("save", async function (next) {

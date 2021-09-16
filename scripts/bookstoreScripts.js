@@ -1,5 +1,13 @@
 // ***** BASKET SCRIPTS ***** //
 
+const basketUpdate = {
+    basketId: String,
+    totalValue: Number,
+    items: {
+        id: Object,
+    },
+};
+
 const formatPrice = (strPrice) => {
     return strPrice.toFixed(2);
 };
@@ -14,7 +22,9 @@ const priceOfBook = (objElement) => {
 };
 
 const subtotal = (objElement) => {
-    return $(objElement).closest("li").find(".book-basket-subtotal .total-price");
+    return $(objElement)
+        .closest("li")
+        .find(".book-basket-subtotal .subtotal-price");
 };
 
 // calculate the subtotal by multiplying the bookPrice with bookQty
@@ -45,7 +55,7 @@ $(".qty").on("input", function () {
     // Once obtained it's put through a map to convert each value to a float
     // then reduce is used to obtain the total value
     const calculatedTotalValue = Array.from(
-        $(".total-price").map(function () {
+        $(".subtotal-price").map(function () {
             return parseFloat($(this).text());
         })
     ).reduce((a, b) => {
@@ -56,13 +66,17 @@ $(".qty").on("input", function () {
 });
 
 // ***** UPDATE DATABASE WITH NEW VALUES ***** //
+
+// Initially decided to update the database on the fly by debouncing to the requests to 1 seconds, but after thinking about the implications of the database being pinged constantly  //
+// Made me change my approach to only updating once the checkout button has been pressed //
+
 let debounce = null;
 $(".qty").on("input", function () {
     clearTimeout(debounce);
 
     /// Make into function
     const calculatedTotalValue = Array.from(
-        $(".total-price").map(function () {
+        $(".subtotal-price").map(function () {
             return parseFloat($(this).text());
         })
     ).reduce((a, b) => {
@@ -70,19 +84,19 @@ $(".qty").on("input", function () {
     }, 0);
 
     basketData = {
-        basketId: basketId(this),
         qty: qty(this),
-        basketBookId: basketBookId(this),
-        totalValue: formatPrice(calculatedTotalValue),
         subtotal: calculatedSubtotal(priceOfBook(this), qty(this)),
     };
-    console.log(basketData);
+    basketUpdate.items[basketBookId(this)] = { basketData };
+    basketUpdate.totalValue = formatPrice(calculatedTotalValue);
+    basketUpdate.basketId = basketId(this);
+});
 
-    debounce = setTimeout(function () {
-        $.ajax({
-            url: "/update-basket/" + basketId,
-            method: "POST",
-            data: basketData,
-        });
-    }, 1000);
+$(".btn").click(function () {
+    $.ajax({
+        url: "/update-basket/" + basketId,
+        method: "POST",
+        data: JSON.stringify(basketUpdate),
+        contentType: "application/json; charset=utf-8",
+    });
 });

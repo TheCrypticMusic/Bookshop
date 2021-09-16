@@ -4,9 +4,9 @@
     </div>
 </div>
 <div class="main-content-container-account">
-
+    {{log section}}
     <div class="flex-shrink-0">
-        <div class="personal-details-nav pt-2 pb-2 d-flex" id="active">
+        <div class="personal-details-nav pt-2 pb-2 d-flex" {{#ifEquals section "/account"}} id="active" {{/ifEquals}}>
 
             <svg class="account-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -16,13 +16,12 @@
             </svg>
 
             <h4 class="nav-item">
-
                 <a class="d-flex align-items-center text-decoration-none" href="/account">Personal Details</a>
             </h4>
 
         </div>
         <hr />
-        <div class="personal-details-nav pt-2 pb-2 d-flex">
+        <div class="personal-details-nav pt-2 pb-2 d-flex" {{#ifEquals section "/order-history"}} id="active" {{/ifEquals}}>
             <svg class="account-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-book-open">
@@ -35,7 +34,7 @@
             </h4>
         </div>
         <hr />
-        <div class="personal-details-nav pt-2 pb-2 d-flex">
+        <div class="personal-details-nav pt-2 pb-2 d-flex" {{#ifEquals section "/wishlist"}} id="active" {{/ifEquals}}>
             <svg class="account-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-heart">
@@ -49,7 +48,7 @@
             </h4>
         </div>
         <hr>
-        <div class="personal-details-nav pt-2 pb-2 d-flex">
+        <div class="personal-details-nav pt-2 pb-2 d-flex" {{#ifEquals section "/address"}} id="active" {{/ifEquals}}>
             <svg class="account-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-send">
@@ -58,7 +57,7 @@
             </svg>
             <h4>
                 <a class="d-flex align-items-center text-decoration-none" href="/address">Addresses</a>
-
             </h4>
         </div>
     </div>
+
