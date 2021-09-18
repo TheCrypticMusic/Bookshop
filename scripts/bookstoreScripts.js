@@ -67,13 +67,12 @@ $(".qty").on("input", function () {
 
 // ***** UPDATE DATABASE WITH NEW VALUES ***** //
 
-// Initially decided to update the database on the fly by debouncing to the requests to 1 seconds, but after thinking about the implications of the database being pinged constantly  //
+// Initially decided to update the database on the fly by debouncing the requests to 1 seconds, but after thinking about the implications of the database being pinged constantly  //
 // Made me change my approach to only updating once the checkout button has been pressed //
 
-let debounce = null;
-$(".qty").on("input", function () {
-    clearTimeout(debounce);
 
+$(".qty").on("input", function () {
+  
     /// Make into function
     const calculatedTotalValue = Array.from(
         $(".subtotal-price").map(function () {
@@ -92,11 +91,26 @@ $(".qty").on("input", function () {
     basketUpdate.basketId = basketId(this);
 });
 
+
 $(".btn").click(function () {
     $.ajax({
         url: "/update-basket/" + basketId,
         method: "POST",
         data: JSON.stringify(basketUpdate),
         contentType: "application/json; charset=utf-8",
-    });
+        success: function () {
+            window.location.href = "http://localhost:5002/checkout"
+        }
+    })
+});
+
+
+
+// ***** CHECKOUT SCRIPTS ***** //
+
+$('input:radio[name="delivery-method"]').change(function(){
+
+    const deliveryPrice = $(this).closest("div").find(".method-info .delivery-price").text()\
+    
+    
 });

@@ -111,6 +111,31 @@ router.get("/account", isAuthenticated, (req, res, next) => {
 	}).lean();
 });
 
+
+router.get("/checkout", isAuthenticated, async (req, res, next) => {
+	const userId = req.user.id
+	await User.findById(userId, async (err, result) => {
+		if (err) {
+			return err;
+		} else {
+			const userAddress = result.address;
+			const user = result
+			await Basket.findOne({ userId }, (err, userBasket) => {
+				if (!err) {
+					if (userBasket) {
+						const basketItems = userBasket.items;
+						const subTotal = userBasket.subTotal;
+						const basketId = userBasket._id;
+						return res.render("checkout", {user: user, userAddress: userAddress, items: basketItems, subTotal: subTotal});
+					} else {
+						console.log("No basket")
+					}
+			}}).lean()
+		}
+	}).lean();
+
+});
+
 router.get("/address", isAuthenticated, (req, res, next) => {
 	User.findById(req.user.id, (err, result) => {
 		if (err) {

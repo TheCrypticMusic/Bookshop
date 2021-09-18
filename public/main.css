@@ -786,9 +786,123 @@ div.basket {
 
 .basket-price {
     display: table-cell;
-    width: 90%;
+    width: 100%;
 }
 
 .checkout {
     padding: 1rem
+}
+
+.checkout-button {
+    text-decoration: none;
+    color: #f8f5f2;
+}
+
+.checkout-button:hover {
+    color: #f8f5f2;
+}
+
+.checkout-container {
+
+    width: 60%;
+}
+
+#checkout-section-title {
+    background-color: #078080;
+    padding: 0.5rem;
+    color: white;
+}
+#checkout-container {
+    border: 1px solid gray;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+#checkout-info {
+    display: block;
+    padding: 0.2rem;
+
+}
+
+
+#checkout-info-address {
+    display: block;
+    padding: 0.2rem;
+    margin-left: 1rem;
+
+}
+
+#flex {
+    display: flex;
+    padding-top: 3rem;
+}
+
+.padding-gap {
+    padding-left: 3rem;
+}
+
+.order-sum-box {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid gray;
+    width: 40%;
+}
+
+.checkout-book-image {
+    height:150px;
+    width: 125;
+    padding: 1rem;
+}
+
+.book-container {
+    display: flex;
+}
+
+.checkout-book-details {
+    margin-bottom: 0;
+    display: block;
+    margin-top: 0.3rem
+    
+}
+
+.checkout-content {
+    padding-top: 1rem;
+}
+
+.checkout-container-divider {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.checkout-subtotal-postage {
+    padding: 1rem;
+}
+
+.methods {
+    display: flex;
+    
+}
+
+
+.checkout-payment-method {
+    width: 30%;
+    
+}
+
+#method-with-border {
+    border: 1px solid black;
+    padding-right: 1rem;
+    padding-left: 0.5rem;
+    margin-left: 1rem;
+}
+
+
+.method-info {
+    padding-left: 1rem;
+    display: block;
+}
+
+.checkout-section {
+    margin-bottom:  0;
 }
