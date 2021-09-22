@@ -13,15 +13,32 @@ const basketItemSchema = new mongoose.Schema({
 
 const basketSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    subTotal: { default: 0, type: Number },
     items: [basketItemSchema],
-    subTotal: {
-        default: 0,
-        type: Number,
-    },
 });
 
-basketSchema.methods.add = function (bookSkuId, bookType, bookImage, bookTitle, bookAuthor, quantity, price) {
+basketSchema.methods.subTotalPrice = function() {
+    
+    const newSubtotal = this.items.map((elem) => elem.total).reduce((a, b) => a + b)
+    return newSubtotal
 
+}
+
+basketSchema.methods.amendItemPrice = function(basketQty, index) {
+
+    const itemPrice = (this.items[index].price * basketQty).toFixed(2);
+    return itemPrice
+}
+
+basketSchema.methods.add = function (
+    bookSkuId,
+    bookType,
+    bookImage,
+    bookTitle,
+    bookAuthor,
+    quantity,
+    price
+) {
     let bookCartIndex = this.items.findIndex(
         (book) => book.bookSkuId == bookSkuId
     );
@@ -34,7 +51,8 @@ basketSchema.methods.add = function (bookSkuId, bookType, bookImage, bookTitle, 
             "already in basket: \nQuantity:",
             bookItem.quantity,
             "\nTotal:",
-            bookItem.total, "\n"
+            bookItem.total,
+            "\n"
         );
     } else {
         this.items.push({
@@ -52,14 +70,12 @@ basketSchema.methods.add = function (bookSkuId, bookType, bookImage, bookTitle, 
             "Added to basket: \nQuantity:",
             quantity,
             "\nTotal:",
-            price, "\n"
+            price,
+            "\n"
         );
     }
-    this.subTotal = this.items.map(x => x.total).reduce((a, b) => a + b, 0)
+    this.subTotal = this.items.map((x) => x.total).reduce((a, b) => a + b, 0);
     this.save();
-}
-
-
-
+};
 
 module.exports = mongoose.model("Basket", basketSchema);

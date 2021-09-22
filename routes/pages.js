@@ -11,158 +11,169 @@ const router = express.Router();
 // const csrfProtection = csrf();
 
 function isAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
-		next();
-	} else {
-		res.redirect("/login");
-	}
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.redirect("/login");
+    }
 }
 
 // router.use(csrfProtection);
 
 router.use((req, res, next) => {
-	res.locals.isAuthenticated = req.isAuthenticated();
-	if (req.isAuthenticated()) res.locals.user = req.user.username;
-	res.locals.session = req.session;
-	res.locals.section = req.url;
-	next();
+    res.locals.isAuthenticated = req.isAuthenticated();
+    if (req.isAuthenticated()) res.locals.user = req.user.username;
+    res.locals.session = req.session;
+    res.locals.section = req.url;
+    next();
 });
 
 router.get("/", (req, res, next) => {
-	console.log("Is User Authenticated?", req.isAuthenticated());
-	Book.find((err, docs) => {
-		if (!err) {
-			res.render("index", { title: "Bookstore", books: docs });
-		} else {
-			console.log("Error retrieving books:", +err);
-		}
-	}).lean();
+    console.log("Is User Authenticated?", req.isAuthenticated());
+    Book.find((err, docs) => {
+        if (!err) {
+            res.render("index", {title: "Bookstore", books: docs});
+        } else {
+            console.log("Error retrieving books:", +err);
+        }
+    }).lean();
 });
 
 router.get("/register", (req, res, next) => {
-	res.render("register");
-	// { csrfToken: req.csrfToken() };
+    res.render("register");
+    // { csrfToken: req.csrfToken() };
 });
 
 router.get("/login", (req, res, next) => {
-	res.render(
-		"login"
-		// { csrfToken: req.csrfToken() });
-	);
+    res.render(
+        "login"
+        // { csrfToken: req.csrfToken() });
+    );
 });
 
 router.get("/logout", (req, res, next) => {
-	req.session.destroy();
-	res.redirect("/");
+    req.session.destroy();
+    res.redirect("/");
 });
 
 router.get("/basket", isAuthenticated, async (req, res, next) => {
-	const userId = req.session.passport.user;
+    const userId = req.session.passport.user;
 
-	if (userId) {
-		await Basket.findOne({ userId }, (err, userBasket) => {
-			if (!err) {
-				if (userBasket) {
-					const basketItems = userBasket.items;
-					const subTotal = userBasket.subTotal;
-					const basketId = userBasket._id;
+    if (userId) {
+        await Basket.findOne({userId}, (err, userBasket) => {
+            if (!err) {
+                if (userBasket) {
+                    const basketItems = userBasket.items;
+                    const subTotal = userBasket.subTotal;
+                    const basketId = userBasket._id;
 
-					return res.render("basket", {
-						basketItems: basketItems,
-						subTotal: subTotal,
-						basketId: basketId,
-					});
-				} else {
-					return res.render("basket", { basketItems: 0 });
-				}
-			}
-		}).lean();
-	}
+                    return res.render("basket", {
+                        basketItems: basketItems,
+                        subTotal: subTotal,
+                        basketId: basketId,
+                    });
+                } else {
+                    return res.render("basket", {basketItems: 0});
+                }
+            }
+        }).lean();
+    }
 });
 
 router.get("/add-to-basket/:id", (req, res, next) => {
-	return res.render(
-		"index"
-		// { csrfToken: req.csrfToken()})
-	);
+    return res.render(
+        "index"
+        // { csrfToken: req.csrfToken()})
+    );
 });
 
 router.get("/remove-from-basket/:id", (req, res, next) => {
-	return res.render(
-		"/basket"
-		// { csrfToken: req.csrfToken()})
-	);
+    return res.render(
+        "/basket"
+        // { csrfToken: req.csrfToken()})
+    );
 });
 
 router.get("/update-basket/:id", (req, res, next) => {
-	return res.render(
-		"/basket"
-		// { csrfToken: req.csrfToken()})
-	);
+    return res.render(
+        "/basket"
+        // { csrfToken: req.csrfToken()})
+    );
 });
 
+router.get("/stripe-checkout-session/:id", isAuthenticated, (req, res, next) => {
+    return res.render("/checkout")
+})
+
 router.get("/account", isAuthenticated, (req, res, next) => {
-	User.findById(req.user.id, (err, result) => {
-		if (err) {
-			return err;
-		} else {
-			return res.render("account", { layout: "account-layout", user: result });
-		}
-	}).lean();
+    User.findById(req.user.id, (err, result) => {
+        if (err) {
+            return err;
+        } else {
+            return res.render("account", {layout: "account-layout", user: result});
+        }
+    }).lean();
 });
 
 
 router.get("/checkout", isAuthenticated, async (req, res, next) => {
-	const userId = req.user.id
-	await User.findById(userId, async (err, result) => {
-		if (err) {
-			return err;
-		} else {
-			const userAddress = result.address;
-			const user = result
-			await Basket.findOne({ userId }, (err, userBasket) => {
-				if (!err) {
-					if (userBasket) {
-						const basketItems = userBasket.items;
-						const subTotal = userBasket.subTotal;
-						const basketId = userBasket._id;
-						return res.render("checkout", {user: user, userAddress: userAddress, items: basketItems, subTotal: subTotal});
-					} else {
-						console.log("No basket")
-					}
-			}}).lean()
-		}
-	}).lean();
+    const userId = req.user.id
+    await User.findById(userId, async (err, result) => {
+        if (err) {
+            return err;
+        } else {
+            const userAddress = result.address;
+            const user = result
+            await Basket.findOne({userId}, (err, userBasket) => {
+                if (!err) {
+                    if (userBasket) {
+                        const basketItems = userBasket.items;
+                        const subTotal = userBasket.subTotal;
+                        const basketId = userBasket._id;
+                        return res.render("checkout", {
+                            user: user,
+                            userAddress: userAddress,
+                            items: basketItems,
+                            subTotal: subTotal,
+                            basketId: basketId
+                        });
+                    } else {
+                        console.log("No basket")
+                    }
+                }
+            }).lean()
+        }
+    }).lean();
 
 });
 
 router.get("/address", isAuthenticated, (req, res, next) => {
-	User.findById(req.user.id, (err, result) => {
-		if (err) {
-			return err;
-		} else {
-			userAddress = result.address;
-			return res.render("address", {
-				layout: "account-layout",
-				user: userAddress,
-			});
-		}
-	}).lean();
+    User.findById(req.user.id, (err, result) => {
+        if (err) {
+            return err;
+        } else {
+            userAddress = result.address;
+            return res.render("address", {
+                layout: "account-layout",
+                user: userAddress,
+            });
+        }
+    }).lean();
 });
 
 router.get("/amendments/email", isAuthenticated, (req, res, next) => {
-	return res.render("email", { layout: "account-layout" });
-	// { csrfToken: req.csrfToken() });
+    return res.render("email", {layout: "account-layout"});
+    // { csrfToken: req.csrfToken() });
 });
 
 router.get("/amendments/password", isAuthenticated, (req, res, next) => {
-	return res.render("password", { layout: "account-layout" });
-	// { csrfToken: req.csrfToken() });
+    return res.render("password", {layout: "account-layout"});
+    // { csrfToken: req.csrfToken() });
 });
 
 router.get("/amendments/username", isAuthenticated, (req, res, next) => {
-	return res.render("username", { layout: "account-layout" });
-	// { csrfToken: req.csrfToken() });
+    return res.render("username", {layout: "account-layout"});
+    // { csrfToken: req.csrfToken() });
 });
 
 module.exports = router;

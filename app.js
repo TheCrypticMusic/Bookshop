@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const dotenv = require("dotenv");
+require("dotenv").config({path: "./config/.env"})
 const cookieParser = require("cookie-parser");
 const expressHbs = require("express-handlebars");
 const session = require("express-session");
@@ -9,12 +9,9 @@ const flash = require("connect-flash");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 
-dotenv.config({
-  path: "./config/.env",
-});
 
-require("./config/passport");
-
+require("./config/passport"); 
+ 
 const app = express();
 
 mongoose.connect("mongodb://localhost:27017/shopping", {
@@ -94,6 +91,7 @@ app.use("/amendments", require("./routes/amendments"))
 app.use("/add-to-basket", require("./routes/addToBasket"))
 app.use("/remove-from-basket", require("./routes/removeFromBasket"))
 app.use("/update-basket", require("./routes/updateBasket"))
+app.use("/stripe-checkout-session", require("./routes/checkoutSession"))
 
 app.listen(5002, () => {
   console.log("Server started on Port 5002");

@@ -82,13 +82,12 @@ $(".qty").on("input", function () {
         return a + b;
     }, 0);
 
-    basketData = {
+    const basketData = {
         qty: qty(this),
         subtotal: calculatedSubtotal(priceOfBook(this), qty(this)),
     };
     basketUpdate.items[basketBookId(this)] = { basketData };
-    basketUpdate.totalValue = formatPrice(calculatedTotalValue);
-    basketUpdate.basketId = basketId(this);
+    console.log(basketData)
 });
 
 
@@ -98,19 +97,34 @@ $(".btn").click(function () {
         method: "POST",
         data: JSON.stringify(basketUpdate),
         contentType: "application/json; charset=utf-8",
-        success: function () {
+        success: function (data) {
             window.location.href = "http://localhost:5002/checkout"
+            console.log(data)
         }
     })
 });
 
+const button = document.querySelector("button")
+const basket = document.getElementsByClassName("checkout-button")[0].id
+button.addEventListener("click", () => {
+    fetch("http://localhost:5002/stripe-checkout-session/" + basket, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+        .then(res => {
+            if (res.ok) return res.json()
+            return res.json().then(json => Promise.reject(json))
+        })
+        .then(({ url }) => {
+            window.location = url
+        })
+        .catch(e => {
+            console.error(e.error)
+        })
+})
 
 
-// ***** CHECKOUT SCRIPTS ***** //
 
-$('input:radio[name="delivery-method"]').change(function(){
 
-    const deliveryPrice = $(this).closest("div").find(".method-info .delivery-price").text()\
-    
-    
-});
