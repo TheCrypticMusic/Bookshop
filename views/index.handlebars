@@ -1,95 +1,116 @@
 <div class="image-container">
-  <img class="main-image" src="images/books.jpg">
+    <img class="main-image" src="images/books.jpg">
 </div>
 <div class="main-content-container">
-
-  <header class="header-row">
-    <h2 class="header-title">Bestsellers</h2>
-  </header>
-  <div class="row">
-    {{#each books }}
-    {{#each skus}}
-    {{#bestsellers category}}
-    <div class="col">
-      <div class="book">
-        <div class="image-wrap">
-          <div class="image-container-book">
-            <img class="book-cover" src="{{ ../imagePath }}">
-          </div>
-        </div>
-        <div class="book-details">
-          <div class="book-title">
-            <h4>{{ ../title }}</h4>
-          </div>
-          <div class="book-author">
-            <small>{{ ../author }}</small>
-          </div>
-
-          <div class="book-type">
-            <small class="text-faded">{{ type }}</small>
-          </div>
-          <div class="book-price">
-
-            <small class="text-faded">£{{ price }}</small>
-
-
-          </div>
-          <div class="basket">
-            <form action="/add-to-basket/{{ ../_id }}" id="book-button" method="POST">
-
-              <button id="add-to-basket-button" role="button">Add to basket</button>
-              <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
-              <input type="hidden" id="bookType" name="bookType" value="{{type}}">
-              <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
-    
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/bestsellers}}
-    {{/each}}
-    {{/each}}
     <header class="header-row">
-      <h2 class="header-title">Recently Added</h2>
+        <h2 class="header-title">Bestsellers</h2>
     </header>
-    {{#each books }}
-    {{#each skus}}
-    {{#recentlyAdded category}}
-    <div class="col">
-      <div class="book">
-        <div class="image-wrap">
-          <div class="image-container-book">
-            <img class="book-cover" src="{{ ../imagePath }}">
-          </div>
-        </div>
-        <div class="book-details">
-          <div class="book-title">
-            <h4>{{ ../title }}</h4>
-          </div>
-          <div class="book-author">
-            <small>{{ ../author }}</small>
-          </div>
-          <div class="book-type">
-            <small class="text-faded">{{ type }}</small>
-          </div>
-          <div class="book-price">
-            <small class="text-faded">£{{ price }}</small>
-          </div>
-          <div class="basket">
-            <form action="/add-to-basket/{{../_id}}" id="book-button" method="POST">
-              <button id="add-to-basket-button" role="button">Add to basket</button>
-              <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
-              <input type="hidden" id="bookType" name="bookType" value="{{type}}">
-              <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
-      
-            </form>
-          </div>
-        </div>
-      </div>
+    <div class="row">
+        {{#each books }}
+            {{#each skus}}
+
+                {{#bestsellers category}}
+
+                    <div class="col">
+                        <div class="book" id="{{../_id}}">
+                            <div class="image-wrap">
+                                <div class="image-container-book">
+                                    <img class="book-cover" src="{{ ../imagePath }}">
+                                </div>
+                            </div>
+                            <div class="book-details">
+                                <div class="book-title">
+                                    <h4>{{ ../title }}</h4>
+                                </div>
+                                <div class="book-author">
+                                    <small>{{ ../author }}</small>
+                                </div>
+                                <div class="book-type">
+                                    <small class="text-faded">{{ type }}</small>
+                                </div>
+                                <div class="book-price">
+
+                                    <small class="text-faded">£{{ price }}</small>
+                                </div>
+                                <div class="basket">
+                                    <a class="wishlist">
+                                        <svg class="wishlist-svg-click" id="wishlist-click"
+                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"  {{#inList ../_id ../../userWishlist }}
+                                             fill="#f38686" {{/inList}} fill="none"
+                                             stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                            <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                    <form action="/add-to-basket/{{ ../_id }}" id="book-button" method="POST">
+                                        <button id="add-to-basket-button" role="button">Add to basket</button>
+                                        <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
+                                        <input type="hidden" id="bookType" name="bookType" value="{{type}}">
+                                        <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/bestsellers}}
+            {{/each}}
+        {{/each}}
+        <header class="header-row">
+            <h2 class="header-title">Recently Added</h2>
+        </header>
+        {{#each books }}
+            {{#each skus}}
+                {{#recentlyAdded category}}
+                    <div class="col">
+                        <div class="book" id="{{../_id}}">
+                            <div class="image-wrap">
+                                <div class="image-container-book">
+                                    <img class="book-cover" src="{{ ../imagePath }}">
+                                </div>
+                            </div>
+                            <div class="book-details">
+                                <div class="book-title">
+                                    <h4>{{ ../title }}</h4>
+                                </div>
+                                <div class="book-author">
+                                    <small>{{ ../author }}</small>
+                                </div>
+                                <div class="book-type">
+                                    <small class="text-faded">{{ type }}</small>
+                                </div>
+                                <div class="book-price">
+                                    <small class="text-faded">£{{ price }}</small>
+                                </div>
+                                <div class="basket">
+                                    <a class="wishlist">
+                                        <svg class="wishlist-svg-click" id="wishlist-click"
+                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" {{#inList ../_id ../../userWishlist }}
+                                             fill="#f38686" {{/inList}} fill="none"
+                                             stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="feather feather-heart">
+                                            <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                    <form action="/add-to-basket/{{../_id}}" id="book-button" method="POST">
+                                        <button id="add-to-basket-button" role="button">Add to basket</button>
+                                        <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
+                                        <input type="hidden" id="bookType" name="bookType" value="{{type}}">
+                                        <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/recentlyAdded}}
+            {{/each}}
+        {{/each}}
     </div>
-    {{/recentlyAdded}}
-    {{/each}}
-    {{/each}}
-  </div>
-  </div>
+</div>

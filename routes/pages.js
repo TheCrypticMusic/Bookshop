@@ -1,12 +1,13 @@
 const express = require("express");
 const Book = require("../models/books");
 const csrf = require("csurf");
-const e = require("connect-flash");
 const User = require("../models/user");
 
 const Basket = require("../models/basket");
-
 const router = express.Router();
+const Wishlist = require("../models/wishlist");
+
+const Order = require("../models/completedOrders");
 
 // const csrfProtection = csrf();
 
@@ -20,13 +21,26 @@ function isAuthenticated(req, res, next) {
 
 // router.use(csrfProtection);
 
-router.use((req, res, next) => {
+router.use(async (req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated();
-    if (req.isAuthenticated()) res.locals.user = req.user.username;
+    if (req.isAuthenticated()) {
+        res.locals.user = req.user.username;
+    }
     res.locals.session = req.session;
     res.locals.section = req.url;
+    if (req.session.passport) {
+        await Wishlist.findOne({userId: req.session.passport.user}, (err, results) => {
+            if (results) {
+                res.locals.userWishlist = results.wishlist.map(x => x.bookId);
+            }
+
+        });
+    }
+
+
     next();
 });
+
 
 router.get("/", (req, res, next) => {
     console.log("Is User Authenticated?", req.isAuthenticated());
@@ -101,9 +115,10 @@ router.get("/update-basket/:id", (req, res, next) => {
     );
 });
 
+
 router.get("/stripe-checkout-session/:id", isAuthenticated, (req, res, next) => {
-    return res.render("/checkout")
-})
+    return res.render("/checkout");
+});
 
 router.get("/account", isAuthenticated, (req, res, next) => {
     User.findById(req.user.id, (err, result) => {
@@ -117,13 +132,13 @@ router.get("/account", isAuthenticated, (req, res, next) => {
 
 
 router.get("/checkout", isAuthenticated, async (req, res, next) => {
-    const userId = req.user.id
+    const userId = req.user.id;
     await User.findById(userId, async (err, result) => {
         if (err) {
             return err;
         } else {
             const userAddress = result.address;
-            const user = result
+            const user = result;
             await Basket.findOne({userId}, (err, userBasket) => {
                 if (!err) {
                     if (userBasket) {
@@ -138,13 +153,24 @@ router.get("/checkout", isAuthenticated, async (req, res, next) => {
                             basketId: basketId
                         });
                     } else {
-                        console.log("No basket")
+                        console.log("No basket");
                     }
                 }
-            }).lean()
+            }).lean();
         }
     }).lean();
 
+});
+
+router.get("/user-wishlist", isAuthenticated, async (req, res, next) => {
+    const userId = req.user.id;
+    await Wishlist.findOne({userId: userId}, async (err, userWishlist) => {
+        const userWishlistArray = userWishlist.wishlist.map(x => x.bookId);
+        await Book.find({_id: {$in: userWishlistArray}}, (err, books) => {
+            const bookInfo = books.map(({title, author, imagePath}) => ({title, author, imagePath}));
+            return res.render("user-wishlist", {layout: "account-layout", "bookInfo": bookInfo});
+        });
+    });
 });
 
 router.get("/address", isAuthenticated, (req, res, next) => {
@@ -152,7 +178,7 @@ router.get("/address", isAuthenticated, (req, res, next) => {
         if (err) {
             return err;
         } else {
-            userAddress = result.address;
+            const userAddress = result.address;
             return res.render("address", {
                 layout: "account-layout",
                 user: userAddress,
@@ -160,6 +186,15 @@ router.get("/address", isAuthenticated, (req, res, next) => {
         }
     }).lean();
 });
+
+router.get("/order-history", isAuthenticated, (req, res, next) => {
+    const userId = req.user.id;
+    Order.findOne({userId: userId}, (err, orders) => {
+        const userOrders = orders.basketIds.map(x => x);
+        return res.render("order-history", {layout: "account-layout", "userOrders": userOrders});
+    }).lean();
+});
+
 
 router.get("/amendments/email", isAuthenticated, (req, res, next) => {
     return res.render("email", {layout: "account-layout"});

@@ -4,26 +4,24 @@ require("dotenv").config({path: "./config/.env"});
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const express = require("express");
 
-const calculateOrderAmount = () => {
-    return 1400;
+const basketItems = async (basketId) => {
+    return Basket.findById(basketId);
 };
 
-const basketItems = async (basketId) => {
-   return Basket.findById(basketId);
-}
-
 const convertToPence = (basketItemPrice) => {
-
-    return Math.round(basketItemPrice * 100)
-}
+    return Math.round(basketItemPrice * 100);
+};
 
 exports.session = async (req, res, next) => {
     const basketId = req.params.id
-    const userBasket = await basketItems(basketId)
+    const userBasket = await basketItems(basketId);
+
+
     try {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
+            metadata: {"basketId": `${basketId}`, "userId": `${userBasket.userId}`},
             line_items: userBasket.items.map(basketItem => {
                 return {
                     price_data: {
@@ -34,13 +32,13 @@ exports.session = async (req, res, next) => {
                         unit_amount: convertToPence(basketItem.price),
                     },
                     quantity: basketItem.quantity
-                }
+                };
             }),
-            success_url: "http://localhost:5002/basket",
+            success_url: "http://localhost:5002/",
             cancel_url: "http://localhost:5002/"
         })
-        res.json({url: session.url})
+        res.json({url: session.url});
     } catch (e) {
-        res.status(500).json({error: e.message})
+        res.status(500).json({error: e.message});
     }
 }

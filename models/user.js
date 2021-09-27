@@ -29,22 +29,22 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function (next) {
-  const user = this
-  user.password = await bcrypt.hashSync(user.password, 10, function (err, hash) {
-    if (err) {
-      return next(err)
-    }
-    return next()
-  })
-})
+    const user = this
+    user.password = await bcrypt.hashSync(user.password, 10, function (err, hash) {
+        if (err) {
+            return next(err);
+        }
+        return next();
+    });
+});
 
 userSchema.methods.encryptNewPassword = function (userPassword, callback) {
-  return callback(null, bcrypt.hashSync(userPassword, 10))
+    return callback(null, bcrypt.hashSync(userPassword, 10));
 }
 
 
 userSchema.methods.verifyPasswords = function (userPassword, callback) {
-  return callback(null, bcrypt.compareSync(userPassword, this.password))
+    return callback(null, bcrypt.compareSync(userPassword, this.password));
 }
 
 const User = mongoose.model("User", userSchema);

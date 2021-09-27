@@ -57,16 +57,19 @@
                 </div>
                 <div class="container" id="checkout-container">
                     <div class="checkout-payment-method" id="method-with-border">
-                        <input type="radio" id="payment-method" value="payment-method" name="payment-method">
+                        <input type="radio" id="payment-method" value="payment-method" name="payment-method"
+                               checked="true">
                         <label for="payment-method">Credit Card Payment</label>
                         <div class="method-info">
                             <small id="checkout-info">Mastercard/ VISA</small>
                         </div>
                     </div>
-                        <button class="checkout-button" id="{{basketId}}">Checkout</button>
+
                 </div>
             </div>
+            <button class="checkout-button" id="{{basketId}}">Checkout</button>
         </div>
+
         <div class="padding-gap"></div>
         <div class="order-sum-box">
             <div class="address-title" id="checkout-section-title">
@@ -89,7 +92,7 @@
                 <hr class="checkout-container-divider">
             {{/each}}
             <div class="checkout-subtotal-postage">
-                <h4>Product Subtotal: £{{subTotal }}</h4>
+                <h4>Product Subtotal: £{{subTotal}}</h4>
                 <h4>Shipping Cost: ADD PRICE </h4>
                 <h4>Combined Total: ADD PRICE </h4>
             </div>

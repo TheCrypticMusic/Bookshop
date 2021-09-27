@@ -20,14 +20,14 @@ const basketSchema = new mongoose.Schema({
 basketSchema.methods.subTotalPrice = function() {
     
     const newSubtotal = this.items.map((elem) => elem.total).reduce((a, b) => a + b)
-    return newSubtotal
+    return newSubtotal.toFixed(2);
 
 }
 
 basketSchema.methods.amendItemPrice = function(basketQty, index) {
 
     const itemPrice = (this.items[index].price * basketQty).toFixed(2);
-    return itemPrice
+    return itemPrice;
 }
 
 basketSchema.methods.add = function (

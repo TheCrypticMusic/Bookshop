@@ -1,0 +1,30 @@
+<div class="content-container">
+    <div class="personal-container">
+        <div class="personal-details-header">
+            <h1>Order History</h1>
+        </div>
+        <section class="details">
+            <div class="form-section">
+                {{#each userOrders}}
+                    <div class="order-details">
+                        <div class="address1-label" id="account-form">
+                            <h2>Order #{{this._id}}</h2>
+                        </div>
+                        {{#each this.order}}
+                            <h4 class="order-book-title"><b>{{this.bookTitle}}</b></h4>
+                            <div class="order-book-details">
+                                <small>{{this.bookAuthor}}</small>
+                                <small>Quantity: {{this.quantity}}</small>
+                                <small>Total: £{{this.total}}</small>
+                            </div>
+                            <hr class="order-divider">
+                        {{/each}}
+                        <h3><b>Subtotal: £{{this.subTotal}}</b></h3>
+                    </div>
+                {{/each}}
+            </div>
+            </form>
+        </section>
+    </div>
+</div>
+</div>

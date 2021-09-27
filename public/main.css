@@ -341,7 +341,8 @@ hr.personal-divider {
     color: #f8f5f2;
     padding: 0.5rem;
     font-size: x-small;
-    width: 100%;
+    width: 75%;
+    margin-left: 2rem;
 
 }
 
@@ -673,7 +674,7 @@ div.basket {
 
 .single-book {
     list-style: none;
-    border: 1px solid;
+    border: 0.5px solid black;
     border-style: groove none groove none;
 
 
@@ -813,7 +814,7 @@ div.basket {
     color: white;
 }
 #checkout-container {
-    border: 1px solid gray;
+    border: 0.5px solid gray;
     margin-bottom: 1rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -845,13 +846,13 @@ div.basket {
 .order-sum-box {
     padding-bottom: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid gray;
+    border: 0.5px solid gray;
     width: 40%;
 }
 
 .checkout-book-image {
-    height:150px;
-    width: 125;
+    height: 150px;
+
     padding: 1rem;
 }
 
@@ -891,7 +892,7 @@ div.basket {
 }
 
 #method-with-border {
-    border: 1px solid black;
+    border: 0.5px solid black;
     padding-right: 1rem;
     padding-left: 0.5rem;
     margin-left: 1rem;
@@ -904,7 +905,69 @@ div.basket {
 }
 
 .checkout-section {
-    margin-bottom:  0;
+    margin-bottom: 0;
 }
 
 
+.checkout-button {
+    background-color: #078080;
+    border: 0;
+    border-radius: 10rem;
+    color: #f8f5f2;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    font-size: small;
+    float: right;
+}
+
+.checkout-button:hover {
+    background-color: #089c9c;
+    color: #f8f5f2;
+}
+
+.order-details {
+    padding: 0rem 1rem 1rem 1rem;
+    border: 0.5px solid #222525;
+    margin-bottom: 1rem;
+}
+
+.order-book-title {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.order-book-details {
+    display: grid;
+}
+
+.order-divider {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.wishlist {
+    position: absolute;
+    cursor: pointer;
+}
+
+.wishlist-svg-click {
+    margin-top: 22%;
+}
+
+
+.wishlist-img {
+    height: 200px;
+    padding: 1rem;
+}
+
+#wishlist-col {
+    display: flex;
+    text-align: center;
+    width: 0;
+    padding-right: 1rem;
+}
+
+#wishlist-row {
+    justify-content: left;
+}

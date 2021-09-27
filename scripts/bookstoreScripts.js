@@ -86,8 +86,8 @@ $(".qty").on("input", function () {
         qty: qty(this),
         subtotal: calculatedSubtotal(priceOfBook(this), qty(this)),
     };
-    basketUpdate.items[basketBookId(this)] = { basketData };
-    console.log(basketData)
+    basketUpdate.items[basketBookId(this)] = {basketData};
+    console.log(basketData);
 });
 
 
@@ -99,14 +99,16 @@ $(".btn").click(function () {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             window.location.href = "http://localhost:5002/checkout"
-            console.log(data)
+            console.log(data);
         }
-    })
+    });
 });
 
+// ***** STRIPE CHECKOUT ***** //
 const button = document.querySelector("button")
-const basket = document.getElementsByClassName("checkout-button")[0].id
-button.addEventListener("click", () => {
+
+$("button").click(function () {
+    const basket = $(".checkout-button").attr("id")
     fetch("http://localhost:5002/stripe-checkout-session/" + basket, {
         method: "POST",
         headers: {
@@ -114,17 +116,45 @@ button.addEventListener("click", () => {
         }
     })
         .then(res => {
-            if (res.ok) return res.json()
-            return res.json().then(json => Promise.reject(json))
+            if (res.ok) {
+                return res.json();
+            }
+            return res.json().then(json => Promise.reject(json));
         })
-        .then(({ url }) => {
-            window.location = url
+        .then(({url}) => {
+            window.location = url;
         })
         .catch(e => {
-            console.error(e.error)
-        })
+            console.error(e.error);
+        });
+
+});
+
+// ****** WISHLIST ****** //
+
+$(".wishlist").click(function () {
+    const bookId = $(this).closest(".book").attr("id")
+    const svg = $(this).find(".wishlist-svg-click");
+    if (svg.css("fill") === "rgb(243, 134, 134)") {
+        svg.css({fill: "#f8f5f2"});
+    } else {
+        svg.css({fill: "rgb(243, 134, 134)"});
+    }
+    $.ajax({
+        url: "/wishlist/" + bookId,
+        method: "POST",
+        data: JSON.stringify(basketUpdate),
+        contentType: "application/json; charset=utf-8",
+    });
 })
 
 
+$(".wishlist").hover(function () {
+    const svg = $(this).find(".wishlist-svg-click");
+    if (svg.css("fill") === "rgb(243, 134, 134)") {
+        svg.css({fill: "#f8f5f2"});
+    } else {
+        svg.css({fill: "rgb(243, 134, 134)"});
+    }
 
-
+})
