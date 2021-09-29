@@ -928,17 +928,13 @@ div.basket {
 
 .order-details {
     padding: 0rem 1rem 1rem 1rem;
-    border: 0.5px solid #222525;
+    border: 0.5px solid gray;
     margin-bottom: 1rem;
 }
 
 .order-book-title {
     padding: 0;
     margin-bottom: 0;
-}
-
-.order-book-details {
-    display: grid;
 }
 
 .order-divider {
@@ -970,4 +966,93 @@ div.basket {
 
 #wishlist-row {
     justify-content: left;
+}
+
+.order-item {
+    display: flex;
+}
+
+.order-img {
+    height: 150px;
+    padding-right: 1rem;
+}
+
+.product-wrap {
+    display: flex;
+    padding-top: 4rem;
+
+}
+
+.product-image {
+    height: 500px;
+}
+
+#product-container {
+    padding-left: 5rem;
+    padding-right: 5rem;
+}
+
+.product-info {
+    padding-left: 5rem;
+    padding-right: 5rem;
+    width: 100%;
+
+
+}
+
+#product-button-form {
+    display: contents;
+}
+
+.product-box {
+    border: 0.5px solid gray;
+    padding: 2rem;
+}
+
+.product-type {
+    float: left;
+    display: contents;
+}
+
+.product-price {
+    float: right;
+}
+
+.product-title {
+    padding-bottom: 2rem;
+
+}
+
+.product-quantity-box {
+    border: 0.5px solid gray;
+    padding: 2rem;
+    border-top: none;
+
+}
+
+.quantity-box {
+    float: left;
+    display: contents;
+}
+
+.product-basket {
+    display: contents;
+}
+
+#product-button {
+    background-color: #078080;
+    border: 0;
+    float: right;
+    border-radius: 10rem;
+    color: #f8f5f2;
+    padding: 0.6rem;
+    font-size: medium;
+    margin-left: 2rem;
+
+}
+
+.product-details-box {
+    border: 0.5px solid gray;
+    padding: 2rem;
+    margin-top: 3rem;
 }

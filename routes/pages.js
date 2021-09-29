@@ -8,6 +8,7 @@ const router = express.Router();
 const Wishlist = require("../models/wishlist");
 
 const Order = require("../models/completedOrders");
+const {fiction} = require("../config/handlebars-helpers");
 
 // const csrfProtection = csrf();
 
@@ -33,8 +34,14 @@ router.use(async (req, res, next) => {
             if (results) {
                 res.locals.userWishlist = results.wishlist.map(x => x.bookId);
             }
-
         });
+    }
+    res.locals.genres = {
+        nonfiction: "non-fiction",
+        fiction: "fiction",
+        scifi: "sci-fi",
+        childrens: "children's",
+        fantasy: "fantasy"
     }
 
 
@@ -74,7 +81,7 @@ router.get("/basket", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;
 
     if (userId) {
-        await Basket.findOne({userId}, (err, userBasket) => {
+        await Basket.findOne({userId: userId}, (err, userBasket) => {
             if (!err) {
                 if (userBasket) {
                     const basketItems = userBasket.items;
@@ -93,6 +100,21 @@ router.get("/basket", isAuthenticated, async (req, res, next) => {
         }).lean();
     }
 });
+
+router.get("/genre/:genre", (req, res, next) => {
+    const genre = req.params.genre
+
+    Book.find({
+        "genre": {
+            $regex: new RegExp("^" + genre),
+            $options: "i"
+        }
+    }, {"skus": {"$elemMatch": {"type": "Paperback"}}}).select("title imagePath author genre").lean().exec((err, result) => {
+
+        return res.render("genre", {"books": result, "genre": result[0].genre});
+    });
+})
+
 
 router.get("/add-to-basket/:id", (req, res, next) => {
     return res.render(
@@ -121,6 +143,7 @@ router.get("/stripe-checkout-session/:id", isAuthenticated, (req, res, next) => 
 });
 
 router.get("/account", isAuthenticated, (req, res, next) => {
+
     User.findById(req.user.id, (err, result) => {
         if (err) {
             return err;
@@ -132,14 +155,14 @@ router.get("/account", isAuthenticated, (req, res, next) => {
 
 
 router.get("/checkout", isAuthenticated, async (req, res, next) => {
-    const userId = req.user.id;
+    const userId = req.session.passport.user;
     await User.findById(userId, async (err, result) => {
         if (err) {
             return err;
         } else {
             const userAddress = result.address;
             const user = result;
-            await Basket.findOne({userId}, (err, userBasket) => {
+            await Basket.findOne({userId: userId}, (err, userBasket) => {
                 if (!err) {
                     if (userBasket) {
                         const basketItems = userBasket.items;
@@ -159,11 +182,24 @@ router.get("/checkout", isAuthenticated, async (req, res, next) => {
             }).lean();
         }
     }).lean();
-
 });
 
+router.get("/product/:index/:id", async (req, res, next) => {
+    const bookId = req.params.id;
+    const index = req.params.index
+    await Book.findOne({_id: bookId}, (err, book) => {
+        if (err) {
+            return err;
+        }
+        const sku = book.skus[index]
+
+        return res.render("product", {"book": book, "sku": sku});
+    }).lean();
+})
+
+
 router.get("/user-wishlist", isAuthenticated, async (req, res, next) => {
-    const userId = req.user.id;
+    const userId = req.session.passport.user;
     await Wishlist.findOne({userId: userId}, async (err, userWishlist) => {
         const userWishlistArray = userWishlist.wishlist.map(x => x.bookId);
         await Book.find({_id: {$in: userWishlistArray}}, (err, books) => {

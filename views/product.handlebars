@@ -1,0 +1,61 @@
+<div class="main-content-container" id="product-container">
+    <div class="product-wrap">
+        <div class="product-container-book">
+            <img class="product-image" src="/{{book.imagePath}}">
+        </div>
+        <div class="product-info">
+            <div class="product-title">
+                <h1 class="header-title"><b>{{book.title}} ({{sku.type}})</b></h1>
+                <h4><b>{{book.author}}</b></h4>
+            </div>
+            <div class="product-box">
+                <div class="product-type">
+                    <small>{{sku.type}}</small>
+                </div>
+                <div class="product-price">
+                    <h3><b>£{{sku.price}}</b></h3>
+                </div>
+                <div class="product-quantity">
+                    <small>Available: <b>{{sku.quantity}} left!</b></small>
+                </div>
+            </div>
+
+            <div class="product-quantity-box">
+                <div class="quantity-box">
+                    <small>Quantity</small>
+                    <input type="number" class="qty" id="quantity" name="quantity" value="1" min="1"
+                           max="{{sku.quantity}}" autocomplete="off">
+                </div>
+                <div class="product-basket">
+                    <form action="/add-to-basket/{{book._id}}" id="product-button-form" method="POST">
+                        <button id="product-button" role="button">Add to basket</button>
+                        <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{sku._id}}">
+                    </form>
+                </div>
+            </div>
+            <div class="product-details-box">
+                <h2>Synopsis</h2>
+                <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus atque dicta dolorem et expedita
+                    libero magni minus numquam pariatur placeat porro, possimus, quae quaerat quas qui quibusdam tempora
+                    tenetur velit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus atque dicta
+                    dolorem et expedita
+                    libero magni minus numquam pariatur placeat porro, possimus, quae quaerat quas qui quibusdam tempora
+                    tenetur velit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus atque dicta
+                    dolorem et expedita
+                    libero magni minus numquam pariatur placeat porro, possimus, quae quaerat quas qui quibusdam tempora
+                    tenetur velit.<br> <br> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus atque
+                    dicta dolorem et expedita
+                    libero magni minus numquam pariatur placeat porro, possimus, quae quaerat quas qui quibusdam tempora
+                    tenetur velit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus atque dicta
+                    dolorem et expedita
+                    libero magni minus numquam pariatur placeat porro, possimus, quae quaerat quas qui quibusdam tempora
+                    tenetur velit <br><br> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus atque
+                    dicta dolorem et expedita
+                    libero magni minus numquam pariatur placeat porro, possimus, quae quaerat quas qui quibusdam tempora
+                    tenetur velit</h4>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -3,19 +3,19 @@
 </div>
 <div class="main-content-container">
     <header class="header-row">
-        <h2 class="header-title">Bestsellers</h2>
+        <h1 class="header-title">Bestsellers</h1>
     </header>
     <div class="row">
         {{#each books }}
             {{#each skus}}
-
                 {{#bestsellers category}}
-
                     <div class="col">
                         <div class="book" id="{{../_id}}">
                             <div class="image-wrap">
                                 <div class="image-container-book">
-                                    <img class="book-cover" src="{{ ../imagePath }}">
+                                    <a href="product/{{@index}}/{{../_id}}">
+                                        <img class="book-cover" src="{{ ../imagePath }}">
+                                    </a>
                                 </div>
                             </div>
                             <div class="book-details">
@@ -59,7 +59,7 @@
             {{/each}}
         {{/each}}
         <header class="header-row">
-            <h2 class="header-title">Recently Added</h2>
+            <h1 class="header-title">Recently Added</h1>
         </header>
         {{#each books }}
             {{#each skus}}
@@ -68,7 +68,9 @@
                         <div class="book" id="{{../_id}}">
                             <div class="image-wrap">
                                 <div class="image-container-book">
-                                    <img class="book-cover" src="{{ ../imagePath }}">
+                                    <a href="product/{{@index}}/{{../_id}}">
+                                        <img class="book-cover" src="{{ ../imagePath }}">
+                                    </a>
                                 </div>
                             </div>
                             <div class="book-details">

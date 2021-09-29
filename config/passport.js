@@ -48,4 +48,4 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-module.export = passport
+module.export = passport;

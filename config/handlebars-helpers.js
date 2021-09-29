@@ -22,6 +22,30 @@ module.exports = {
         }
         return options.inverse(this);
     },
+    nonFiction: function (genre, options) {
+        if ("Non-Fiction" === genre) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    },
+    fiction: function (genre, options) {
+        if ("Fiction" === genre) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    },
+    sciFi: function (genre, options) {
+        if ("Sci-Fi" === genre) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    },
+    fantasy: function (genre, options) {
+        if ("Fantasy" === genre) {
+            return options.fn(this);
+        }
+        return options.inverse(this);
+    },
     ifEquals: function (arg1, arg2, options) {
         return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
     },

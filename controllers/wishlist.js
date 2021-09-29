@@ -32,6 +32,5 @@ exports.add = async (req, res, next) => {
         }
     });
 
-
     res.redirect("http://localhost:5002");
 };

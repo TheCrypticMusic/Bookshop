@@ -17,28 +17,29 @@
    <div id={{basketId}} class="basket-view">
       <ul class="book-list">
          {{#each basketItems}}
-         <li id={{_id}} class="single-book">
-            <div class="book-basket-container">
-               <div class="book-cover-basket-wrap">
-                  <img class="book-cover-basket" src="{{bookImage}}" alt="book-cover">
-               </div>
-               <div class="book-info-basket">
-                  <div class="book-title-basket">
-                     <h4 class="bold-book-info">{{ bookTitle }}</h3>
-                  </div>
-                  <div class="book-author-basket">
-                     <h5>{{ bookAuthor }}</h5>
-                     <h5>{{bookType}}</h5>
+             <li id={{_id}} class="single-book">
+                 <div class="book-basket-container">
+                     <div class="book-cover-basket-wrap">
+                         <img class="book-cover-basket" src="{{bookImage}}" alt="book-cover">
+                     </div>
+                     <div class="book-info-basket">
+                         <div class="book-title-basket">
+                             <h4 class="bold-book-info">{{ bookTitle }}</h4>
+                         </div>
+                         <div class="book-author-basket">
+                             <h5>{{ bookAuthor }}</h5>
+                             <h5>{{bookType}}</h5>
 
-                  </div>
-               </div>
-               <div class="book-qty-basket">
-                  <form action="#">
-                     <label for="quantity">Qty</label>
-                     <input type="number" class="qty" id="quantity" name="quantity" value="{{ quantity }}" min="1"
-                        max="99" autocomplete="off">
+                         </div>
+                     </div>
+                     <div class="book-qty-basket">
+                         <form action="#">
+                             <label for="quantity">Qty</label>
+                             <input type="number" class="qty" id="quantity" name="quantity" value="{{ quantity }}"
+                                    min="1"
+                                    max="99" autocomplete="off">
 
-                  </form>
+                         </form>
                </div>
                <div class="book-basket-price">
                   <h4 class="bold-book-info">Book price</h4>

@@ -107,7 +107,7 @@ $(".btn").click(function () {
 // ***** STRIPE CHECKOUT ***** //
 const button = document.querySelector("button")
 
-$("button").click(function () {
+$(".checkout-button").click(function () {
     const basket = $(".checkout-button").attr("id")
     fetch("http://localhost:5002/stripe-checkout-session/" + basket, {
         method: "POST",

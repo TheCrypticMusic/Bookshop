@@ -39,11 +39,11 @@ basketSchema.methods.add = function (
     quantity,
     price
 ) {
-    let bookCartIndex = this.items.findIndex(
+    const bookCartIndex = this.items.findIndex(
         (book) => book.bookSkuId == bookSkuId
     );
     if (bookCartIndex > -1) {
-        let bookItem = this.items[bookCartIndex];
+        const bookItem = this.items[bookCartIndex];
         bookItem.quantity += 1;
         bookItem.total = bookItem.price * bookItem.quantity;
         console.log(

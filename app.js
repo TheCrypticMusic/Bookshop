@@ -146,7 +146,6 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) =
     return res.json({received: true})
 })
 
-
 app.listen(5002, () => {
     console.log("Server started on Port 5002");
 });

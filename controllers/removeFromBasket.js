@@ -8,7 +8,7 @@ exports.removeItemFromBasket = async (req, res, next) => {
 
     const userId = req.session.passport.user;
 
-    await Basket.findOne({ userId }, async (err, userBasket) => {
+    await Basket.findOne({userId: userId}, async (err, userBasket) => {
         if (err) {
             console.log("Error:", err);
             return res.status(404);
@@ -18,8 +18,8 @@ exports.removeItemFromBasket = async (req, res, next) => {
         const totalPriceBook = userBasket.items.map((x) => x.total)[index];
         const newSubtotal = (userBasket.subTotal -= totalPriceBook).toFixed(2);
         await Basket.updateOne(
-            { userId },
-            { $pull: { items: userBasket.items[index] } },
+            {userId},
+            {$pull: {items: userBasket.items[index]}},
             (err, result) => {
                 if (err) {
                     return err;
