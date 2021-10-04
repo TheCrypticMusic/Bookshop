@@ -91,7 +91,7 @@ $(".qty").on("input", function () {
 });
 
 
-$(".btn").click(function () {
+$("#basket-to-checkout").click(function () {
     $.ajax({
         url: "/update-basket/" + basketId,
         method: "POST",

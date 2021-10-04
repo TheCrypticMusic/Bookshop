@@ -8,4 +8,6 @@ router.post("/password", amendmentController.password);
 
 router.post("/username", amendmentController.username);
 
+router.post("/addressDetails", amendmentController.addressDetails)
+
 module.exports = router;

@@ -88,7 +88,7 @@ exports.username = async (req, res, next) => {
               if (err) {
                 return res.send(err);
               } else {
-                res.render("Username", { message: "Username changed" });
+                res.render("username", { message: "Username changed" });
               }
             }
           );
@@ -97,3 +97,24 @@ exports.username = async (req, res, next) => {
     }
   });
 };
+
+exports.addressDetails = async (req, res, next) => {
+    const {addressLine1, addressLine2, town, postcode} = req.body
+    const userId = req.session.passport.user
+
+    await User.findOneAndUpdate({_id: userId}, 
+      {
+        "address.addressLine1": addressLine1,
+        "address.addressLine2": addressLine2,
+        "address.town": town,
+        "address.postcode": postcode,
+      }, (err, result) => {
+        if (err) {
+          return err
+        } 
+        return result
+    
+    })
+    res.redirect("/address")
+
+}

@@ -253,4 +253,19 @@ router.get("/amendments/username", isAuthenticated, (req, res, next) => {
     // { csrfToken: req.csrfToken() });
 });
 
+router.get("/amendments/address-details", isAuthenticated, (req, res, next) => {
+    User.findById(req.user.id, (err, result) => {
+        if (err) {
+            return err
+        } else {
+            const userAddress = result.address
+            return res.render("address-details", {layout: "account-layout", user: userAddress})
+        }
+    }).lean()
+
+
+
+})
+
+
 module.exports = router;
