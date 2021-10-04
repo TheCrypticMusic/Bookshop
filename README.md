@@ -25,11 +25,11 @@ Bookshop project that features a functioning front-end and backend. Built with:
 
 • Basket view
 
-**Upcoming Features:**
-
-
 • Fake payments
 
 • Wishlist
 
 • Unique ids url and webpage for each book 
+
+
+
