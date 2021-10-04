@@ -8,8 +8,8 @@
                 <div class="address-title" id="checkout-section-title">
                     <h3 class="checkout-section">1) Address Details</h3>
                 </div>
-                <div class="container" id="checkout-container">
-                    <small class="address-text" id="checkout-info-address">{{user.username}}</small>
+                <div class="container-address" id="checkout-container">
+                    <p class="address-text" id="checkout-info-address">{{user.username}}</p>
                     <small class="address-text" id="checkout-info-address">{{userAddress.addressLine1}}</small>
                     <small class="address-text" id="checkout-info-address">{{userAddress.addressLine2}}</small>
                     <small class="address-text" id="checkout-info-address">{{userAddress.addressLine3}}</small>
@@ -21,34 +21,19 @@
                 <div class="delivery-title" id="checkout-section-title">
                     <h3 class="checkout-section">2) Delivery Method</h3>
                 </div>
-                <div class="container" id="checkout-container">
+                <div class="container-postage" id="checkout-container">
+                    {{#each postage}}
                     <div class="methods">
                         <div class="checkout-delivery-method" id="method-with-border">
-                            <input type="radio" id="delivery-method" value="3-5-delivery" name="delivery-method">
-                            <label for="3-5-delivery">3-5 Days Delivery</label>
+
+                            <input type="radio" id="delivery-method" value="{{this._id}}" name="delivery-method" {{#postageOption this.postageCost}}checked="true"{{/postageOption}}>
+                            <label for="{{this.postageName}}">{{this.postageName}}</label>
                             <div class="method-info">
-                                <small id="checkout-info">Standard</small>
-                                <small class="delivery-price" id="checkout-info">£0.00</small>
-                            </div>
-                        </div>
-                        <div class="checkout-delivery-method" id="method-with-border">
-                            <input type="radio" id="delivery-method" value="next-day-delivery" name="delivery-method">
-                            <label for="next-day-delivery">Next Day Delivery</label>
-                            <div class="method-info">
-                                <small id="checkout-info">Express</small>
-                                <small class="delivery-price" id="checkout-info">£3.99</small>
-                            </div>
-                        </div>
-                        <div class="checkout-delivery-method" id="method-with-border">
-                            <input type="radio" id="delivery-method" value="before-12-day-delivery"
-                                   name="delivery-method">
-                            <label for="before-12-day-delivery">Before 12pm Day Delivery</label>
-                            <div class="method-info">
-                                <small id="checkout-info">Express Before 12pm</small>
-                                <small class="delivery-price" id="checkout-info">£5.99</small>
+                                <small class="delivery-price" id="checkout-info">£{{this.postageCost}}</small>
                             </div>
                         </div>
                     </div>
+                    {{/each}}
                 </div>
             </div>
             <div class="delivery-container">
@@ -92,9 +77,9 @@
                 <hr class="checkout-container-divider">
             {{/each}}
             <div class="checkout-subtotal-postage">
-                <h4>Product Subtotal: £{{subTotal}}</h4>
-                <h4>Shipping Cost: ADD PRICE </h4>
-                <h4>Combined Total: ADD PRICE </h4>
+                <h4 id="product-subtotal">Product Subtotal: £{{padNumber subTotal}}</h4>
+                <h4 id="shipping-cost">Shipping Cost: £0 </h4>
+                <h4 id="combined-cost">Combined Total: £{{padNumber subTotal}} </h4>
             </div>
         </div>
     </div>

@@ -820,6 +820,22 @@ div.basket {
     padding-bottom: 1rem;
 }
 
+.container-address {
+    display: block !important;
+}
+
+.address-details {
+    display: block;
+}
+
+#checkout-container {
+    display: flex;
+}
+
+.address-title {
+    display: block;
+}
+
 #checkout-info {
     display: block;
     padding: 0.2rem;

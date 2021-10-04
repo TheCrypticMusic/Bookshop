@@ -56,6 +56,13 @@ module.exports = {
             }
             return options.inverse(this);
         }
+    }, 
+    postageOption: function(cost, options) {
+        if (cost === 0) {
+            return options.fn(this);
+        } else {
+        return options.inverse(this);
+        }
     }
 }
 

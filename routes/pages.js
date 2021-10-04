@@ -2,13 +2,14 @@ const express = require("express");
 const Book = require("../models/books");
 const csrf = require("csurf");
 const User = require("../models/user");
-
 const Basket = require("../models/basket");
 const router = express.Router();
 const Wishlist = require("../models/wishlist");
+const Postage = require("../models/postageCosts")
+
 
 const Order = require("../models/completedOrders");
-const {fiction} = require("../config/handlebars-helpers");
+
 
 // const csrfProtection = csrf();
 
@@ -71,6 +72,7 @@ router.get("/login", (req, res, next) => {
         // { csrfToken: req.csrfToken() });
     );
 });
+
 
 router.get("/logout", (req, res, next) => {
     req.session.destroy();
@@ -156,6 +158,9 @@ router.get("/account", isAuthenticated, (req, res, next) => {
 
 router.get("/checkout", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;
+
+    const postage = await Postage.findOne().lean().map(x => x.postageTypes)
+
     await User.findById(userId, async (err, result) => {
         if (err) {
             return err;
@@ -173,7 +178,8 @@ router.get("/checkout", isAuthenticated, async (req, res, next) => {
                             userAddress: userAddress,
                             items: basketItems,
                             subTotal: subTotal,
-                            basketId: basketId
+                            basketId: basketId,
+                            postage: postage
                         });
                     } else {
                         console.log("No basket");

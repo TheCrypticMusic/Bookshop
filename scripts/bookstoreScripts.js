@@ -104,16 +104,33 @@ $(".btn").click(function () {
     });
 });
 
+$("input[name=delivery-method]").change(function() {
+   
+
+    const radioButtonShippingCost = $(this).closest("div").find(".delivery-price").text().split("£")[1]
+
+    const productSubtotal = $("#product-subtotal").text().split("£")[1]
+
+    $("#shipping-cost").html(`Shipping Cost: £${radioButtonShippingCost}`)
+
+    const combinedTotal = parseFloat(radioButtonShippingCost) + parseFloat(productSubtotal)
+
+    $("#combined-cost").html(`Combined Total: £${combinedTotal}`)
+    
+})
+
 // ***** STRIPE CHECKOUT ***** //
 const button = document.querySelector("button")
 
 $(".checkout-button").click(function () {
+    const dbShippingCost = $("#delivery-method:checked").val()
     const basket = $(".checkout-button").attr("id")
     fetch("http://localhost:5002/stripe-checkout-session/" + basket, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-        }
+        },
+        body: JSON.stringify({postage: dbShippingCost})
     })
         .then(res => {
             if (res.ok) {
