@@ -4,14 +4,16 @@
       <div class="table-checkout-price">
          <div class="basket-price">
             <div class="flex-price">
+            {{#if basketItems}}
                <h4 class="currency">Total Value: £</h4>
                <h4 class="total-value">{{padNumber subTotal}}</h4>
             </div>
          </div>
-
+     
          <div class="checkout">
             <button type="submit" id="basket-to-checkout" class="btn btn-success btn">Checkout</button>
          </div>
+         {{/if}}
       </div>
    </header>
    <div id={{basketId}} class="basket-view">

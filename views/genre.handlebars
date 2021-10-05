@@ -1,7 +1,6 @@
 <div class="main-content-container">
     <header class="header-row">
         <h1 class="header-title">{{genre}}</h1>
-        {{log books.genre}}
     </header>
     <div class="row">
         {{#each books }}
@@ -10,7 +9,7 @@
                     <div class="book" id="{{../_id}}">
                         <div class="image-wrap">
                             <div class="image-container-book">
-                                <a href="/product/{{@index}}/{{../_id}}">
+                                <a href="/book/{{../_id}}/{{_id}}">
                                     <img class="book-cover" src="/{{ ../imagePath }}">
                                 </a>
                             </div>
