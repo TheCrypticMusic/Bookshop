@@ -1,5 +1,5 @@
 const express = require("express");
-const amendmentController = require("../controllers/amendments");
+const amendmentController = require("../controllers/updateUserDetails");
 const router = express.Router();
 
 router.post("/email", amendmentController.email);

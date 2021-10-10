@@ -4,9 +4,11 @@ const Basket = require("../models/basket");
 const Wishlist = require("../models/wishlist");
 const Postage = require("../models/postageCosts");
 const Order = require("../models/completedOrders");
+const mongoose = require("mongoose")
+
 
 exports.getUserBasket = (userId) => {
-    const userBasket = Basket.findOne({ userId: userId }, (err, result) => {
+    const userBasket =  Basket.findOne({ userId: userId }, (err, result) => {
         if (err) {
             return err;
         }
@@ -21,24 +23,31 @@ exports.getAllBooks = () => {
             console.log("Error retrieving books:" + err);
             return err;
         }
+    
         return result;
     });
     return allBooks.lean();
 };
 
 exports.getSingleBookBySku = (bookId, skuId) => {
-    const book = Book.findOne({_id: bookId}, {"skus": {"$elemMatch": {"_id": skuId}}}).select("title author imagePath _id").lean().exec()
+    const book = Book.findOne({_id: bookId}, {"skus": {"$elemMatch": {"_id": skuId}}}).select("title author imagePath _id genre").lean().exec()
     return book
 
+}
+
+
+exports.getSingleBook = (bookId) => {
+    const book = Book.findOne({_id: bookId}).lean().exec()
+    return book
 }
 
 exports.getUserWishlist = async (userId) => {
     const userWishlist = await Wishlist.findOne({userId: userId}).select("wishlist").lean().exec()
     
     const wishlistBookIds = userWishlist.wishlist.map(x => x.bookId)
-    
-    const bookInfo = await Book.find({_id: {"$in": wishlistBookIds}}).lean().exec()
 
+    const bookInfo = await Book.find({_id: {"$in": wishlistBookIds}}).lean().exec()
+ 
     return bookInfo
 
 
@@ -89,4 +98,68 @@ exports.getPostagePrices = () => {
         .lean()
         .map((x) => x.postageTypes);
     return postagePrices
+}
+
+exports.deleteBookFromBasket = async (userId, bookSkuId) => {
+    
+    const userBasket = await Basket.updateOne({userId: userId, "$pull": {"items": {"_id": bookSkuId}}}).exec()
+    return userBasket
+
+}
+
+exports.updateBasketSubtotal = async (userId) => {
+    const userBasket = await Basket.findOne({userId}).exec()
+    await userBasket.updateSubTotalPrice()
+    return userBasket
+}
+
+exports.updateBasketItemQuantityAndTotal = async (userId, basketItemIds, quantity) => {
+
+    const basketUpdate = await basketItemIds.map( async (id, index) => {
+      Basket.updateMany({userId: userId}, { $set: {"items.$[elem].quantity": quantity[index]}}, { arrayFilters: [{ "elem._id": id}]}).exec().then( async () => {
+        const userBasket = await Basket.findOne({userId: userId}).exec()
+  
+        userBasket.items.map((x) => {
+          x.total = x.price * x.quantity
+        })
+
+        await userBasket.save().then(result => {
+          userBasket.updateSubTotalPrice()
+          return result
+          })
+        })
+    })
+
+      return basketUpdate
+}
+
+exports.filterBasketByBasketItemId = async (userId, basketItemIds) => {
+    
+    const objectIdBasketItemIds = basketItemIds.map(item => mongoose.Types.ObjectId(item))
+    const objectIdUserId = mongoose.Types.ObjectId(userId)
+
+    Basket.aggregate([
+        {
+          '$match': {
+            'userId': objectIdUserId
+          }
+        }, {
+          '$unwind': {
+            'path': '$items'
+          }
+        }, {
+          '$match': {
+            'items._id': {
+              '$in': 
+                objectIdBasketItemIds
+            }
+          }
+        }, {
+            '$project': {
+              'subTotal': 0, 
+              'userId': 0, 
+              '_id': 0
+            }
+          }
+      ]).exec()
 }

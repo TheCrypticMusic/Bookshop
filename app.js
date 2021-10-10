@@ -10,15 +10,17 @@ const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 const bodyParser = require("body-parser")
-
 const Order = require("./models/completedOrders")
 const Basket = require("./models/basket")
-
 require("./config/passport");
 const {use} = require("express/lib/router");
 const {env} = require("express-handlebars/.eslintrc");
-
 const app = express();
+
+const mongooseHelpers = require("./config/mongooseHelpers")
+
+
+
 
 mongoose.connect("mongodb://localhost:27017/shopping", {
     useNewUrlParser: true,
@@ -91,10 +93,10 @@ app.use("/", require("./routes/pages"));
 
 app.use("/auth", require("./routes/auth"));
 
-app.use("/amendments", require("./routes/amendments"))
+app.use("/amendments", require("./routes/updateUserDetails"))
 
 app.use("/add-to-basket", require("./routes/addToBasket"))
-app.use("/remove-from-basket", require("./routes/removeFromBasket"))
+app.use("/delete-from-basket", require("./routes/deleteFromBasket"))
 app.use("/update-basket", require("./routes/updateBasket"))
 app.use("/stripe-checkout-session", require("./routes/checkoutSession"))
 app.use("/wishlist", require("./routes/wishlist"))
@@ -149,3 +151,5 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) =
 app.listen(5002, () => {
     console.log("Server started on Port 5002");
 });
+
+

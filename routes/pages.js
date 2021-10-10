@@ -3,6 +3,7 @@ const csrf = require("csurf");
 const router = express.Router();
 const Wishlist = require("../models/wishlist");
 const mongooseHelpers = require("../config/mongooseHelpers");
+const Basket = require("../models/basket")
 
 
 // const csrfProtection = csrf();
@@ -111,12 +112,6 @@ router.get("/add-to-basket/:id", (req, res, next) => {
     );
 });
 
-router.get("/remove-from-basket/:id", (req, res, next) => {
-    return res.render(
-        "/basket"
-        // { csrfToken: req.csrfToken()})
-    );
-});
 
 router.get("/update-basket/:id", (req, res, next) => {
     return res.render(

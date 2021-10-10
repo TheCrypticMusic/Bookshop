@@ -17,18 +17,29 @@ const basketSchema = new mongoose.Schema({
     items: [basketItemSchema],
 });
 
-basketSchema.methods.subTotalPrice = function() {
-    
-    const newSubtotal = this.items.map((elem) => elem.total).reduce((a, b) => a + b)
-    return newSubtotal.toFixed(2);
-
+basketSchema.methods.updateSubTotalPrice = function() {
+    console.log(this.subTotal, "- before")
+    if (this.items.length > 0) {
+        const newSubtotal = this.items.map((elem) => elem.total).reduce((a, b) => a + b)
+        this.subTotal = newSubtotal.toFixed(2)
+        console.log(this.subTotal, "- after")
+        this.save()
+    } else {
+        console.log("Else")
+        this.subTotal = 0.00
+        this.save()
+    }
 }
 
-basketSchema.methods.amendItemPrice = function(basketQty, index) {
-
-    const itemPrice = (this.items[index].price * basketQty).toFixed(2);
-    return itemPrice;
+basketSchema.methods.updateItemPrice = function() {
+    this.items.map(x => { 
+        x.total = x.price * x.quantity
+  
+    })
+    this.save()
 }
+
+
 
 basketSchema.methods.add = function (
     bookSkuId,

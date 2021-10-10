@@ -90,11 +90,29 @@ $(".qty").on("input", function () {
     console.log(basketData);
 });
 
+$(".delete-btn").click(function() {
+
+    const bookId = this.closest("li").id
+
+    $.ajax({
+        url: "/delete-from-basket/" + bookId,
+        method: "DELETE",
+        contentType: "application/json; charset=utf-8",
+        success : function() {
+            location.reload()
+         },
+        error : function(error) {
+          console.log("error", error);
+        }
+    })
+
+
+})
 
 $("#basket-to-checkout").click(function () {
     $.ajax({
         url: "/update-basket/" + basketId,
-        method: "POST",
+        method: "PUT",
         data: JSON.stringify(basketUpdate),
         contentType: "application/json; charset=utf-8",
         success: function (data) {
