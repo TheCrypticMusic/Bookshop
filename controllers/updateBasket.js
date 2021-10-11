@@ -12,41 +12,8 @@ exports.updateBasket = async (req, res, next) => {
     const basketItemIds = Object.keys(items).map(x => x)
 
     mongooseHelpers.updateBasketItemQuantityAndTotal(userId, basketItemIds, qty)
- 
-    
-    // mongooseHelpers.updateBasketItemTotal(userId, basketItemIds)
- 
-    
 
-
-
-
-
-    // await mongooseHelpers.updateBasketSubtotal(userId)
- 
-   
-    // await Promise.all(basketItemId.map((elem, index) => {
-
-    //     Basket.updateOne({userId: userId, "items._id": elem}, {
-    //         $set: {
-    //             "items.$.quantity": qty[index],
-    //             "items.$.total": total[index]
-    //         }
-    //     }, (err) => {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //     }).then(() => {
-    //         Basket.findOne({userId: userId}, (err, userBasket) => {
-    //                 userBasket.subTotal = mongooseHelpers.updateBasketSubtotal();
-    //                 userBasket.save();
-    //             }
-    //         );
-    //     });
-    // }));
-
-
-    return res.render("basket");
+    return res.render("checkout");
 
 };
 

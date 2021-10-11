@@ -12,6 +12,6 @@ exports.deleteItemFromBasket = async (req, res, next) => {
     await mongooseHelpers.deleteBookFromBasket(userId, bookSkuId)
     await mongooseHelpers.updateBasketSubtotal(userId)
     
-    res.json({"success": "Book deleted from basket"})
+    return res.json({"success": "Book deleted from basket"})
 
 };

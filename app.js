@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-require("dotenv").config({path: "./config/.env"})
+require("dotenv").config({ path: "./config/.env" })
 const cookieParser = require("cookie-parser");
 const expressHbs = require("express-handlebars");
 const session = require("express-session");
@@ -13,8 +13,6 @@ const bodyParser = require("body-parser")
 const Order = require("./models/completedOrders")
 const Basket = require("./models/basket")
 require("./config/passport");
-const {use} = require("express/lib/router");
-const {env} = require("express-handlebars/.eslintrc");
 const app = express();
 
 const mongooseHelpers = require("./config/mongooseHelpers")
@@ -41,7 +39,7 @@ app.use(express.static(publicDirectory));
 app.use(express.static(scriptDirectory))
 
 // Parse URL-Encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 // Parse JSON bodies (as sent by HTML forms)
 app.use(express.json());
@@ -83,9 +81,9 @@ const hbs = expressHbs.create({
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", [
-        path.join(__dirname, "views"),
-        path.join(__dirname, "views/account")
-    ]
+    path.join(__dirname, "views"),
+    path.join(__dirname, "views/account")
+]
 )
 
 //Define Routes
@@ -101,7 +99,7 @@ app.use("/update-basket", require("./routes/updateBasket"))
 app.use("/stripe-checkout-session", require("./routes/checkoutSession"))
 app.use("/wishlist", require("./routes/wishlist"))
 
-app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const event = req.body;
 
     console.log(event)
@@ -109,10 +107,10 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) =
         console.log("Logging to Database")
 
     } else if (event.type === "checkout.session.completed") {
-        const {userId, basketId} = event.data.object.metadata
+        const { userId, basketId } = event.data.object.metadata
         console.log(userId, basketId)
-        await Basket.findOne({userId: userId}, (err, userBasket) => {
-            Order.findOne({userId: userId}, (err, userOrder) => {
+        await Basket.findOne({ userId: userId }, (err, userBasket) => {
+            Order.findOne({ userId: userId }, (err, userOrder) => {
                 if (userOrder) {
                     userOrder.basketIds.push({
                         basketId: userBasket._id,
@@ -145,7 +143,7 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) =
 
     }
 
-    return res.json({received: true})
+    return res.json({ received: true })
 })
 
 app.listen(5002, () => {

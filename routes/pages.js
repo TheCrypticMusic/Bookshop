@@ -53,6 +53,8 @@ router.use(async (req, res, next) => {
         childrens: "children's",
         fantasy: "fantasy",
     };
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
     next();
 });
 
@@ -222,8 +224,14 @@ router.get("/amendments/password", isAuthenticated, (req, res, next) => {
     // { csrfToken: req.csrfToken() });
 });
 
-router.get("/amendments/username", isAuthenticated, (req, res, next) => {
-    return res.render("username", { layout: "account-layout" });
+router.get("/amendments/username", isAuthenticated, async (req, res, next) => {
+    const userId = req.session.passport.user;
+
+    mongooseHelpers.getUser(userId).then(result => {
+        const username = result.username
+        res.render("username", { layout: "account-layout", "username": username });
+    })
+
     // { csrfToken: req.csrfToken() });
 });
 
