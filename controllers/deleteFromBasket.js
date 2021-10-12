@@ -9,9 +9,8 @@ exports.deleteItemFromBasket = async (req, res, next) => {
     const bookSkuId = req.params.id
     const userId = req.session.passport.user;
 
-    await mongooseHelpers.deleteBookFromBasket(userId, bookSkuId)
-    await mongooseHelpers.updateBasketSubtotal(userId)
-    
+    mongooseHelpers.deleteBookFromBasket(userId, bookSkuId)
+
     return res.json({"success": "Book deleted from basket"})
 
 };

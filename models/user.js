@@ -28,8 +28,9 @@ const userSchema = new mongoose.Schema({
     shippingAddress: shippingAddressSchema,
 });
 
+// hook to encrypt the password 
 userSchema.pre("save", async function (next) {
-    const user = this
+   
     if (!this.isModified('password')) {
         return next();
     }
@@ -40,10 +41,6 @@ userSchema.pre("save", async function (next) {
         return next();
     });
 });
-
-userSchema.methods.encryptNewPassword = (userPassword, cb) => {
-    return cb(null, bcrypt.hashSync(userPassword, 10));
-}
 
 
 userSchema.methods.comparePassword = async function (password, cb) {

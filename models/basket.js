@@ -17,29 +17,36 @@ const basketSchema = new mongoose.Schema({
     items: [basketItemSchema],
 });
 
-basketSchema.methods.updateSubTotalPrice = function() {
-    console.log(this.subTotal, "- before")
-    if (this.items.length > 0) {
-        const newSubtotal = this.items.map((elem) => elem.total).reduce((a, b) => a + b)
-        this.subTotal = newSubtotal.toFixed(2)
-        console.log(this.subTotal, "- after")
-        this.save()
-    } else {
-        console.log("Else")
-        this.subTotal = 0.00
-        this.save()
-    }
-}
-
-basketSchema.methods.updateItemPrice = function() {
-    this.items.map(x => { 
+// Update total field with recent changes
+basketSchema.post("updateOne", async function (doc, next) {
+    
+    const docToUpdate = await this.model.findOne(this.getQuery())
+    console.log(docToUpdate)
+    docToUpdate.items.map(x => {
         x.total = x.price * x.quantity
-  
     })
-    this.save()
-}
+    await docToUpdate.save().then(() => {
+        next()
+    })
 
+})
 
+// Update subtoal afer basket has been updated
+basketSchema.post("updateOne", async function (doc, next) {
+    const docToUpdate = await this.model.findOne(this.getQuery());
+    if (docToUpdate.items.length > 0) {
+        const newSubtotal = docToUpdate.items.map((elem) => elem.total).reduce((a, b) => a + b)
+        docToUpdate.subTotal = newSubtotal.toFixed(2)
+        await docToUpdate.save().then(() => {
+            next()
+        })
+    } else {
+        docToUpdate.subTotal = 0.00
+        await docToUpdate.save().then(() => {
+            next()
+        })
+    }
+})
 
 basketSchema.methods.add = function (
     bookSkuId,

@@ -48,9 +48,8 @@
                                     </a>
                                     <form action="/add-to-basket/{{ ../_id }}" id="book-button" method="POST">
                                         <button id="add-to-basket-button" role="button">Add to basket</button>
-                                        <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
-                                        <input type="hidden" id="bookType" name="bookType" value="{{type}}">
                                         <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
+                                        <input type="hidden" id="quantity" name="quantity" value="1">
                                     </form>
                                 </div>
                             </div>
@@ -103,10 +102,8 @@
                                     </a>
                                     <form action="/add-to-basket/{{../_id}}" id="book-button" method="POST">
                                         <button id="add-to-basket-button" role="button">Add to basket</button>
-                                        <input type="hidden" id="skuIndex" name="skuIndex" value="{{@index}}">
-                                        <input type="hidden" id="bookType" name="bookType" value="{{type}}">
                                         <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{_id}}">
-
+                                        <input type="hidden" id="quantity" name="quantity" value="1">
                                     </form>
                                 </div>
                             </div>

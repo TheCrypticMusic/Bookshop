@@ -6,12 +6,10 @@ const Postage = require("../models/postageCosts");
 const Order = require("../models/completedOrders");
 const mongoose = require("mongoose");
 
-const bcrypt = require("bcryptjs");
-
 /**
  *
  * @param {String} userId
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getUserBasket = async (userId) => {
     return await Basket.findOne({ userId: userId }).lean().exec();
@@ -19,7 +17,7 @@ exports.getUserBasket = async (userId) => {
 
 /**
  *
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getAllBooks = async () => {
     return await Book.find().lean().exec();
@@ -29,23 +27,27 @@ exports.getAllBooks = async () => {
  *
  * @param {String} bookId
  * @param {String} skuId
- * @returns JSON
+ * @returns {JSON}
  */
-exports.getSingleBookBySku = (bookId, skuId) => {
-    const book = Book.findOne(
-        { _id: bookId },
-        { skus: { $elemMatch: { _id: skuId } } }
-    )
-        .select("title author imagePath _id genre")
-        .lean()
-        .exec();
-    return book;
+exports.getSingleBookBySku = async (bookId, skuId) => {
+    try {
+        const singleBook = await Book.findOne(
+            { _id: bookId },
+            { skus: { $elemMatch: { _id: skuId } } }
+        )
+            .select("title author imagePath _id genre")
+            .lean()
+            .exec();
+        return singleBook;
+    } catch (err) {
+        return err;
+    }
 };
 
 /**
  *
  * @param {String} bookId
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getSingleBook = (bookId) => {
     const book = Book.findOne({ _id: bookId }).lean().exec();
@@ -55,7 +57,7 @@ exports.getSingleBook = (bookId) => {
 /**
  *
  * @param {String} userId
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getUserWishlist = async (userId) => {
     const userWishlist = await Wishlist.findOne({ userId: userId })
@@ -63,26 +65,26 @@ exports.getUserWishlist = async (userId) => {
         .lean()
         .exec();
 
-    const wishlistBookIds = userWishlist.wishlist.map((x) => x.bookId);
+    if (userWishlist) {
+        const wishlistBookIds = userWishlist.wishlist.map((x) => x.bookId);
 
-    const bookInfo = await Book.find({ _id: { $in: wishlistBookIds } })
-        .lean()
-        .exec();
-
-    return bookInfo;
+        const bookInfo = await Book.find({ _id: { $in: wishlistBookIds } })
+            .lean()
+            .exec();
+        return bookInfo;
+    }
 };
 
 /**
  *
  * @param {String} userId
- * @returns JSON
+ * @returns {JSON}
  */
-exports.getOrders = async (userId) => {
+exports.getUserOrders = async (userId) => {
     try {
         const completedOrders = await Order.findOne({ userId: userId })
             .lean()
             .exec();
-        // console.log(completedOrders)
         return completedOrders;
     } catch (err) {
         console.log(err);
@@ -93,7 +95,7 @@ exports.getOrders = async (userId) => {
 /**
  *
  * @param {String} userId
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getUser = async (userId) => {
     try {
@@ -107,7 +109,7 @@ exports.getUser = async (userId) => {
 /**
  *
  * @param {String} genreRequired
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getBookGenre = (genreRequired) => {
     const booksOfGenre = Book.find(
@@ -127,7 +129,7 @@ exports.getBookGenre = (genreRequired) => {
 
 /**
  *
- * @returns JSON
+ * @returns {JSON}
  */
 exports.getPostagePrices = () => {
     const postagePrices = Postage.findOne()
@@ -139,149 +141,8 @@ exports.getPostagePrices = () => {
 /**
  *
  * @param {String} userId
- * @param {String} bookSkuId
- *
- */
-exports.deleteBookFromBasket = async (userId, bookSkuId) => {
-    try {
-        return await Basket.updateOne({
-            userId: userId,
-            $pull: { items: { _id: bookSkuId } },
-        }).exec();
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-};
-
-/**
- *
- * @param {String} userId
- */
-exports.updateBasketSubtotal = async (userId) => {
-    try {
-        await Basket.findOne({ userId })
-            .exec()
-            .then((result) => {
-                result.updateSubTotalPrice();
-            });
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-};
-
-/**
- *
- * @param {String} userId
- * @param {Array} basketItemIds
- * @param {Array} quantity
- */
-exports.updateBasketItemQuantityAndTotal = async (
-    userId,
-    basketItemIds,
-    quantity
-) => {
-    try {
-        await basketItemIds.map(async (id, index) => {
-            Basket.updateOne(
-                { userId: userId },
-                { $set: { "items.$[elem].quantity": quantity[index] } },
-                { arrayFilters: [{ "elem._id": id }] }
-            )
-                .exec()
-                .then(async () => {
-                    const userBasket = await Basket.findOne({ userId: userId }).exec();
-
-                    userBasket.items.map((x) => {
-                        x.total = x.price * x.quantity;
-                    });
-
-                    await userBasket.save().then((result) => {
-                        userBasket.updateSubTotalPrice();
-                        return result;
-                    });
-                });
-        });
-    } catch (err) {
-        console.log(err);
-        return err;
-    }
-};
-
-/**
- *
- * @param {String} userId
- * @param {String} newUsername
- * @returns Boolean
- */
-exports.updateUsername = async (userId, newUsername) => {
-    const userInDatabase = await User.findOne({ username: newUsername }).exec();
-    if (!userInDatabase) {
-        await User.findOne({ _id: userId })
-            .exec()
-            .then((result) => {
-                result.username = newUsername;
-                result.save();
-            });
-        return true;
-    }
-    return false;
-};
-
-/**
- *
- * @param {String} userId
- * @param {String} newEmail
- * @returns Boolean
- */
-exports.updateEmail = async (userId, newEmail, password) => {
-    const userInDatabase = await User.findOne({ email: newEmail }).exec();
-    if (!userInDatabase) {
-        await User.findOne({ _id: userId })
-            .exec()
-            .then(async (result) => {
-                await result.comparePassword(password, (err, isMatch) => {
-                    if (err) {
-                        return err;
-                    }
-                    result.email = newEmail;
-                    result.save();
-                    return isMatch;
-                });
-            });
-        return true;
-    }
-    return false;
-};
-
-/**
- *
- * @param {String} userId
- * @param {String} oldPassword
- * @param {String} newPassword
- * @param {String} newPasswordConfirm
- * @returns Boolean
- */
-exports.updatePassword = async (
-    userId,
-    oldPassword,
-    newPassword,
-    newPasswordConfirm
-) => {
-    if (newPassword != newPasswordConfirm) {
-        return false;
-    }
-    return true;
-
-    // const userInDatabase = await User.findOne({userId: userId}).exec()
-};
-
-/**
- *
- * @param {String} userId
  * @param {Array} basketItemBookSkuIds
- * @returns Array
+ * @returns {Array}
  */
 exports.getFilteredBasketWithBookSkuIds = async (
     userId,
@@ -320,4 +181,167 @@ exports.getFilteredBasketWithBookSkuIds = async (
     ]).exec();
 
     return userBasket;
+};
+
+/**
+ *
+ * @param {String} userId
+ * @param {String} bookSkuId
+ *
+ */
+exports.deleteBookFromBasket = async (userId, bookSkuId) => {
+    try {
+        await Basket.updateOne({
+            userId: userId,
+            $pull: { items: { _id: bookSkuId } },
+        }).exec();
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+};
+
+/**
+ *
+ * @param {String} userId
+ * @param {Array} basketItemIds
+ * @param {Array} quantity
+ */
+exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
+    try {
+        basketItemIds.map(async (id, index) => {
+            await Basket.updateOne(
+                { userId: userId },
+                { $set: { "items.$[elem].quantity": quantity[index] } },
+                { arrayFilters: [{ "elem._id": id }] }
+            ).exec();
+        });
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+};
+
+/**
+ *
+ * @param {String} userId
+ * @param {String} bookSkuId
+ * @param {String} bookImage
+ * @param {String} bookType
+ * @param {String} bookTitle
+ * @param {String} bookAuthor
+ * @param {Number} quantity
+ * @param {Number} price
+ *
+ */
+exports.updateBasketWithBook = async (
+    userId,
+    bookSkuId,
+    bookImage,
+    bookType,
+    bookTitle,
+    bookAuthor,
+    quantity,
+    price
+) => {
+    try {
+        const bookExistsInBasket = await Basket.exists({
+            userId: userId,
+            "items.bookSkuId": bookSkuId,
+        });
+        if (bookExistsInBasket) {
+            await Basket.updateOne(
+                { userId: userId, "items.bookSkuId": bookSkuId },
+                { $inc: { "items.$.quantity": quantity } }
+            ).exec();
+        } else {
+            const updateData = {
+                items: {
+                    bookSkuId: bookSkuId,
+                    bookImage: bookImage,
+                    bookType: bookType,
+                    bookTitle: bookTitle,
+                    bookAuthor: bookAuthor,
+                    quantity: quantity,
+                    price: price,
+                    total: quantity * price,
+                },
+            };
+            await Basket.updateOne(
+                { userId: userId },
+                { $addToSet: updateData },
+                { upsert: true }
+            ).exec();
+        }
+    } catch (err) {
+        return err;
+    }
+};
+
+/**
+ *
+ * @param {String} userId
+ * @param {String} newUsername
+ * @returns {Boolean}
+ */
+exports.updateUsername = async (userId, newUsername) => {
+    const userInDatabase = await User.findOne({ username: newUsername }).exec();
+    if (!userInDatabase) {
+        await User.findOne({ _id: userId })
+            .exec()
+            .then((result) => {
+                result.username = newUsername;
+                result.save();
+            });
+        return true;
+    }
+    return false;
+};
+
+/**
+ *
+ * @param {String} userId
+ * @param {String} newEmail
+ * @returns {Boolean}
+ */
+exports.updateEmail = async (userId, newEmail, password) => {
+    const userInDatabase = await User.findOne({ email: newEmail }).exec();
+    if (!userInDatabase) {
+        await User.findOne({ _id: userId })
+            .exec()
+            .then(async (result) => {
+                await result.comparePassword(password, (err, isMatch) => {
+                    if (err) {
+                        return err;
+                    }
+                    result.email = newEmail;
+                    result.save();
+                    return isMatch;
+                });
+            });
+        return true;
+    }
+    return false;
+};
+
+/**
+ *
+ * @param {String} userId
+ * @param {String} oldPassword
+ * @param {String} newPassword
+ * @param {String} newPasswordConfirm
+ * @returns {Boolean}
+ */
+exports.updatePassword = async (userId, newPassword, newPasswordConfirm) => {
+    if (newPassword != newPasswordConfirm) {
+        return false;
+    }
+    //  using mongoose.pre hook here to hash the password when I edit the password field and I call save
+    await User.findOne({ _id: userId })
+        .exec()
+        .then(async (userInDatabase) => {
+            userInDatabase.password = newPassword;
+            userInDatabase.save();
+        });
+    return true;
 };

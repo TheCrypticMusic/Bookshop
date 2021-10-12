@@ -21,13 +21,14 @@
             </div>
 
             <div class="product-quantity-box">
+            <form action="/add-to-basket/{{book._id}}" id="product-button-form" method="POST">
                 <div class="quantity-box">
                     <small>Quantity</small>
                     <input type="number" class="qty" id="quantity" name="quantity" value="1" min="1"
                            max="{{sku.quantity}}" autocomplete="off">
                 </div>
                 <div class="product-basket">
-                    <form action="/add-to-basket/{{book._id}}" id="product-button-form" method="POST">
+     
                         <button id="product-button" role="button">Add to basket</button>
                         <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{sku._id}}">
                     </form>

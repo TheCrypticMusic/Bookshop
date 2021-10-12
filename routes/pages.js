@@ -205,12 +205,17 @@ router.get("/address", isAuthenticated, async (req, res, next) => {
 router.get("/order-history", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;
 
-    const orders = await mongooseHelpers.getOrders(userId);
-    const userOrders = orders.basketIds.map((x) => x);
+    const orders = await mongooseHelpers.getUser(userId);
 
+    if (orders) {
+        const userOrders = orders.basketIds.map((x) => x);
+        return res.render("order-history", {
+            layout: "account-layout",
+            userOrders: userOrders,
+        });
+    }
     return res.render("order-history", {
         layout: "account-layout",
-        userOrders: userOrders,
     });
 });
 

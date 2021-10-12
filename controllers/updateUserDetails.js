@@ -16,10 +16,10 @@ exports.email = (req, res, next) => {
 };
 
 exports.password = async (req, res, next) => {
-    const { oldPassword, newPassword, newPasswordConfirm } = req.body;
+    const { newPassword, newPasswordConfirm } = req.body;
     const userId = req.session.passport.user;
 
-    mongooseHelpers.updatePassword(userId, oldPassword, newPassword, newPasswordConfirm).then(successfullUpdate => {
+    mongooseHelpers.updatePassword(userId, newPassword, newPasswordConfirm).then(successfullUpdate => {
         if (successfullUpdate) {
             req.success = req.flash("success", "Password changed")
             res.redirect(req.originalUrl)
