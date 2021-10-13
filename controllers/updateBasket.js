@@ -6,7 +6,6 @@ const mongooseHelpers = require("../config/mongooseHelpers")
 exports.updateBasket = async (req, res, next) => {
     const {items} = req.body;
     const userId = req.session.passport.user;
-    const total = Object.values(items).map(x => parseFloat(x.basketData.subtotal));
    
     const qty = Object.values(items).map(x => parseInt(x.basketData.qty));
     const basketItemIds = Object.keys(items).map(x => x)
@@ -14,8 +13,5 @@ exports.updateBasket = async (req, res, next) => {
     await mongooseHelpers.updateBasketItemQuantity(userId, basketItemIds, qty).then(() => {
         return res.render("checkout");
     })
-
-
-
 };
 

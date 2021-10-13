@@ -86,6 +86,14 @@ app.set("views", [
 ]
 )
 
+//API Routes
+
+app.use("/api/books", require("./routes/API/books"))
+app.use("/api/baskets", require("./routes/API/baskets"))
+
+
+
+
 //Define Routes
 app.use("/", require("./routes/pages"));
 

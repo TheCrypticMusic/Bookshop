@@ -19,8 +19,8 @@ exports.password = async (req, res, next) => {
     const { newPassword, newPasswordConfirm } = req.body;
     const userId = req.session.passport.user;
 
-    mongooseHelpers.updatePassword(userId, newPassword, newPasswordConfirm).then(successfullUpdate => {
-        if (successfullUpdate) {
+    mongooseHelpers.updatePassword(userId, newPassword, newPasswordConfirm).then(successfulUpdate => {
+        if (successfulUpdate) {
             req.success = req.flash("success", "Password changed")
             res.redirect(req.originalUrl)
         } else {
@@ -28,28 +28,6 @@ exports.password = async (req, res, next) => {
             res.redirect(req.originalUrl)
         }
     })
-    // await User.findById(userId, async (err, user) => {
-    // 	if (err) {
-    // 		console.log("Password Change Error: error occurred:", err);
-    // 	}
-    // 	user.encryptNewPassword(newPassword, (err, password) => {
-    // 		if (err) {
-    // 			return err;
-    // 		} else {
-    // 			User.findByIdAndUpdate(
-    // 				{ _id: userId },
-    // 				{ password: password },
-    // 				(err, result) => {
-    // 					if (err) {
-    // 						return res.send(err);
-    // 					} else {
-    // 						res.render("password", { message: "Password changed" });
-    // 					}
-    // 				}
-    // 			);
-    // 		}
-    // 	});
-    // });
 };
 
 exports.username = async (req, res, next) => {
@@ -66,35 +44,6 @@ exports.username = async (req, res, next) => {
         }
     })
 }
-
-//   const { oldUsername, newUsername } = req.body;
-//   const userId = req.session.passport.user;
-
-//   await User.findOne({ username: newUsername }, async (err, docs) => {
-//     if (docs) {
-//       console.log("Username already taken:", docs);
-//       return res.render("username", { message: "Username already taken" });
-//     } else {
-//       await User.findById(userId, async (err, user) => {
-//         if (err) {
-//           console.log("Password Change Error: error occurred:", err);
-//         } else {
-//           User.findByIdAndUpdate(
-//             { _id: userId },
-//             { username: newUsername },
-//             (err, result) => {
-//               if (err) {
-//                 return res.send(err);
-//               } else {
-//                 res.render("username", { message: "Username changed" });
-//               }
-//             }
-//           );
-//         }
-//       });
-//     }
-//   });
-// };
 
 exports.addressDetails = async (req, res, next) => {
     const { addressLine1, addressLine2, town, postcode } = req.body

@@ -35,9 +35,10 @@ exports.getSingleBookBySku = async (bookId, skuId) => {
             { _id: bookId },
             { skus: { $elemMatch: { _id: skuId } } }
         )
-            .select("title author imagePath _id genre")
+            .select("title author imagePath _id genre price ")
             .lean()
             .exec();
+   
         return singleBook;
     } catch (err) {
         return err;
@@ -49,9 +50,9 @@ exports.getSingleBookBySku = async (bookId, skuId) => {
  * @param {String} bookId
  * @returns {JSON}
  */
-exports.getSingleBook = (bookId) => {
-    const book = Book.findOne({ _id: bookId }).lean().exec();
-    return book;
+exports.getSingleBook = async (bookId) => {
+    return await Book.findOne({ _id: bookId }).lean().exec();
+
 };
 
 /**
@@ -217,6 +218,7 @@ exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
                 { $set: { "items.$[elem].quantity": quantity[index] } },
                 { arrayFilters: [{ "elem._id": id }] }
             ).exec();
+            
         });
     } catch (err) {
         console.log(err);
@@ -224,6 +226,12 @@ exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
     }
 };
 
+/**
+ * 
+ * @param {String} userId 
+ * @param {String} bookId 
+ * 
+ */
 exports.updateWishListWithBook = async (userId, bookId) => {
 
     try {
@@ -371,3 +379,14 @@ exports.updatePassword = async (userId, newPassword, newPasswordConfirm) => {
         });
     return true;
 };
+
+
+exports.createBasket = async (userId) => {
+    const userHasBasket = await Basket.findOne({ userId: userId })
+    if (userHasBasket) {
+        return true
+    } else {
+        await Basket.create({ userId: userId, subTotal: 0, items: [] })
+        return false
+    }
+}
