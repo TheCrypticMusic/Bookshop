@@ -11,13 +11,11 @@ exports.updateBasket = async (req, res, next) => {
     const qty = Object.values(items).map(x => parseInt(x.basketData.qty));
     const basketItemIds = Object.keys(items).map(x => x)
 
-    console.log(req.body)
-
-    await mongooseHelpers.updateBasketItemQuantity(userId, basketItemIds, qty).then(result => {
-        console.log(result)
+    await mongooseHelpers.updateBasketItemQuantity(userId, basketItemIds, qty).then(() => {
+        return res.render("checkout");
     })
 
-    return res.render("checkout");
+
 
 };
 

@@ -8,6 +8,7 @@ const generateAuthToken = () => {
 };
 
 exports.register = async (req, res) => {
+    
     const { username, email, password, passwordConfirm } = req.body;
     if (!email || !password) {
         return res.status(400).render("register");
@@ -27,6 +28,7 @@ exports.register = async (req, res) => {
             email: email,
             password: password,
         }).save((error, data) => {
+            console.log(data)
             return res.render("register", { message: "Account Created" });
         });
     });

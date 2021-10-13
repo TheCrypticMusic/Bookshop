@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 
 const bcrypt = require("bcryptjs");
 
-
-
 const addressSchema = new mongoose.Schema({
     addressLine1: { type: String, required: false },
     addressLine2: { type: String, required: false },
@@ -34,7 +32,7 @@ userSchema.pre("save", async function (next) {
     if (!this.isModified('password')) {
         return next();
     }
-    user.password = await bcrypt.hashSync(user.password, 10, function (err, hash) {
+    this.password = await bcrypt.hashSync(this.password, 10, function (err, hash) {
         if (err) {
             return next(err);
         }

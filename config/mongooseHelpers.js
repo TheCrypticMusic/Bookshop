@@ -60,18 +60,20 @@ exports.getSingleBook = (bookId) => {
  * @returns {JSON}
  */
 exports.getUserWishlist = async (userId) => {
-    const userWishlist = await Wishlist.findOne({ userId: userId })
+    const userWishListExists = await Wishlist.findOne({ userId: userId })
         .select("wishlist")
         .lean()
         .exec();
 
-    if (userWishlist) {
-        const wishlistBookIds = userWishlist.wishlist.map((x) => x.bookId);
+    if (userWishListExists) {
+        const wishlistBookIds = userWishListExists.wishlist.map((x) => x.bookId);
 
         const bookInfo = await Book.find({ _id: { $in: wishlistBookIds } })
             .lean()
             .exec();
         return bookInfo;
+    } else {
+        return {}
     }
 };
 
@@ -221,6 +223,30 @@ exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
         return err;
     }
 };
+
+exports.updateWishListWithBook = async (userId, bookId) => {
+
+    try {
+        const bookExistsInWishlist = await Wishlist.exists({ userId: userId, "wishlist.bookId": bookId })
+        if (bookExistsInWishlist) {
+            await Wishlist.updateOne({ userId: userId }, { $pull: { "wishlist": { bookId: bookId } } })
+        } else {
+            const updateData = {
+                wishlist: {
+                    bookId: bookId
+                }
+            }
+            await Wishlist.updateOne(
+                { userId: userId },
+                { $addToSet: updateData },
+                { upsert: true }
+            ).exec();
+        }
+    } catch (err) {
+        console.log(err)
+        return err
+    }
+}
 
 /**
  *
