@@ -474,9 +474,9 @@ exports.deleteUserBasket = async (userId) => {
  * field: genre
  * @param {string} userId 
  */
-exports.updateBookDetails = async (bookId, updateQuery) => {
+exports.updateBookDetails = async (bookId, updateData) => {
 
-    const updatedBookResult = await Book.updateOne({ "_id": bookId }, updateQuery).exec()
+    const updatedBookResult = await Book.updateOne({ "_id": bookId }, updateData).exec()
     return updatedBookResult
 
 }
@@ -517,8 +517,7 @@ exports.createSkuForBook = async (bookId, category, stockLevel, price, type) => 
 
 exports.updateSkuForBook = async (bookId, skuId, updateDocument) => {
 
-
-    const skuUpdate = await Book.updateOne({ "_id": bookId, "skus._id": skuId }, { $set: updateDocument}).exec()
+    const skuUpdate = await Book.updateOne({ "_id": bookId, "skus._id": skuId }, { $set: updateDocument }).exec()
     return skuUpdate
 
 }
@@ -544,3 +543,59 @@ exports.deleteBook = async (bookId) => {
     return deletedBookResult
 
 }
+
+
+exports.getPostageTypes = async () => {
+
+    try {
+        const postages = await Postage.find().lean().exec()
+        return postages
+    } catch (error) {
+        return error
+    }
+
+}
+
+exports.createPostageType = async (postageName, price) => {
+
+    try {
+        const postageCount = await Postage.countDocuments({ "postageTypes.postageName": postageName })
+
+        if (postageCount > 0) {
+            return false
+        } else {
+            const newPostage = await Postage.updateOne({ $addToSet: { "postageTypes": { "postageName": postageName, "postageCost": price } } })
+            return newPostage
+        }
+    } catch (error) {
+        return error
+    }
+
+}
+
+exports.updatePostageType = async (postageTypeId, updateData) => {
+
+    try {
+        const updatedPostage = await Postage.updateOne({ "postageTypes._id": postageTypeId }, { $set: updateData }).exec()
+        return updatedPostage
+
+    } catch (error) {
+        return error
+    }
+
+}
+
+exports.deletePostageType = async (postageTypeId) => {
+
+    try {
+
+        const deletedPostage = await Postage.updateOne({}, { $pull: { "postageTypes": { "_id": postageTypeId } }}).exec()
+        console.log(deletedPostage)
+        return deletedPostage
+
+    } catch (error) {
+        return error
+    }
+}
+
+

@@ -209,7 +209,7 @@ router.delete("/:id/skus", bookExists, (req, res) => {
 
     mongooseHelpers.deleteAllSkusFromBook(bookId).then((result) => {
         if (result.nModified > 0) {
-            APIHelpers.sendStatus(201, "success", null, "All skus deleted from book", req.originalUrl, res)
+            APIHelpers.sendStatus(200, "success", null, "All skus deleted from book", req.originalUrl, res)
         } else {
             APIHelpers.sendStatus(404, "error", null, "No skus found", req.originalUrl, res)
         }
@@ -226,7 +226,7 @@ router.delete("/:id/skus/:sku", bookExists, (req, res) => {
 
     mongooseHelpers.deleteBookSku(bookId, skuId).then((result) => {
         if (result.nModified > 0) {
-            APIHelpers.sendStatus(201, "success", null, "Sku deleted from book", req.originalUrl, res)
+            APIHelpers.sendStatus(200, "success", null, "Sku deleted from book", req.originalUrl, res)
         } else {
             APIHelpers.sendStatus(404, "error", null, "No sku found", req.originalUrl, res)
         }
@@ -274,7 +274,7 @@ router.put("/:id/skus/:sku", bookExists, (req, res) => {
 
     mongooseHelpers.updateSkuForBook(bookId, skuId, newUpdate).then((result => {
         if (result.nModified > 0) {
-            APIHelpers.sendStatus(201, "success", null, "Book sku updated", req.originalUrl, res)
+            APIHelpers.sendStatus(200, "success", null, "Book sku updated", req.originalUrl, res)
         } else {
             APIHelpers.sendStatus(422, "error", null, "Sku found but not updated due to fields already containing data sent", req.originalUrl, res)
         }
@@ -286,5 +286,6 @@ router.put("/:id/skus/:sku", bookExists, (req, res) => {
 
 
 // TODO: Vaildation checks on book update (Check if same title) plus sku (check if same sku)
+// TODO: Write documentation for APIHelpers + more
 
 module.exports = router;
