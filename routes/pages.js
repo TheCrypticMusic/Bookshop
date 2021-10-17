@@ -19,12 +19,11 @@ const isAuthenticated = (req, res, next) => {
 // Checks to see if the user has items in their basket, if they do then they are allowed to access the checkout screen
 const allowedToAccessPaymentScreen = async (req, res, next) => {
     const userId = req.session.passport.user;
-    const userBasket = await mongooseHelpers.getUserBasket(userId);
-    if (userBasket.items.length > 0) {
-        next();
-    } else {
-        res.redirect("/basket");
-    }
+    mongooseHelpers.getUserBasket(userId).then((userBasket) => {
+        userBasket.items.length > 0 ? next() : res.redirect("/basket")
+    })
+    
+ 
 };
 
 // router.use(csrfProtection);
@@ -59,9 +58,12 @@ router.use(async (req, res, next) => {
 });
 
 router.get("/", async (req, res, next) => {
+
     console.log("Is User Authenticated?", req.isAuthenticated());
-    const books = await mongooseHelpers.getAllBooks();
-    return res.render("index", { title: "Bookstore", books: books });
+    mongooseHelpers.getBooks({}).then(books => {
+        return res.render("index", { title: "Bookstore", books: books });
+    })
+    
 });
 
 router.get("/register", (req, res, next) => {
@@ -101,10 +103,13 @@ router.get("/basket", isAuthenticated, async (req, res, next) => {
 router.get("/genre/:genre", async (req, res, next) => {
     const genre = req.params.genre;
 
-    const books = await mongooseHelpers.getBookGenre(genre);
-    const pageHeader = books[0].genre;
+    mongooseHelpers.getBookGenre(genre).then(books => {
+        console.log(books)
+        const pageHeader = books[0].genre;
 
-    return res.render("genre", { books: books, genre: pageHeader });
+        return res.render("genre", { books: books, genre: pageHeader });
+    })
+
 });
 
 router.get("/add-to-basket/:id", (req, res, next) => {

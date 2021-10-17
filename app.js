@@ -88,8 +88,8 @@ app.set("views", [
 
 //API Routes
 
-app.use("/api/books", require("./routes/API/books"))
-app.use("/api/baskets", require("./routes/API/baskets"))
+app.use("/api/books", require("./API/books"))
+app.use("/api/baskets", require("./API/baskets"))
 
 
 

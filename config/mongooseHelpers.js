@@ -6,44 +6,76 @@ const Postage = require("../models/postageCosts");
 const Order = require("../models/completedOrders");
 const mongoose = require("mongoose");
 
+
 /**
  *
  * @param {String} userId
  * @returns {JSON}
  */
 exports.getUserBasket = async (userId) => {
+
     return await Basket.findOne({ userId: userId }).lean().exec();
+
 };
 
 /**
+ * 
+ * @param {JSON} filter To retrive all books leave empty parameter empty, 
+ * however, if you want to return a filtered response
+ * then pass the required filtering in an JSON object 
  *
+ * E.g find all books that are from a particular genre:
+ * {genre: "Sci-Fi"}
+ * 
+ * E.g find all books that are hardback AND Fiction:
+ * {author: "Agatha Christie", genre: "Fiction"} 
+ * 
  * @returns {JSON}
  */
-exports.getAllBooks = async () => {
-    return await Book.find().lean().exec();
+exports.getBooks = async (filter = {}) => {
+
+    return await Book.find(filter).lean().exec();
+
 };
 
 /**
  *
  * @param {String} bookId
  * @param {String} skuId
+ * @param {Array} selectFilter
  * @returns {JSON}
  */
-exports.getSingleBookBySku = async (bookId, skuId) => {
+exports.getSingleSkuOfBook = async (bookId, skuId, selectFilter) => {
+
     try {
-        const singleBook = await Book.findOne(
+        const singleSku = await Book.findOne(
             { _id: bookId },
-            { skus: { $elemMatch: { _id: skuId } } }
+            { skus: { $elemMatch: { _id: skuId } } },
         )
-            .select("title author imagePath _id genre price ")
+            .select(selectFilter)
             .lean()
             .exec();
-   
-        return singleBook;
+
+        return singleSku;
     } catch (err) {
         return err;
     }
+
 };
+
+exports.getAllSkusOfBook = async (bookId, selectFilter) => {
+
+    try {
+        const allSkus = await Book.findOne(
+            { _id: bookId },
+            "skus"
+        )
+        return allSkus
+    } catch (error) {
+        return error
+    }
+
+}
 
 /**
  *
@@ -51,6 +83,7 @@ exports.getSingleBookBySku = async (bookId, skuId) => {
  * @returns {JSON}
  */
 exports.getSingleBook = async (bookId) => {
+
     return await Book.findOne({ _id: bookId }).lean().exec();
 
 };
@@ -61,6 +94,7 @@ exports.getSingleBook = async (bookId) => {
  * @returns {JSON}
  */
 exports.getUserWishlist = async (userId) => {
+
     const userWishListExists = await Wishlist.findOne({ userId: userId })
         .select("wishlist")
         .lean()
@@ -76,6 +110,7 @@ exports.getUserWishlist = async (userId) => {
     } else {
         return {}
     }
+
 };
 
 /**
@@ -84,6 +119,7 @@ exports.getUserWishlist = async (userId) => {
  * @returns {JSON}
  */
 exports.getUserOrders = async (userId) => {
+
     try {
         const completedOrders = await Order.findOne({ userId: userId })
             .lean()
@@ -93,6 +129,7 @@ exports.getUserOrders = async (userId) => {
         console.log(err);
         return err;
     }
+
 };
 
 /**
@@ -101,12 +138,14 @@ exports.getUserOrders = async (userId) => {
  * @returns {JSON}
  */
 exports.getUser = async (userId) => {
+
     try {
         return await User.findById({ _id: userId }).lean().exec();
     } catch (err) {
         console.log(err);
         return err;
     }
+
 };
 
 /**
@@ -115,6 +154,7 @@ exports.getUser = async (userId) => {
  * @returns {JSON}
  */
 exports.getBookGenre = (genreRequired) => {
+
     const booksOfGenre = Book.find(
         {
             genre: {
@@ -128,6 +168,7 @@ exports.getBookGenre = (genreRequired) => {
         .lean()
         .exec();
     return booksOfGenre;
+
 };
 
 /**
@@ -135,10 +176,12 @@ exports.getBookGenre = (genreRequired) => {
  * @returns {JSON}
  */
 exports.getPostagePrices = () => {
+
     const postagePrices = Postage.findOne()
         .lean()
         .map((x) => x.postageTypes);
     return postagePrices;
+
 };
 
 /**
@@ -151,6 +194,7 @@ exports.getFilteredBasketWithBookSkuIds = async (
     userId,
     basketItemBookSkuIds
 ) => {
+
     const objectIdBasketItemIds = basketItemBookSkuIds.map((item) =>
         mongoose.Types.ObjectId(item)
     );
@@ -184,6 +228,7 @@ exports.getFilteredBasketWithBookSkuIds = async (
     ]).exec();
 
     return userBasket;
+
 };
 
 /**
@@ -193,6 +238,7 @@ exports.getFilteredBasketWithBookSkuIds = async (
  *
  */
 exports.deleteBookFromBasket = async (userId, bookSkuId) => {
+
     try {
         await Basket.updateOne({
             userId: userId,
@@ -202,6 +248,7 @@ exports.deleteBookFromBasket = async (userId, bookSkuId) => {
         console.log(err);
         return err;
     }
+
 };
 
 /**
@@ -211,6 +258,7 @@ exports.deleteBookFromBasket = async (userId, bookSkuId) => {
  * @param {Array} quantity
  */
 exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
+
     try {
         basketItemIds.map(async (id, index) => {
             await Basket.updateOne(
@@ -218,12 +266,13 @@ exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
                 { $set: { "items.$[elem].quantity": quantity[index] } },
                 { arrayFilters: [{ "elem._id": id }] }
             ).exec();
-            
+
         });
     } catch (err) {
         console.log(err);
         return err;
     }
+
 };
 
 /**
@@ -254,6 +303,7 @@ exports.updateWishListWithBook = async (userId, bookId) => {
         console.log(err)
         return err
     }
+
 }
 
 /**
@@ -278,6 +328,7 @@ exports.updateBasketWithBook = async (
     quantity,
     price
 ) => {
+
     try {
         const bookExistsInBasket = await Basket.exists({
             userId: userId,
@@ -310,6 +361,7 @@ exports.updateBasketWithBook = async (
     } catch (err) {
         return err;
     }
+
 };
 
 /**
@@ -319,6 +371,7 @@ exports.updateBasketWithBook = async (
  * @returns {Boolean}
  */
 exports.updateUsername = async (userId, newUsername) => {
+
     const userInDatabase = await User.findOne({ username: newUsername }).exec();
     if (!userInDatabase) {
         await User.findOne({ _id: userId })
@@ -330,6 +383,7 @@ exports.updateUsername = async (userId, newUsername) => {
         return true;
     }
     return false;
+
 };
 
 /**
@@ -339,6 +393,7 @@ exports.updateUsername = async (userId, newUsername) => {
  * @returns {Boolean}
  */
 exports.updateEmail = async (userId, newEmail, password) => {
+
     const userInDatabase = await User.findOne({ email: newEmail }).exec();
     if (!userInDatabase) {
         await User.findOne({ _id: userId })
@@ -356,6 +411,7 @@ exports.updateEmail = async (userId, newEmail, password) => {
         return true;
     }
     return false;
+
 };
 
 /**
@@ -367,6 +423,7 @@ exports.updateEmail = async (userId, newEmail, password) => {
  * @returns {Boolean}
  */
 exports.updatePassword = async (userId, newPassword, newPasswordConfirm) => {
+
     if (newPassword != newPasswordConfirm) {
         return false;
     }
@@ -378,15 +435,112 @@ exports.updatePassword = async (userId, newPassword, newPasswordConfirm) => {
             userInDatabase.save();
         });
     return true;
+
 };
 
 
-exports.createBasket = async (userId) => {
-    const userHasBasket = await Basket.findOne({ userId: userId })
+exports.createUserBasket = async (userId) => {
+
+    const userHasBasket = await Basket.findOne({ userId: userId }).exec()
     if (userHasBasket) {
         return true
     } else {
-        await Basket.create({ userId: userId, subTotal: 0, items: [] })
+        await Basket.create({ userId: userId, items: [] })
         return false
     }
+
+}
+
+exports.deleteUserBasket = async (userId) => {
+
+    const basketDeletedResult = await Basket.deleteOne({ userId: userId }).exec()
+    if (basketDeletedResult.deletedCount > 0) {
+        return true
+    } else {
+        return false
+    }
+
+}
+
+/**
+ * Update book details - this can be used to update the following fields
+ * 
+ * field: imagePath
+ * 
+ * field: title
+ * 
+ * field: author
+ * 
+ * field: genre
+ * @param {string} userId 
+ */
+exports.updateBookDetails = async (bookId, updateQuery) => {
+
+    const updatedBookResult = await Book.updateOne({ "_id": bookId }, updateQuery).exec()
+    return updatedBookResult
+
+}
+
+exports.deleteAllSkusFromBook = async (bookId) => {
+
+    const deletedBookSkus = await Book.updateOne({
+        "_id": bookId
+    }, { $set: { "skus": [] } }).exec()
+    return deletedBookSkus
+
+}
+
+exports.deleteBookSku = async (bookId, skuId) => {
+
+    const deletedBookSku = await Book.updateOne({
+        "_id": bookId
+    }, {
+        $pull: { "skus": { _id: skuId } },
+    }).exec();
+    return deletedBookSku
+
+}
+
+exports.createSkuForBook = async (bookId, category, stockLevel, price, type) => {
+
+    const numberOfBooks = await Book.countDocuments({ "_id": bookId })
+    const numberOfTypes = await Book.countDocuments({ "_id": bookId, "skus.type": type })
+
+    if (numberOfBooks > 0 && numberOfTypes == 0) {
+        const createdSku = await Book.updateOne({ "_id": bookId }, { $addToSet: { "skus": { category: category, quantity: stockLevel, price: price, type: type } } }).exec()
+        return createdSku
+    } else {
+        return false
+    }
+
+}
+
+exports.updateSkuForBook = async (bookId, skuId, updateDocument) => {
+
+
+    const skuUpdate = await Book.updateOne({ "_id": bookId, "skus._id": skuId }, { $set: updateDocument}).exec()
+    return skuUpdate
+
+}
+
+
+exports.createBook = async (imagePath, title, author, genre) => {
+
+    const numberOfBooks = await Book.countDocuments({ title: title, author: author })
+
+    if (numberOfBooks > 0) {
+        return false
+    } else {
+        const createdBook = await Book.create({ title: title, imagePath: imagePath, author: author, genre: genre, skus: [] })
+        return createdBook
+    }
+
+}
+
+exports.deleteBook = async (bookId) => {
+
+    const deletedBookResult = await Book.deleteOne({ "_id": bookId }).exec()
+
+    return deletedBookResult
+
 }

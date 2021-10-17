@@ -1,16 +1,21 @@
 const mongoose = require("mongoose");
 
-const skuCreator = (titleOfBook, typeOfBook) => {
-    // grab first letter of the type of book
-    const firstLetterOfType = typeOfBook[0] + typeOfBook[typeOfBook.length - 1];
-    // grab first letters of book title if they are capitals
-    const firstLettersOfBookTitle = titleOfBook
+const skuCreator = async (titleOfBook, authorOfBook, typeOfBook) => {
+
+    const firstLettersOfTitle = titleOfBook.split(" ").length > 1 ? titleOfBook
+        .split(" ")
+        .filter((x) => x[0] == x[0].toUpperCase())
+        .map((x) => x[0]).join("") : titleOfBook[0]
+
+    const firstLettersOfAuthor = authorOfBook
         .split(" ")
         .filter((x) => x[0] == x[0].toUpperCase())
         .map((x) => x[0]);
-    const sku = firstLettersOfBookTitle.join("") + firstLetterOfType;
-    console.log(sku.toUpperCase());
-    return sku.toUpperCase();
+    
+    const firstLetterAndLastLetterOfType = typeOfBook[0] + typeOfBook[typeOfBook.length - 1];
+    
+    const sku = (firstLettersOfTitle + firstLettersOfAuthor.join("") + firstLetterAndLastLetterOfType).toUpperCase()
+    return sku
 };
 
 const skuSchema = new mongoose.Schema({
@@ -31,12 +36,25 @@ const bookSchema = new mongoose.Schema({
     skus: [skuSchema],
 });
 
-bookSchema.pre("save", async function (next) {
-    const book = this;
-    for (let index = 0; index < book.skus.length; index++) {
-        book.skus[index].sku = await skuCreator(book.title, book.skus[index].type);
+bookSchema.post("updateOne", async function (doc, next) {
+
+    const book = await this.model.findOne(this.getQuery());
+
+    const isPullOrSetOnSku = Object.keys(this._update)[0] == "$pull" || "$set"
+    
+    if (isPullOrSetOnSku) {
+        next()
     }
-    next();
+    
+    const latestSku = book.skus[book.skus.length - 1]
+
+    skuCreator(book.title, book.author, latestSku.type).then(sku => {
+        latestSku.set({ "sku": sku })
+        book.save().then(() => {
+            next();
+        })
+
+    })
 });
 
 const Book = mongoose.model("Book", bookSchema);
