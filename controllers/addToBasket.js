@@ -17,7 +17,7 @@ exports.addItemToBasket = async (req, res, next) => {
         // const userBasket = mongooseHelpers.getUserBasket(userId)
         const selectFilter = ["title", "author", "imagePath", "genre", "price"]
         mongooseHelpers.getSingleSkuOfBook(bookId, bookSkuId, selectFilter).then((singleBook) => {
-            console.log(singleBook)
+
             const { imagePath, title, author } = singleBook;
             const [bookPrice, bookType] = [
                 singleBook.skus[0].price,

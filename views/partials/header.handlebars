@@ -1,40 +1,44 @@
 <nav class="navbar navbar-expand-lg">
 
+	<ul class="nav nav-pills">
 
-    <ul class="nav nav-pills">
-
-        <li class="nav-item"><a href="/basket" class="nav-link">Basket</a></li>
-        <li class="nav-item"><a href="/account" class="nav-link">Account</a></li>
-        {{#if isAuthenticated }}
-            <li class="nav-item"><a href="/logout" class="nav-link">Log Out</a></li>
-        {{else}}
-            <li class="nav-item"><a href="/login" class="nav-link">Sign In</a></li>
-        {{/if}}
-    </ul>
+		<li class="nav-item"><a href="/basket" class="nav-link">Basket</a></li>
+		<li class="nav-item"><a href="/account" class="nav-link">Account</a></li>
+		{{#if isAuthenticated}}
+			<li class="nav-item"><a href="/logout" class="nav-link">Log Out</a></li>
+		{{else}}
+			<li class="nav-item"><a href="/login" class="nav-link">Sign In</a></li>
+		{{/if}}
+	</ul>
 </nav>
 <header class="header-top-title">
-    <div class="container-fluid flex-direction" id="header">
-        <div class="header-title">
-            <a href="/" class="d-flex align-items-center text-decoration-none">
-                <span class="fs-4" style="color: rgb(46, 46, 46)">Bookstore</span>
-            </a>
-        </div>
-        <div class="search-bar">
-            <input type="text" class="form-control" id="book-search" name="book-search"
-                   placeholder="Search by Title...">
-        </div>
+	<div class="container-fluid flex-direction" id="header">
+		<div class="header-title">
+			<a href="/" class="d-flex align-items-center text-decoration-none">
+				<span class="fs-4" style="color: rgb(46, 46, 46)">Bookstore</span>
+			</a>
+		</div>
+		<div class="search-bar">
+			<input
+				type="text"
+				class="form-control"
+				id="book-search"
+				name="book-search"
+				placeholder="Search by Title..."
+			/>
+		</div>
 
-    </div>
+	</div>
 </header>
 <div class="genre-nav">
-    <ul class="list">
+	<ul class="list">
 
-        <li class="book-genre"><a href="/genre/{{genres.fiction}}">Fiction</a></li>
-        <li class="book-genre"><a href="/genre/{{genres.nonfiction}}">Non-Fiction</a></li>
-        <li class="book-genre"><a href="/genre/{{genres.childrens}}">Children's</a></li>
-        <li class="book-genre"><a href="/genre/{{genres.fantasy}}">Fantasy</a></li>
-        <li class="book-genre"><a href="/genre/{{genres.scifi}}">Sci-Fi</a></li>
+		<li class="book-genre"><a href="/genre/{{genres.fiction}}">Fiction</a></li>
+		<li class="book-genre"><a href="/genre/{{genres.nonfiction}}">Non-Fiction</a></li>
+		<li class="book-genre"><a href="/genre/{{genres.childrens}}">Children's</a></li>
+		<li class="book-genre"><a href="/genre/{{genres.fantasy}}">Fantasy</a></li>
+		<li class="book-genre"><a href="/genre/{{genres.scifi}}">Sci-Fi</a></li>
 
-    </ul>
+	</ul>
 
 </div>

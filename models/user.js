@@ -28,11 +28,11 @@ const userSchema = new mongoose.Schema({
 
 // hook to encrypt the password 
 userSchema.pre("save", async function (next) {
-   
+
     if (!this.isModified('password')) {
         return next();
     }
-    this.password = await bcrypt.hashSync(this.password, 10, function (err, hash) {
+    this.password = bcrypt.hashSync(this.password, 10, function (err, hash) {
         if (err) {
             return next(err);
         }

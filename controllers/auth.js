@@ -8,7 +8,7 @@ const generateAuthToken = () => {
 };
 
 exports.register = async (req, res) => {
-    
+
     const { username, email, password, passwordConfirm } = req.body;
     if (!email || !password) {
         return res.status(400).render("register");

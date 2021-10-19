@@ -11,6 +11,6 @@ exports.deleteItemFromBasket = async (req, res, next) => {
 
     mongooseHelpers.deleteBookFromBasket(userId, bookSkuId)
 
-    return res.json({"success": "Book deleted from basket"})
+    return res.json({ "success": "Book deleted from basket" })
 
 };

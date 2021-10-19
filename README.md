@@ -1,4 +1,5 @@
 # Bookshop
+
 Bookshop project that features a functioning front-end and backend. Built with:
 
 • Node.js
@@ -29,7 +30,4 @@ Bookshop project that features a functioning front-end and backend. Built with:
 
 • Wishlist
 
-• Unique ids url and webpage for each book 
-
-
-
+• Unique ids url and webpage for each book

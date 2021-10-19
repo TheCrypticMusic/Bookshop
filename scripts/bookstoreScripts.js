@@ -72,7 +72,7 @@ $(".qty").on("input", function () {
 
 
 $(".qty").on("input", function () {
-  
+
     /// Make into function
     const calculatedTotalValue = Array.from(
         $(".subtotal-price").map(function () {
@@ -86,11 +86,11 @@ $(".qty").on("input", function () {
         qty: qty(this),
         subtotal: calculatedSubtotal(priceOfBook(this), qty(this)),
     };
-    basketUpdate.items[basketBookId(this)] = {basketData};
+    basketUpdate.items[basketBookId(this)] = { basketData };
     console.log(basketData);
 });
 
-$(".delete-btn").click(function() {
+$(".delete-btn").click(function () {
 
     const bookId = this.closest("li").id
 
@@ -98,11 +98,11 @@ $(".delete-btn").click(function() {
         url: "/delete-from-basket/" + bookId,
         method: "DELETE",
         contentType: "application/json; charset=utf-8",
-        success : function() {
+        success: function () {
             location.reload()
-         },
-        error : function(error) {
-          console.log("error", error);
+        },
+        error: function (error) {
+            console.log("error", error);
         }
     })
 
@@ -122,8 +122,8 @@ $("#basket-to-checkout").click(function () {
     });
 });
 
-$("input[name=delivery-method]").change(function() {
-   
+$("input[name=delivery-method]").change(function () {
+
 
     const radioButtonShippingCost = $(this).closest("div").find(".delivery-price").text().split("£")[1]
 
@@ -134,7 +134,7 @@ $("input[name=delivery-method]").change(function() {
     const combinedTotal = parseFloat(radioButtonShippingCost) + parseFloat(productSubtotal)
 
     $("#combined-cost").html(`Combined Total: £${combinedTotal}`)
-    
+
 })
 
 // ***** STRIPE CHECKOUT ***** //
@@ -148,7 +148,7 @@ $(".checkout-button").click(function () {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({postage: dbShippingCost})
+        body: JSON.stringify({ postage: dbShippingCost })
     })
         .then(res => {
             if (res.ok) {
@@ -156,7 +156,7 @@ $(".checkout-button").click(function () {
             }
             return res.json().then(json => Promise.reject(json));
         })
-        .then(({url}) => {
+        .then(({ url }) => {
             window.location = url;
         })
         .catch(e => {
@@ -171,9 +171,9 @@ $(".wishlist").click(function () {
     const bookId = $(this).closest(".book").attr("id")
     const svg = $(this).find(".wishlist-svg-click");
     if (svg.css("fill") === "rgb(243, 134, 134)") {
-        svg.css({fill: "#f8f5f2"});
+        svg.css({ fill: "#f8f5f2" });
     } else {
-        svg.css({fill: "rgb(243, 134, 134)"});
+        svg.css({ fill: "rgb(243, 134, 134)" });
     }
     $.ajax({
         url: "/wishlist/" + bookId,
@@ -187,9 +187,9 @@ $(".wishlist").click(function () {
 $(".wishlist").hover(function () {
     const svg = $(this).find(".wishlist-svg-click");
     if (svg.css("fill") === "rgb(243, 134, 134)") {
-        svg.css({fill: "#f8f5f2"});
+        svg.css({ fill: "#f8f5f2" });
     } else {
-        svg.css({fill: "rgb(243, 134, 134)"});
+        svg.css({ fill: "rgb(243, 134, 134)" });
     }
 
 })

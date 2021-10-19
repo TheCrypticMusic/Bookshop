@@ -1,6 +1,6 @@
 const Basket = require("../models/basket");
 const router = require("../routes/pages");
-require("dotenv").config({path: "./config/.env"});
+require("dotenv").config({ path: "./config/.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const express = require("express");
 const Postage = require("../models/postageCosts");
@@ -20,8 +20,8 @@ exports.session = async (req, res, next) => {
     const postageCharge = req.body.postage
 
     const stripeShippingCharges = {
-        "6159f95d9de2c60de7162509": "shr_1JgrTlHokHPo19BTeLpMrm95", 
-        "6159f95d9de2c60de716250a": "shr_1JgrYWHokHPo19BTsE0oHhx8", 
+        "6159f95d9de2c60de7162509": "shr_1JgrTlHokHPo19BTeLpMrm95",
+        "6159f95d9de2c60de716250a": "shr_1JgrYWHokHPo19BTsE0oHhx8",
         "6159f95d9de2c60de716250b": "shr_1JgrZNHokHPo19BTra69G5ZV"
     }
 
@@ -31,7 +31,7 @@ exports.session = async (req, res, next) => {
             payment_method_types: ["card"],
             mode: "payment",
             shipping_rates: [stripeShippingCharges[postageCharge]],
-            metadata: {"basketId": `${basketId}`, "userId": `${userBasket.userId}`},
+            metadata: { "basketId": `${basketId}`, "userId": `${userBasket.userId}` },
             line_items: userBasket.items.map(basketItem => {
                 return {
                     price_data: {
@@ -47,9 +47,9 @@ exports.session = async (req, res, next) => {
             success_url: "http://localhost:5002/",
             cancel_url: "http://localhost:5002/"
         })
-        res.json({url: session.url});
+        res.json({ url: session.url });
     } catch (e) {
-        res.status(500).json({error: e.message});
+        res.status(500).json({ error: e.message });
     }
 
 }

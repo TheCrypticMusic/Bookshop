@@ -121,7 +121,7 @@ router.put("/:id", bookExists, (req, res) => {
                     200,
                     "success",
                     { updated_book_fields: bodyContent },
-                    "Book update",
+                    "Book updated",
                     req.originalUrl,
                     res
                 );
@@ -270,7 +270,7 @@ router.put("/:id/skus/:sku", bookExists, (req, res) => {
     const skuId = req.params.sku
 
     const bodyContent = req.body
-    const newUpdate = APIHelpers.updateSubdocumentBuilder("skus", bodyContent)
+    const newUpdate = mongooseHelpers.updateZeroDepthSubdocumentBuilder("skus", bodyContent)
 
     mongooseHelpers.updateSkuForBook(bookId, skuId, newUpdate).then((result => {
         if (result.nModified > 0) {

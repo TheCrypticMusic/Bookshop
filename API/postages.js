@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 
 // Create new postage type
 router.post("/", (req, res) => {
-   
+
     const { postageName, price } = req.body
 
     mongooseHelpers.createPostageType(postageName, price).then((newPostage) => {
@@ -34,7 +34,7 @@ router.put("/:id", (req, res) => {
     const postageTypeId = req.params.id
     const updateData = req.body
 
-    const convertedUpdateData = APIHelpers.updateSubdocumentBuilder("postageTypes", updateData)
+    const convertedUpdateData = mongooseHelpers.updateZeroDepthSubdocumentBuilder("postageTypes", updateData)
 
     mongooseHelpers.updatePostageType(postageTypeId, convertedUpdateData).then((result) => {
 

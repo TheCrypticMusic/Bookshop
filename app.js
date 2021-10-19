@@ -91,7 +91,7 @@ app.set("views", [
 app.use("/api/books", require("./API/books"))
 app.use("/api/baskets", require("./API/baskets"))
 app.use("/api/postages", require("./API/postages"))
-
+app.use("/api/orders", require("./API/orders"))
 
 
 //Define Routes
@@ -109,21 +109,18 @@ app.use("/wishlist", require("./routes/wishlist"))
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const event = req.body;
-
-    console.log(event)
     if (event.type === "charge.succeeded") {
         console.log("Logging to Database")
 
     } else if (event.type === "checkout.session.completed") {
         const { userId, basketId } = event.data.object.metadata
-        console.log(userId, basketId)
         await Basket.findOne({ userId: userId }, (err, userBasket) => {
             Order.findOne({ userId: userId }, (err, userOrder) => {
                 if (userOrder) {
                     userOrder.basketIds.push({
                         basketId: userBasket._id,
                         subTotal: userBasket.subTotal,
-                        order: userBasket.items.map(x => x)
+                        items: userBasket.items.map(x => x)
                     })
                     userOrder.save().then(() => {
                         userBasket.remove()

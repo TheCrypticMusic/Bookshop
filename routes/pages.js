@@ -22,8 +22,8 @@ const allowedToAccessPaymentScreen = async (req, res, next) => {
     mongooseHelpers.getUserBasket(userId).then((userBasket) => {
         userBasket.items.length > 0 ? next() : res.redirect("/basket")
     })
-    
- 
+
+
 };
 
 // router.use(csrfProtection);
@@ -63,7 +63,7 @@ router.get("/", async (req, res, next) => {
     mongooseHelpers.getBooks({}).then(books => {
         return res.render("index", { title: "Bookstore", books: books });
     })
-    
+
 });
 
 router.get("/register", (req, res, next) => {
@@ -210,19 +210,20 @@ router.get("/address", isAuthenticated, async (req, res, next) => {
 router.get("/order-history", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;
 
-    const orders = await mongooseHelpers.getUser(userId);
-
-    if (orders) {
-        const userOrders = orders.basketIds.map((x) => x);
-        return res.render("order-history", {
-            layout: "account-layout",
-            userOrders: userOrders,
-        });
-    }
-    return res.render("order-history", {
-        layout: "account-layout",
+    mongooseHelpers.getUserOrders(userId).then((orders) => {
+        if (orders) {
+            const userOrders = orders.basketIds.map((x) => x);
+            return res.render("order-history", {
+                layout: "account-layout",
+                userOrders: userOrders,
+            });
+        } else {
+            return res.render("order-history", {
+                layout: "account-layout",
+            })
+        }
     });
-});
+})
 
 router.get("/amendments/email", isAuthenticated, (req, res, next) => {
     return res.render("email", { layout: "account-layout" });

@@ -4,6 +4,7 @@ const mongooseHelpers = require("../config/mongooseHelpers")
 
 // get user basket
 router.get("/:id", (req, res) => {
+
     const userId = req.params.id
     mongooseHelpers.getUserBasket(userId).then(userBasket => {
         if (userBasket === null) {
@@ -40,7 +41,7 @@ router.put("/:id", (req, res) => {
             })
         }
 
-        mongooseHelpers.getSingleBookBySku(bookId, bookSkuId).then(book => {
+        mongooseHelpers.getSingleSkuOfBook(bookId, bookSkuId).then(book => {
             if (!(book)) {
                 return res.status(404).json({
                     "status": "error",
@@ -89,7 +90,7 @@ router.post("/:id", (req, res) => {
     const userId = req.params.id
 
     mongooseHelpers.createUserBasket(userId).then(userHasBasket => {
-        
+
         if (userHasBasket) {
             res.status(409).json({
                 "status": "error",
