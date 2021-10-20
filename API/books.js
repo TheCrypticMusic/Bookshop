@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router(); 1
 const mongooseHelpers = require("../config/mongooseHelpers");
 const apiHelpers = require("../config/apiHelpers");
 
@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
                 201,
                 "success",
                 { books: books },
-                "Book found",
+                "Books found",
                 req,
                 res
             );
@@ -169,7 +169,6 @@ router.get("/:id/skus", apiHelpers.bookExists, (req, res) => {
 })
 
 // delete all skus from book
-
 router.delete("/:id/skus", apiHelpers.bookExists, (req, res) => {
 
     const bookId = req.params.id
@@ -237,7 +236,7 @@ router.put("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
     const skuId = req.params.sku
 
     const bodyContent = req.body
-    const newUpdate = mongooseHelpers.updateZeroDepthSubdocumentBuilder("skus", bodyContent)
+    const newUpdate = mongooseHelpers._updateZeroDepthSubdocumentBuilder("skus", bodyContent)
 
     mongooseHelpers.updateSkuForBook(bookId, skuId, newUpdate).then((result => {
         if (result.nModified > 0) {

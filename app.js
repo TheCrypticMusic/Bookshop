@@ -93,7 +93,7 @@ app.use("/api/books", require("./API/books"))
 app.use("/api/baskets", require("./API/baskets"))
 app.use("/api/postages", require("./API/postages"))
 app.use("/api/orders", require("./API/orders"))
-
+app.use("/api/wishlists", require("./API/wishlists"))
 
 //Define Routes
 app.use("/", require("./routes/pages"));

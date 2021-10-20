@@ -376,6 +376,20 @@ exports.deleteBook = async (bookId) => {
 
 // ***** WISHLIST HELPERS ***** //
 
+
+exports.createWishlist = async (userId) => {
+
+	const userWishListExists = await Wishlist.exists({ userId: userId })
+
+	if (userWishListExists) {
+		return true
+	} else {
+		await Wishlist.create({ userId: userId })
+		return false
+	}
+
+}
+
 /**
  *
  * @param {String} userId
@@ -389,15 +403,31 @@ exports.getUserWishlist = async (userId) => {
 
 	if (userWishListExists) {
 		const wishlistBookIds = userWishListExists.wishlist.map((x) => x.bookId);
-
-		const bookInfo = await Book.find({ _id: { $in: wishlistBookIds } })
-			.lean()
-			.exec();
-		return bookInfo;
+		const books = this.getBooks({ "_id": wishlistBookIds })
+		return books
 	} else {
-		return {};
+		return false;
 	}
 };
+
+exports.getSingleItemInWishlist = async (userId, bookId) => {
+
+	const singleItem = await Wishlist.findOne({ userId: userId }, {
+		wishlist: {
+			$elemMatch: { "bookId": bookId }
+		},
+	})
+	if (singleItem.wishlist.length === 0) {
+		return false
+	}
+	return singleItem
+
+}
+exports.deleteWishlistItems = async (userId) => {
+
+	const deletedItems = await Wishlist.updateOne({ userId: userId }, { $set: { "wishlist": [] } })
+	return deletedItems
+}
 
 /**
  *
@@ -405,34 +435,54 @@ exports.getUserWishlist = async (userId) => {
  * @param {String} bookId
  *
  */
-exports.updateWishListWithBook = async (userId, bookId) => {
+exports.addBookToWishlist = async (userId, bookId) => {
 	try {
-		const bookExistsInWishlist = await Wishlist.exists({
-			userId: userId,
-			"wishlist.bookId": bookId,
-		});
-		if (bookExistsInWishlist) {
-			await Wishlist.updateOne(
-				{ userId: userId },
-				{ $pull: { wishlist: { bookId: bookId } } }
-			);
-		} else {
-			const updateData = {
-				wishlist: {
-					bookId: bookId,
-				},
-			};
-			await Wishlist.updateOne(
-				{ userId: userId },
-				{ $addToSet: updateData },
-				{ upsert: true }
-			).exec();
-		}
+		this.getSingleItemInWishlist(userId, bookId).then(async (result) => {
+
+			if (!(result)) {
+				const addedBook = await Wishlist.updateOne({ userId: userId }, { $addToSet: { "wishlist": { "bookId": bookId } } }).exec()
+				return addedBook
+			}
+		})
+		return false
+		// const bookExistsInWishlist = await Wishlist.exists({
+		// 	userId: userId,
+		// 	"wishlist.bookId": mngoosbookId,
+		// });
+		// if (bookExistsInWishlist) {
+		// 	await Wishlist.updateOne(
+		// 		{ userId: userId },
+		// 		{ $pull: { wishlist: { bookId: bookId } } }
+		// 	);
+		// } else {
+		// 	const updateData = {
+		// 		wishlist: {
+		// 			bookId: bookId,
+		// 		},
+		// 	};
+		// 	await Wishlist.updateOne(
+		// 		{ userId: userId },
+		// 		{ $addToSet: updateData },
+		// 		{ upsert: true }
+		// 	).exec();
+		// }
 	} catch (err) {
 		console.log(err);
 		return err;
 	}
 };
+
+exports.deleteSingleItemFromWishlist = async (userId, bookId) => {
+
+	try {
+
+		const deletedItem = await Wishlist.updateOne({ userId: userId }, { $pull: { "wishlist": { "bookId": bookId } } }).exec()
+		return deletedItem
+	} catch (error) {
+		return error
+	}
+
+}
 
 // ***** USER HELPERS ***** //
 
@@ -581,7 +631,7 @@ exports.deleteOrderDocument = async (userId) => {
 	}
 };
 
-exports.updateOrderIte;
+
 
 // This is used to create a record in the database of all the orders that the user has completed
 // This is not used to create a new order
@@ -697,12 +747,6 @@ exports.updateSingleOrderItemDetails = async (userId, basketId, itemId, updateDa
 	}
 };
 
-// const skuUpdate = await Book.updateOne(
-//     { _id: bookId, "skus._id": skuId },
-//     { $set: updateDocument }
-// ).exec();
-// return skuUpdate;
-
 // ***** POSTAGE HELPERS ***** //
 
 /**
@@ -746,6 +790,22 @@ exports.createPostageType = async (postageName, price) => {
 	}
 };
 
+exports.getSinglePostageType = async (postageTypeId) => {
+	try {
+
+		const postageTypeExists = await Postage.exists({ "postageTypes._id": postageTypeId })
+
+		if (!(postageTypeExists)) {
+			return false
+		}
+
+		const postageType = await Postage.findOne({}, { "postageTypes": { $elemMatch: { _id: postageTypeId } } }).lean().exec()
+		return postageType
+	} catch (error) {
+		return error
+	}
+}
+
 exports.updatePostageType = async (postageTypeId, updateData) => {
 	try {
 		const updatedPostage = await Postage.updateOne(
@@ -764,7 +824,6 @@ exports.deletePostageType = async (postageTypeId) => {
 			{},
 			{ $pull: { postageTypes: { _id: postageTypeId } } }
 		).exec();
-		console.log(deletedPostage);
 		return deletedPostage;
 	} catch (error) {
 		return error;
@@ -844,11 +903,4 @@ exports._formatBookSkuResultForBasket = async (bookResult) => {
 
 	return combinedResult;
 };
-// bookImage: { type: String, required: true },
-// bookSkuId: { type: mongoose.Schema.Types.ObjectId, ref: "Book Sku Id" },
-// bookType: { type: String, required: true },
-// bookTitle: { type: String, required: true },
-// bookAuthor: { type: String, required: true },
-// quantity: { type: Number, required: true },
-// price: { type: Number, required: true },
-// total: { type: Number, required: true },
+

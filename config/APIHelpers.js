@@ -87,7 +87,7 @@ exports.userOrderDocumentExists = async (req, res, next) => {
 };
 
 exports.bookExists = (req, res, next) => {
-	const bookId = req.method !== "" ? req.body.bookId : req.params.bookId
+	const bookId = req.method !== "POST" ? req.body.bookId : req.params.bookId
 
 	mongooseHelpers.getSingleBook(bookId).then((book) => {
 		if (book === null) {
@@ -100,8 +100,8 @@ exports.bookExists = (req, res, next) => {
 };
 
 exports.skuExists = (req, res, next) => {
-	const bookSkuId = req.method !== "" ? req.body.bookSkuId : req.params.bookSkuId
-	const bookId = req.method !== "" ? req.body.bookId : req.params.bookId
+	const bookSkuId = req.method !== "POST" ? req.body.bookSkuId : req.params.bookSkuId
+	const bookId = req.method !== "POST" ? req.body.bookId : req.params.bookId
 
 
 	mongooseHelpers.getSingleSkuOfBook(bookId, bookSkuId).then((sku) => {
@@ -126,7 +126,33 @@ exports.basketItemExists = (req, res, next) => {
 			next()
 		}
 	})
+}
 
+exports.postageTypeExists = (req, res, next) => {
 
+	const postageTypeId = req.method !== "POST" ? req.params.postagetypeid : req.body.postagetypeid
 
+	mongooseHelpers.getSinglePostageType(postageTypeId).then((result) => {
+		if (!(result)) {
+			this.sendStatus(404, "error", null, "Postage type not found", req, res)
+		} else {
+			req.result = result
+			next()
+		}
+	})
+}
+
+exports.wishlistExists = (req, res, next) => {
+
+	const userId = req.method !== "" ? req.params.userid : req.body.userid
+
+	mongooseHelpers.getUserWishlist(userId).then((result) => {
+
+		if (!(result)) {
+			this.sendStatus(404, "error", null, "No wishlist found", req, res)
+		} else {
+			req.result = result
+			next()
+		}
+	})
 }

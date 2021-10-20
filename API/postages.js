@@ -1,71 +1,73 @@
 const express = require("express");
 const router = express.Router();
-const mongooseHelpers = require("../config/mongooseHelpers")
+const mongooseHelpers = require("../config/mongooseHelpers");
 const apiHelpers = require("../config/apiHelpers");
-
+const { application } = require("express");
 
 // get postage document
 router.get("/", (req, res) => {
-
     mongooseHelpers.getPostageTypes().then((postages) => {
-        apiHelpers.sendStatus(200, "success", { postages: postages }, "Postages found", req, res)
-    })
-
-})
-
+        apiHelpers.sendStatus(200, "success", { postages: postages }, "Postages found", req, res);
+    });
+});
 
 // Create new postage type
+// Fields:
+// postageName
+// postageCost
 router.post("/", (req, res) => {
-
-    const { postageName, price } = req.body
+    const { postageName, price } = req.body;
 
     mongooseHelpers.createPostageType(postageName, price).then((newPostage) => {
-
-        if (!(newPostage)) {
-            apiHelpers.sendStatus(404, "error", null, "Postage already exists", req, res)
+        if (!newPostage) {
+            apiHelpers.sendStatus(404, "error", null, "Postage already exists", req, res);
         } else {
-            apiHelpers.sendStatus(201, "success", null, "Postage created", req, res)
+            apiHelpers.sendStatus(201, "success", null, "Postage created", req, res);
         }
-    })
+    });
+});
 
-})
+// get single postage type
+router.get("/:postagetypeid", apiHelpers.postageTypeExists, (req, res) => {
+    apiHelpers.sendStatus(200, "success", req.result, "Postage type found", req, res);
+});
 
 // Update existing postage type
-router.put("/:id", (req, res) => {
+// Fields:
+// postageTypes
+// postageCost
+router.put("/:postagetypeid", apiHelpers.postageTypeExists, (req, res) => {
+    const postageTypeId = req.params.postagetypeid;
+    const updateData = req.body;
 
-    const postageTypeId = req.params.id
-    const updateData = req.body
-
-    const convertedUpdateData = mongooseHelpers.updateZeroDepthSubdocumentBuilder("postageTypes", updateData)
+    const convertedUpdateData = mongooseHelpers._updateZeroDepthSubdocumentBuilder(
+        "postageTypes",
+        updateData
+    );
 
     mongooseHelpers.updatePostageType(postageTypeId, convertedUpdateData).then((result) => {
-
         if (result.nModified > 0) {
-            apiHelpers.sendStatus(200, "success", null, "Postage type updated", req, res)
-        } else if (result.n > 0) {
-            apiHelpers.sendStatus(422, "error", null, "Postage type found but not updated due to fields already containing data sent", req, res)
+            apiHelpers.sendStatus(200, "success", null, "Postage type updated", req, res);
         } else {
-            apiHelpers.sendStatus(404, "error", null, "Postage type not found", req, res)
+            apiHelpers.sendStatus(
+                422,
+                "error",
+                null,
+                "Postage type found but not updated due to fields already containing data sent",
+                req,
+                res
+            );
         }
-    })
-
-})
+    });
+});
 
 // Delete postage type
-router.delete("/:id", (req, res) => {
-
-    const postageTypeId = req.params.id
+router.delete("/:postagetypeid", apiHelpers.postageTypeExists, (req, res) => {
+    const postageTypeId = req.params.postagetypeid;
 
     mongooseHelpers.deletePostageType(postageTypeId).then((result) => {
-        if (result.nModified > 0) {
-            apiHelpers.sendStatus(200, "success", null, "Postage type deleted", req, res)
-        } else {
-            apiHelpers.sendStatus(404, "error", null, "Postage type not found", req, res)
-        }
-    })
-
-})
-
-
+        apiHelpers.sendStatus(200, "success", null, "Postage type deleted", req, res);
+    });
+});
 
 module.exports = router;
