@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongooseHelpers = require("../config/mongooseHelpers");
-const APIHelpers = require("../config/APIHelpers");
+const apiHelpers = require("../config/apiHelpers");
 
 
 
@@ -10,7 +10,7 @@ const APIHelpers = require("../config/APIHelpers");
 router.get("/", (req, res) => {
 	mongooseHelpers.getAllOrders().then((orders) => {
 		if (orders.length > 0) {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				200,
 				"success",
 				{ orders: orders },
@@ -19,17 +19,17 @@ router.get("/", (req, res) => {
 				res
 			);
 		} else {
-			APIHelpers.sendStatus(404, "error", null, "No orders found", req, res);
+			apiHelpers.sendStatus(404, "error", null, "No orders found", req, res);
 		}
 	});
 });
 
 // get a specfic user and their associated completed orders
-router.get("/:userid", APIHelpers.userOrderDocumentExists, (req, res) => {
+router.get("/:userid", apiHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.getUserOrders(userId).then((userOrders) => {
-		APIHelpers.sendStatus(
+		apiHelpers.sendStatus(
 			200,
 			"success",
 			{ user_orders: userOrders },
@@ -46,7 +46,7 @@ router.post("/:userid", (req, res) => {
 
 	mongooseHelpers.createNewOrderDocumentForUser(userId).then((documentCreated) => {
 		if (documentCreated) {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				201,
 				"success",
 				null,
@@ -55,7 +55,7 @@ router.post("/:userid", (req, res) => {
 				res
 			);
 		} else {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				404,
 				"error",
 				null,
@@ -68,12 +68,12 @@ router.post("/:userid", (req, res) => {
 });
 
 // delete order document
-router.delete("/:userid", APIHelpers.userOrderDocumentExists, (req, res) => {
+router.delete("/:userid", apiHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.deleteOrderDocument(userId).then((result) => {
 		if (result.deletedCount > 0) {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				200,
 				"success",
 				null,
@@ -86,12 +86,12 @@ router.delete("/:userid", APIHelpers.userOrderDocumentExists, (req, res) => {
 });
 
 // create a new order
-router.post("/:userid/baskets", APIHelpers.userOrderDocumentExists, APIHelpers.basketExists, (req, res) => {
+router.post("/:userid/baskets", apiHelpers.userOrderDocumentExists, apiHelpers.basketExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.createUserOrder(userId).then((result) => {
 		if (!result) {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				201,
 				"success",
 				result,
@@ -100,7 +100,7 @@ router.post("/:userid/baskets", APIHelpers.userOrderDocumentExists, APIHelpers.b
 				res
 			);
 		} else {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				404,
 				"error",
 				null,
@@ -113,26 +113,26 @@ router.post("/:userid/baskets", APIHelpers.userOrderDocumentExists, APIHelpers.b
 });
 
 // delete all orders
-router.delete("/:userid/baskets", APIHelpers.userOrderDocumentExists, (req, res) => {
+router.delete("/:userid/baskets", apiHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.deleteAllOrders(userId).then((result) => {
 		if (result.nModified > 0) {
-			APIHelpers.sendStatus(200, "success", null, "Orders deleted", req, res);
+			apiHelpers.sendStatus(200, "success", null, "Orders deleted", req, res);
 		} else {
-			APIHelpers.sendStatus(404, "success", null, "No orders found", req, res);
+			apiHelpers.sendStatus(404, "success", null, "No orders found", req, res);
 		}
 	});
 });
 
 // get a single completed order for a user
 
-router.get("/:userid/baskets/:basketid", APIHelpers.userOrderDocumentExists, (req, res) => {
+router.get("/:userid/baskets/:basketid", apiHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 	const basketId = req.params.basketid;
 
 	mongooseHelpers.getSingleOrder(userId, basketId).then((singleOrder) => {
-		APIHelpers.sendStatus(200, "success", singleOrder, "Order found", req, res);
+		apiHelpers.sendStatus(200, "success", singleOrder, "Order found", req, res);
 	});
 });
 
@@ -141,8 +141,8 @@ router.get("/:userid/baskets/:basketid", APIHelpers.userOrderDocumentExists, (re
 // subTotal
 router.put(
 	"/:userid/baskets/:basketid",
-	APIHelpers.userOrderDocumentExists,
-	APIHelpers.completedOrderExists,
+	apiHelpers.userOrderDocumentExists,
+	apiHelpers.completedOrderExists,
 	(req, res) => {
 		const userId = req.params.userid;
 		const basketId = req.params.basketid;
@@ -150,7 +150,7 @@ router.put(
 
 		mongooseHelpers.updateSingleOrderSubtotal(userId, basketId, updateData).then((result) => {
 			if (result.nModified > 0) {
-				APIHelpers.sendStatus(
+				apiHelpers.sendStatus(
 					200,
 					"success",
 					null,
@@ -159,7 +159,7 @@ router.put(
 					res
 				);
 			} else {
-				APIHelpers.sendStatus(
+				apiHelpers.sendStatus(
 					422,
 					"success",
 					null,
@@ -174,14 +174,14 @@ router.put(
 
 router.delete(
 	"/:userid/baskets/:basketid",
-	APIHelpers.userOrderDocumentExists,
-	APIHelpers.completedOrderExists,
+	apiHelpers.userOrderDocumentExists,
+	apiHelpers.completedOrderExists,
 	(req, res) => {
 		const userId = req.params.userid;
 		const basketId = req.params.basketid;
 
 		mongooseHelpers.deleteSingleOrder(userId, basketId).then((result) => {
-			APIHelpers.sendStatus(
+			apiHelpers.sendStatus(
 				200,
 				"success",
 				null,
@@ -197,8 +197,8 @@ router.delete(
 // Update a single order item details
 router.put(
 	"/:userid/baskets/:basketid/items/:itemid",
-	APIHelpers.userOrderDocumentExists,
-	APIHelpers.completedOrderExists,
+	apiHelpers.userOrderDocumentExists,
+	apiHelpers.completedOrderExists,
 	(req, res) => {
 		const userId = req.params.userid;
 		const basketId = req.params.basketid;
@@ -208,7 +208,7 @@ router.put(
 		mongooseHelpers
 			.updateSingleOrderItemDetails(userId, basketId, itemId, updateBody)
 			.then((result) => {
-				APIHelpers.sendStatus(201, "success", result, "Item updated", req, res);
+				apiHelpers.sendStatus(201, "success", result, "Item updated", req, res);
 			});
 	}
 );
