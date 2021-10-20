@@ -8,7 +8,7 @@ const basketItemSchema = new mongoose.Schema({
     bookAuthor: { type: String, required: true },
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
-    total: { type: Number, required: true },
+    total: { type: Number },
 });
 
 const basketSchema = new mongoose.Schema({

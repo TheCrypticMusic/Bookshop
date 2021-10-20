@@ -16,24 +16,7 @@ exports.addItemToBasket = async (req, res, next) => {
     try {
         // const userBasket = mongooseHelpers.getUserBasket(userId)
         const selectFilter = ["title", "author", "imagePath", "genre", "price"]
-        mongooseHelpers.getSingleSkuOfBook(bookId, bookSkuId, selectFilter).then((singleBook) => {
-
-            const { imagePath, title, author } = singleBook;
-            const [bookPrice, bookType] = [
-                singleBook.skus[0].price,
-                singleBook.skus[0].type,
-            ];
-            mongooseHelpers.updateBasketWithBook(
-                userId,
-                bookSkuId,
-                imagePath,
-                bookType,
-                title,
-                author,
-                quantity,
-                bookPrice
-            );
-        });
+        mongooseHelpers.addBookToBasket(userId, bookId, bookSkuId, quantity);
     } catch (err) {
         return err;
     }

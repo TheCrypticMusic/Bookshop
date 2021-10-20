@@ -1,140 +1,159 @@
 const express = require("express");
 const router = express.Router();
-const mongooseHelpers = require("../config/mongooseHelpers")
+const mongooseHelpers = require("../config/mongooseHelpers");
+const APIHelpers = require("../config/APIHelpers");
+
+
 
 // get user basket
-router.get("/:id", (req, res) => {
-
-    const userId = req.params.id
-    mongooseHelpers.getUserBasket(userId).then(userBasket => {
-        if (userBasket === null) {
-            return res.status(404).json({ error: "User does not have a basket" })
-        } else {
-            return res.status(200).json({
-                "status": "success",
-                "code": 200,
-                "data": {
-                    "user_basket": userBasket
-                },
-                "message": "user basket found",
-                "path": `/api/baskets/${userId}`
-            })
-        }
-    })
-})
-
-// update user basket with single sku and quantity
-router.put("/:id", (req, res) => {
-
-    const { bookId, bookSkuId, qty } = req.body
-
-    const userId = req.params.id
-
-    mongooseHelpers.getUserBasket(userId).then(userBasket => {
-        if (userBasket === null) {
-            return res.status(404).json({
-                "status": "error",
-                "code": 404,
-                "data": null,
-                "message": "User does not have a basket",
-                "path": `/api/baskets/${userId}`
-            })
-        }
-
-        mongooseHelpers.getSingleSkuOfBook(bookId, bookSkuId).then(book => {
-            if (!(book)) {
-                return res.status(404).json({
-                    "status": "error",
-                    "code": 404,
-                    "data": null,
-                    "message": "Incorrect book id provided",
-                    "path": `/api/baskets/${userId}`
-                })
-            } else if (!(book.hasOwnProperty("skus"))) {
-                console.log(book)
-                return res.status(404).json({
-                    "status": "error",
-                    "code": 404,
-                    "data": null,
-                    "message": "Incorrect book sku id provided",
-                    "path": `/api/baskets/${userId}`
-                })
-            } else {
-                const { imagePath, title, author } = book
-                const { type, price } = book.skus[0]
-
-                mongooseHelpers.updateBasketWithBook(userId, bookSkuId, imagePath, type, title, author, qty, price).then(() => {
-                    return res.status(200).json({
-                        "status": "success",
-                        "code": 200,
-                        "data": {
-                            "sent": {
-                                "book_id": bookId,
-                                "book_sku_id": bookSkuId,
-                                "quantity": qty
-                            }
-                        },
-                        "message": `${title}, ${type} - added to basket`,
-                        "path": `/api/baskets/${userId}`
-                    })
-                })
-            }
-        })
-    })
-})
-
+router.get("/:userid", APIHelpers.basketExists, (req, res) => {
+    const userId = req.params.userid;
+    mongooseHelpers.getUserBasket(userId).then((userBasket) => {
+        APIHelpers.sendStatus(
+            200,
+            "success",
+            { basket: userBasket },
+            "User basket found",
+            req,
+            res
+        );
+    });
+});
 
 // Create basket for user if one doesn't exist
-router.post("/:id", (req, res) => {
+router.post("/:userid", (req, res) => {
+    const userId = req.params.userid;
 
-    const userId = req.params.id
-
-    mongooseHelpers.createUserBasket(userId).then(userHasBasket => {
-
+    mongooseHelpers.createUserBasket(userId).then((userHasBasket) => {
         if (userHasBasket) {
-            res.status(409).json({
-                "status": "error",
-                "code": 409,
-                "data": null,
-                "message": `User basket already exists`,
-                "path": `/api/baskets/${userId}`
-            })
+            APIHelpers.sendStatus(
+                409,
+                "error",
+                null,
+                `User basket already exists for ${userId}`,
+                req,
+                res
+            );
         } else {
-            res.status(201).json({
-                "status": "success",
-                "code": 201,
-                "data": null,
-                "message": `User basket created for ${userId}`,
-                "path": `/api/baskets/${userId}`
-            })
+            APIHelpers.sendStatus(
+                201,
+                "success",
+                null,
+                `User basket created for ${userId}`,
+                req,
+                res
+            );
         }
-
-    })
-})
+    });
+});
 
 // Delete user basket if basket is present
-router.delete("/:id", (req, res) => {
-    const userId = req.params.id
+router.delete("/:userid", APIHelpers.basketExists, (req, res) => {
+    const userId = req.params.userid;
 
-    mongooseHelpers.deleteUserBasket(userId).then(basketDeletedResult => {
+    mongooseHelpers.deleteUserBasket(userId).then((basketDeletedResult) => {
         if (basketDeletedResult) {
-            res.status(200).json({
-                "status": "success",
-                "code": 200,
-                "data": null,
-                "message": "User basket deleted",
-                "path": `/api/baskets/${userId}`
-            })
-        } else {
-            res.status(404).json({
-                "status": "error",
-                "code": 404,
-                "data": null,
-                "message": "No user basket found",
-                "path": `/api/baskets/${userId}`
-            })
+            APIHelpers.sendStatus(
+                200,
+                "success",
+                null,
+                `User basket, ${userId}, deleted`,
+                req,
+                res
+            );
         }
+    });
+});
+
+// get all items from basket
+router.get("/:userid/items", APIHelpers.basketExists, (req, res) => {
+    const userId = req.params.userid;
+
+    mongooseHelpers.getAllItemsInUserBasket(userId).then((userBasketItems) => {
+        APIHelpers.sendStatus(
+            200,
+            "success",
+            userBasketItems,
+            "Basket items found",
+            req,
+            res
+        );
+    });
+});
+
+// delete all items from basket
+router.delete("/:userid/items", APIHelpers.basketExists, (req, res) => {
+    const userId = req.params.userid;
+
+    mongooseHelpers.deleteAllItemsFromBasket(userId).then((deletedBasketResult) => {
+        if (deletedBasketResult.nModified > 0) {
+            APIHelpers.sendStatus(200, "success", null, "Items deleted", req, res);
+        } else {
+            APIHelpers.sendStatus(
+                200,
+                "success",
+                null,
+                "Request successful but no items in basket to be deleted",
+                req,
+                res
+            );
+        }
+    });
+});
+
+// add book to basket
+// bookSkuId has to be sent for it to be a vaild post
+
+router.post("/:userid/items", APIHelpers.basketExists, APIHelpers.bookExists, APIHelpers.skuExists, (req, res) => {
+    const userId = req.params.userid;
+    const { bookSkuId, bookId, qty } = req.body;
+
+    mongooseHelpers.addBookToBasket(userId, bookId, bookSkuId, qty).then((update) => {
+        APIHelpers.sendStatus(
+            200,
+            "success",
+            null,
+            `${bookSkuId} added to basket`,
+            req,
+            res
+        );
+    });
+});
+
+// get single item in basket
+router.get("/:userid/items/:itemid", APIHelpers.basketExists, APIHelpers.basketItemExists, (req, res) => {
+
+    APIHelpers.sendStatus(200, "success", req.result, "Single item found", req, res)
+
+})
+
+router.put("/:userid/items/:itemid", APIHelpers.basketExists, APIHelpers.basketItemExists, (req, res) => {
+
+    const userId = req.params.userid;
+    const itemId = req.params.itemid;
+
+    const updateData = mongooseHelpers._updateZeroDepthSubdocumentBuilder("items", req.body)
+
+    mongooseHelpers.updateBasketItem(userId, itemId, updateData).then((result) => {
+        if (result.nModified > 0) {
+            APIHelpers.sendStatus(200, "success", null, "Item update successful", req, res)
+        } else {
+            APIHelpers.sendStatus(200, "success", null, "Request successful but items already contain data sent in request", req, res)
+        }
+
     })
 })
 
-module.exports = router
+
+router.delete("/:userid/items/:itemid", APIHelpers.basketExists, APIHelpers.basketItemExists, (req, res) => {
+
+    const userId = req.params.userid
+    const itemId = req.params.itemid
+    console.log(userId, itemId)
+    mongooseHelpers.deleteItemFromBasket(userId, itemId).then((result) => {
+        APIHelpers.sendStatus(200, "success", result, "Item deleted from basket", req, res)
+    })
+
+})
+
+module.exports = router;

@@ -9,17 +9,17 @@ const mongoose = require("mongoose");
 // ***** BASKET HELPERS ***** //
 
 exports.createUserBasket = async (userId) => {
-	const userHasBasket = await Basket.findOne({ userId: userId }).exec();
-	if (userHasBasket) {
-		return true;
-	} else {
+	const userBasketExists = await Basket.exists({ userId: userId });
+
+	if (!userBasketExists) {
 		await Basket.create({ userId: userId, items: [] });
-		return false;
 	}
+	return userBasketExists;
 };
 
 exports.deleteUserBasket = async (userId) => {
 	const basketDeletedResult = await Basket.deleteOne({ userId: userId }).exec();
+
 	if (basketDeletedResult.deletedCount > 0) {
 		return true;
 	} else {
@@ -33,7 +33,14 @@ exports.deleteUserBasket = async (userId) => {
  * @returns {JSON}
  */
 exports.getUserBasket = async (userId) => {
-	return await Basket.findOne({ userId: userId }).lean().exec();
+	const basketExists = await Basket.exists({ userId: userId });
+
+	if (basketExists) {
+		const userBasket = await Basket.findOne({ userId: userId }).lean().exec();
+		return userBasket;
+	} else {
+		return false;
+	}
 };
 
 /**
@@ -82,12 +89,13 @@ exports.getFilteredBasketWithBookSkuIds = async (userId, basketItemBookSkuIds) =
  * @param {String} bookSkuId
  *
  */
-exports.deleteBookFromBasket = async (userId, bookSkuId) => {
+exports.deleteItemFromBasket = async (userId, bookSkuId) => {
 	try {
-		await Basket.updateOne({
+		const deletedBook = await Basket.updateOne({
 			userId: userId,
-			$pull: { items: { _id: bookSkuId } },
+			$pull: { items: { bookSkuId: bookSkuId } },
 		}).exec();
+		return deletedBook
 	} catch (err) {
 		console.log(err);
 		return err;
@@ -115,61 +123,75 @@ exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
 	}
 };
 
+exports.deleteAllItemsFromBasket = async (userId) => {
+	try {
+		const deletedItems = await Basket.updateOne({ userId: userId }, { $set: { items: [] } });
+		return deletedItems;
+	} catch (error) {
+		return error;
+	}
+};
+
 /**
  *
- * @param {String} userId
+ * @param {String} bookId
  * @param {String} bookSkuId
- * @param {String} bookImage
- * @param {String} bookType
- * @param {String} bookTitle
- * @param {String} bookAuthor
- * @param {Number} quantity
- * @param {Number} price
- *
  */
-exports.updateBasketWithBook = async (
-	userId,
-	bookSkuId,
-	bookImage,
-	bookType,
-	bookTitle,
-	bookAuthor,
-	quantity,
-	price
-) => {
+exports.addBookToBasket = async (userId, bookId, bookSkuId, quantity) => {
 	try {
-		const bookExistsInBasket = await Basket.exists({
-			userId: userId,
-			"items.bookSkuId": bookSkuId,
-		});
-		if (bookExistsInBasket) {
-			await Basket.updateOne(
-				{ userId: userId, "items.bookSkuId": bookSkuId },
-				{ $inc: { "items.$.quantity": quantity } }
-			).exec();
-		} else {
-			const updateData = {
-				items: {
-					bookSkuId: bookSkuId,
-					bookImage: bookImage,
-					bookType: bookType,
-					bookTitle: bookTitle,
-					bookAuthor: bookAuthor,
-					quantity: quantity,
-					price: price,
-					total: quantity * price,
-				},
-			};
-			await Basket.updateOne(
-				{ userId: userId },
-				{ $addToSet: updateData },
-				{ upsert: true }
-			).exec();
-		}
+		this.getSingleSkuOfBook(bookId, bookSkuId, ["imagePath", "title", "author"]).then(
+			(bookSku) => {
+
+				this._formatBookSkuResultForBasket(bookSku).then(async (formattedResult) => {
+					formattedResult["quantity"] = quantity;
+
+					const bookExistsInBasket = await Basket.exists({
+						userId: userId,
+						"items.bookSkuId": bookSkuId,
+					});
+					if (bookExistsInBasket) {
+						await Basket.updateOne(
+							{ userId: userId, "items.bookSkuId": bookSkuId },
+							{ $inc: { "items.$.quantity": quantity } }
+						).exec();
+					} else {
+						await Basket.updateOne(
+							{ userId: userId },
+							{ $addToSet: { items: formattedResult } },
+							{ upsert: true }
+						).exec();
+					}
+				});
+			}
+		);
 	} catch (err) {
 		return err;
 	}
 };
+
+exports.getAllItemsInUserBasket = async (userId) => {
+	const itemsInUserBasket = await Basket.findOne({ userId: userId }, "items");
+	console.log(itemsInUserBasket);
+	return itemsInUserBasket;
+};
+
+exports.getBasketItem = async (userId, bookSkuId) => {
+
+	const singleItemInBasket = await Basket.findOne({ userId: userId }, { items: { $elemMatch: { "bookSkuId": bookSkuId } } }).lean().exec()
+	return singleItemInBasket
+
+}
+
+exports.updateBasketItem = async (userId, bookSkuId, updateData) => {
+	console.log(userId, bookSkuId, updateData)
+
+
+
+	const updatedItem = await Basket.updateOne({ userId: userId, "items.bookSkuId": bookSkuId }, { $set: updateData })
+	console.log(updatedItem)
+	return updatedItem
+}
+
 
 // ***** BOOK HELPERS ***** //
 
@@ -207,7 +229,6 @@ exports.getSingleSkuOfBook = async (bookId, skuId, selectFilter) => {
 			.select(selectFilter)
 			.lean()
 			.exec();
-
 		return singleSku;
 	} catch (err) {
 		return err;
@@ -805,3 +826,29 @@ exports._updateSubdocumentWithDepthBuilder = (subdocumentPath, arrayFilters, upd
 	});
 	return [newSetUpdate, newArrayFilter];
 };
+
+exports._formatBookSkuResultForBasket = async (bookResult) => {
+	const { imagePath, title, author } = bookResult;
+	const skuDetails = bookResult.skus[0];
+
+	const { _id, price, type } = skuDetails;
+
+	const combinedResult = await {
+		bookImage: imagePath,
+		bookSkuId: _id,
+		bookType: type,
+		bookTitle: title,
+		bookAuthor: author,
+		price: price,
+	};
+
+	return combinedResult;
+};
+// bookImage: { type: String, required: true },
+// bookSkuId: { type: mongoose.Schema.Types.ObjectId, ref: "Book Sku Id" },
+// bookType: { type: String, required: true },
+// bookTitle: { type: String, required: true },
+// bookAuthor: { type: String, required: true },
+// quantity: { type: Number, required: true },
+// price: { type: Number, required: true },
+// total: { type: Number, required: true },

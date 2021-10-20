@@ -3,10 +3,12 @@ const router = express.Router();
 const mongooseHelpers = require("../config/mongooseHelpers")
 const APIHelpers = require("../config/APIHelpers");
 
+
+// get postage document
 router.get("/", (req, res) => {
 
     mongooseHelpers.getPostageTypes().then((postages) => {
-        APIHelpers.sendStatus(200, "success", { postages: postages }, "Postages found", req.originalUrl, res)
+        APIHelpers.sendStatus(200, "success", { postages: postages }, "Postages found", req, res)
     })
 
 })
@@ -20,9 +22,9 @@ router.post("/", (req, res) => {
     mongooseHelpers.createPostageType(postageName, price).then((newPostage) => {
 
         if (!(newPostage)) {
-            APIHelpers.sendStatus(404, "error", null, "Postage already exists", req.originalUrl, res)
+            APIHelpers.sendStatus(404, "error", null, "Postage already exists", req, res)
         } else {
-            APIHelpers.sendStatus(201, "success", null, "Postage created", req.originalUrl, res)
+            APIHelpers.sendStatus(201, "success", null, "Postage created", req, res)
         }
     })
 
@@ -39,11 +41,11 @@ router.put("/:id", (req, res) => {
     mongooseHelpers.updatePostageType(postageTypeId, convertedUpdateData).then((result) => {
 
         if (result.nModified > 0) {
-            APIHelpers.sendStatus(200, "success", null, "Postage type updated", req.originalUrl, res)
+            APIHelpers.sendStatus(200, "success", null, "Postage type updated", req, res)
         } else if (result.n > 0) {
-            APIHelpers.sendStatus(422, "error", null, "Postage type found but not updated due to fields already containing data sent", req.originalUrl, res)
+            APIHelpers.sendStatus(422, "error", null, "Postage type found but not updated due to fields already containing data sent", req, res)
         } else {
-            APIHelpers.sendStatus(404, "error", null, "Postage type not found", req.originalUrl, res)
+            APIHelpers.sendStatus(404, "error", null, "Postage type not found", req, res)
         }
     })
 
@@ -56,9 +58,9 @@ router.delete("/:id", (req, res) => {
 
     mongooseHelpers.deletePostageType(postageTypeId).then((result) => {
         if (result.nModified > 0) {
-            APIHelpers.sendStatus(200, "success", null, "Postage type deleted", req.originalUrl, res)
+            APIHelpers.sendStatus(200, "success", null, "Postage type deleted", req, res)
         } else {
-            APIHelpers.sendStatus(404, "error", null, "Postage type not found", req.originalUrl, res)
+            APIHelpers.sendStatus(404, "error", null, "Postage type not found", req, res)
         }
     })
 

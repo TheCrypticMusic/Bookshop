@@ -3,49 +3,8 @@ const router = express.Router();
 const mongooseHelpers = require("../config/mongooseHelpers");
 const APIHelpers = require("../config/APIHelpers");
 
-const userBasketExists = (req, res, next) => {
-	const userId = req.params.userid;
 
-	mongooseHelpers.getUserBasket(userId).then((result) => {
-		if (result === null) {
-			APIHelpers.sendStatus(404, "error", null, "Basket not found", req.originalUrl, res);
-		} else {
-			next();
-		}
-	});
-};
 
-const completedOrderExists = (req, res, next) => {
-	const userId = req.params.userid;
-	const basketId = req.params.basketid;
-
-	mongooseHelpers.getSingleOrder(userId, basketId).then((singleOrder) => {
-		if (!singleOrder) {
-			APIHelpers.sendStatus(404, "error", null, "No order found", req.originalUrl, res);
-		} else {
-			next();
-		}
-	});
-};
-
-const userOrderDocumentExists = async (req, res, next) => {
-	const userId = req.params.userid;
-
-	await mongooseHelpers.getUserOrders(userId).then((result) => {
-		if (!result) {
-			APIHelpers.sendStatus(
-				404,
-				"error",
-				null,
-				"No order document found",
-				req.originalUrl,
-				res
-			);
-		} else {
-			next();
-		}
-	});
-};
 
 // get all orders that have been processed on the website
 router.get("/", (req, res) => {
@@ -56,17 +15,17 @@ router.get("/", (req, res) => {
 				"success",
 				{ orders: orders },
 				"All orders found",
-				req.originalUrl,
+				req,
 				res
 			);
 		} else {
-			APIHelpers.sendStatus(404, "error", null, "No orders found", req.originalUrl, res);
+			APIHelpers.sendStatus(404, "error", null, "No orders found", req, res);
 		}
 	});
 });
 
 // get a specfic user and their associated completed orders
-router.get("/:userid", userOrderDocumentExists, (req, res) => {
+router.get("/:userid", APIHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.getUserOrders(userId).then((userOrders) => {
@@ -75,7 +34,7 @@ router.get("/:userid", userOrderDocumentExists, (req, res) => {
 			"success",
 			{ user_orders: userOrders },
 			"User orders found",
-			req.originalUrl,
+			req,
 			res
 		);
 	});
@@ -92,7 +51,7 @@ router.post("/:userid", (req, res) => {
 				"success",
 				null,
 				"User order document sucessfully created",
-				req.originalUrl,
+				req,
 				res
 			);
 		} else {
@@ -101,7 +60,7 @@ router.post("/:userid", (req, res) => {
 				"error",
 				null,
 				"Document already exists",
-				req.originalUrl,
+				req,
 				res
 			);
 		}
@@ -109,7 +68,7 @@ router.post("/:userid", (req, res) => {
 });
 
 // delete order document
-router.delete("/:userid", userOrderDocumentExists, (req, res) => {
+router.delete("/:userid", APIHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.deleteOrderDocument(userId).then((result) => {
@@ -119,7 +78,7 @@ router.delete("/:userid", userOrderDocumentExists, (req, res) => {
 				"success",
 				null,
 				"Order document deleted",
-				req.originalUrl,
+				req,
 				res
 			);
 		}
@@ -127,7 +86,7 @@ router.delete("/:userid", userOrderDocumentExists, (req, res) => {
 });
 
 // create a new order
-router.post("/:userid/baskets", userOrderDocumentExists, userBasketExists, (req, res) => {
+router.post("/:userid/baskets", APIHelpers.userOrderDocumentExists, APIHelpers.basketExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.createUserOrder(userId).then((result) => {
@@ -137,7 +96,7 @@ router.post("/:userid/baskets", userOrderDocumentExists, userBasketExists, (req,
 				"success",
 				result,
 				"New order created",
-				req.originalUrl,
+				req,
 				res
 			);
 		} else {
@@ -146,7 +105,7 @@ router.post("/:userid/baskets", userOrderDocumentExists, userBasketExists, (req,
 				"error",
 				null,
 				"Basket found but zero items in basket",
-				req.originalUrl,
+				req,
 				res
 			);
 		}
@@ -154,26 +113,26 @@ router.post("/:userid/baskets", userOrderDocumentExists, userBasketExists, (req,
 });
 
 // delete all orders
-router.delete("/:userid/baskets", userOrderDocumentExists, (req, res) => {
+router.delete("/:userid/baskets", APIHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 
 	mongooseHelpers.deleteAllOrders(userId).then((result) => {
 		if (result.nModified > 0) {
-			APIHelpers.sendStatus(200, "success", null, "Orders deleted", req.originalUrl, res);
+			APIHelpers.sendStatus(200, "success", null, "Orders deleted", req, res);
 		} else {
-			APIHelpers.sendStatus(404, "success", null, "No orders found", req.originalUrl, res);
+			APIHelpers.sendStatus(404, "success", null, "No orders found", req, res);
 		}
 	});
 });
 
 // get a single completed order for a user
 
-router.get("/:userid/baskets/:basketid", userOrderDocumentExists, (req, res) => {
+router.get("/:userid/baskets/:basketid", APIHelpers.userOrderDocumentExists, (req, res) => {
 	const userId = req.params.userid;
 	const basketId = req.params.basketid;
 
 	mongooseHelpers.getSingleOrder(userId, basketId).then((singleOrder) => {
-		APIHelpers.sendStatus(200, "success", singleOrder, "Order found", req.originalUrl, res);
+		APIHelpers.sendStatus(200, "success", singleOrder, "Order found", req, res);
 	});
 });
 
@@ -182,8 +141,8 @@ router.get("/:userid/baskets/:basketid", userOrderDocumentExists, (req, res) => 
 // subTotal
 router.put(
 	"/:userid/baskets/:basketid",
-	userOrderDocumentExists,
-	completedOrderExists,
+	APIHelpers.userOrderDocumentExists,
+	APIHelpers.completedOrderExists,
 	(req, res) => {
 		const userId = req.params.userid;
 		const basketId = req.params.basketid;
@@ -196,7 +155,7 @@ router.put(
 					"success",
 					null,
 					"Completed order subtotal updated",
-					req.originalUrl,
+					req,
 					res
 				);
 			} else {
@@ -205,7 +164,7 @@ router.put(
 					"success",
 					null,
 					"Completed order found but not updated due to same data being present",
-					req.originalUrl,
+					req,
 					res
 				);
 			}
@@ -215,8 +174,8 @@ router.put(
 
 router.delete(
 	"/:userid/baskets/:basketid",
-	userOrderDocumentExists,
-	completedOrderExists,
+	APIHelpers.userOrderDocumentExists,
+	APIHelpers.completedOrderExists,
 	(req, res) => {
 		const userId = req.params.userid;
 		const basketId = req.params.basketid;
@@ -227,7 +186,7 @@ router.delete(
 				"success",
 				null,
 				"Completed order deleted",
-				req.originalUrl,
+				req,
 				res
 			);
 		});
@@ -238,8 +197,8 @@ router.delete(
 // Update a single order item details
 router.put(
 	"/:userid/baskets/:basketid/items/:itemid",
-	userOrderDocumentExists,
-	completedOrderExists,
+	APIHelpers.userOrderDocumentExists,
+	APIHelpers.completedOrderExists,
 	(req, res) => {
 		const userId = req.params.userid;
 		const basketId = req.params.basketid;
@@ -249,7 +208,7 @@ router.put(
 		mongooseHelpers
 			.updateSingleOrderItemDetails(userId, basketId, itemId, updateBody)
 			.then((result) => {
-				APIHelpers.sendStatus(201, "success", result, "Item updated", req.originalUrl, res);
+				APIHelpers.sendStatus(201, "success", result, "Item updated", req, res);
 			});
 	}
 );

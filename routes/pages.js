@@ -119,6 +119,10 @@ router.get("/add-to-basket/:id", (req, res, next) => {
     );
 });
 
+router.get("/delete-from-basket/:id", (req, res) => {
+    return res.render("basket")
+})
+
 
 router.get("/update-basket/:id", (req, res, next) => {
     return res.render(
@@ -177,12 +181,16 @@ router.get("/book/:bookId/:skuId", async (req, res, next) => {
     const bookId = req.params.bookId;
     const skuId = req.params.skuId;
 
-    const bookDetails = await mongooseHelpers.getSingleBookBySku(bookId, skuId);
+    mongooseHelpers.getSingleSkuOfBook(bookId, skuId, ["title", "author", "imagePath"]).then((bookSku) => {
 
-    const skuDetails = bookDetails.skus[0];
+        const skuDetails = bookSku.skus[0];
 
-    return res.render("product", { book: bookDetails, sku: skuDetails });
+        return res.render("product", { book: bookSku, sku: skuDetails });
+    })
+
+
 });
+
 
 router.get("/user-wishlist", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;
