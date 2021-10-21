@@ -94,6 +94,8 @@ app.use("/api/baskets", require("./API/baskets"))
 app.use("/api/postages", require("./API/postages"))
 app.use("/api/orders", require("./API/orders"))
 app.use("/api/wishlists", require("./API/wishlists"))
+app.use("/api/users", require("./API/users"))
+
 
 //Define Routes
 app.use("/", require("./routes/pages"));

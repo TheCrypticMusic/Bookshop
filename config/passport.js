@@ -8,6 +8,7 @@ passport.use(
             usernameField: "email",
         },
         function (usernameField, password, done) {
+
             User.findOne({ email: usernameField }, function (err, user) {
                 if (err) {
                     return done(err);

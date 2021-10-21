@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongooseHelpers = require("../config/mongooseHelpers")
-
+const authControler = require("../controllers/auth")
 
 
 exports.createTitleCaseQuery = (query) => {
@@ -156,3 +156,39 @@ exports.wishlistExists = (req, res, next) => {
 		}
 	})
 }
+
+exports.userExists = (req, res, next) => {
+
+	const userId = req.method !== "POST" ? req.params.userid : req.body.userid
+
+	mongooseHelpers.getUser(userId).then((result) => {
+		if (!(result)) {
+			this.sendStatus(404, "error", null, "No user found", req, res)
+			return
+		}
+		req.result = result
+		next()
+	})
+}
+
+exports.vaildateRegisterData = (req, res, next) => {
+
+	const { username, email, password } = req.body
+
+	console.log("Username:", username, "Email:", email, "Password:", password)
+
+	mongooseHelpers._vaildateEmail(email).then((emailExists) => {
+		if (emailExists) {
+			return this.sendStatus(409, "error", null, "Email already exists", req, res)
+		}
+		mongooseHelpers._vaildateUsername(username).then((userUsernameExists) => {
+			if (userUsernameExists) {
+				return this.sendStatus(409, "error", null, "Username already exists", req, res)
+			}
+			next()
+		})
+
+	})
+
+
+}	

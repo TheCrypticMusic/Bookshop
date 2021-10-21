@@ -30,7 +30,6 @@ router.post("/:userid/items", apiHelpers.wishlistExists, (req, res) => {
     const bookId = req.query.bookid
 
     mongooseHelpers.addBookToWishlist(userId, bookId).then((result) => {
-        console.log(result)
         apiHelpers.sendStatus(200, "success", null, "Book added", req, res)
     })
 
@@ -75,7 +74,7 @@ router.delete("/:userid/items/:bookid", apiHelpers.wishlistExists, (req, res) =>
         if (result.nModified > 0) {
             apiHelpers.sendStatus(200, "success", result, "Book deleted from wishlist", req, res)
         } else {
-            apiHelpers.sendStatus(404, "error", result, "Result successful but no item to be deleted", req, res)
+            apiHelpers.sendStatus(404, "error", result, "Request successful but no item to be deleted", req, res)
         }
 
     })

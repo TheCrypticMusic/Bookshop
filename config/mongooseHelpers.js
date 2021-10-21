@@ -95,7 +95,7 @@ exports.deleteItemFromBasket = async (userId, bookSkuId) => {
 			userId: userId,
 			$pull: { items: { bookSkuId: bookSkuId } },
 		}).exec();
-		return deletedBook
+		return deletedBook;
 	} catch (err) {
 		console.log(err);
 		return err;
@@ -141,25 +141,28 @@ exports.addBookToBasket = async (userId, bookId, bookSkuId, quantity) => {
 	try {
 		this.getSingleSkuOfBook(bookId, bookSkuId, ["imagePath", "title", "author"]).then(
 			(bookSku) => {
-
 				this._formatBookSkuResultForBasket(bookSku).then(async (formattedResult) => {
 					formattedResult["quantity"] = quantity;
 
 					const bookExistsInBasket = await Basket.exists({
 						userId: userId,
-						"items.bookSkuId": bookSkuId,
+						"items.bookSkuId": formattedResult.bookSkuId,
 					});
+
 					if (bookExistsInBasket) {
-						await Basket.updateOne(
+						const bookAddedToBasket = await Basket.updateOne(
 							{ userId: userId, "items.bookSkuId": bookSkuId },
 							{ $inc: { "items.$.quantity": quantity } }
 						).exec();
+
+						return bookAddedToBasket;
 					} else {
-						await Basket.updateOne(
+						const bookAddedToBasket = await Basket.updateOne(
 							{ userId: userId },
-							{ $addToSet: { items: formattedResult } },
-							{ upsert: true }
+							{ $push: { items: formattedResult } }
 						).exec();
+
+						return bookAddedToBasket;
 					}
 				});
 			}
@@ -176,22 +179,23 @@ exports.getAllItemsInUserBasket = async (userId) => {
 };
 
 exports.getBasketItem = async (userId, bookSkuId) => {
-
-	const singleItemInBasket = await Basket.findOne({ userId: userId }, { items: { $elemMatch: { "bookSkuId": bookSkuId } } }).lean().exec()
-	return singleItemInBasket
-
-}
+	const singleItemInBasket = await Basket.findOne(
+		{ userId: userId },
+		{ items: { $elemMatch: { bookSkuId: bookSkuId } } }
+	)
+		.lean()
+		.exec();
+	return singleItemInBasket;
+};
 
 exports.updateBasketItem = async (userId, bookSkuId, updateData) => {
-	console.log(userId, bookSkuId, updateData)
-
-
-
-	const updatedItem = await Basket.updateOne({ userId: userId, "items.bookSkuId": bookSkuId }, { $set: updateData })
-	console.log(updatedItem)
-	return updatedItem
-}
-
+	const updatedItem = await Basket.updateOne(
+		{ userId: userId, "items.bookSkuId": bookSkuId },
+		{ $set: updateData }
+	);
+	console.log(updatedItem);
+	return updatedItem;
+};
 
 // ***** BOOK HELPERS ***** //
 
@@ -376,19 +380,16 @@ exports.deleteBook = async (bookId) => {
 
 // ***** WISHLIST HELPERS ***** //
 
-
 exports.createWishlist = async (userId) => {
-
-	const userWishListExists = await Wishlist.exists({ userId: userId })
+	const userWishListExists = await Wishlist.exists({ userId: userId });
 
 	if (userWishListExists) {
-		return true
+		return true;
 	} else {
-		await Wishlist.create({ userId: userId })
-		return false
+		await Wishlist.create({ userId: userId });
+		return false;
 	}
-
-}
+};
 
 /**
  *
@@ -403,31 +404,31 @@ exports.getUserWishlist = async (userId) => {
 
 	if (userWishListExists) {
 		const wishlistBookIds = userWishListExists.wishlist.map((x) => x.bookId);
-		const books = this.getBooks({ "_id": wishlistBookIds })
-		return books
+		const books = this.getBooks({ _id: wishlistBookIds });
+		return books;
 	} else {
 		return false;
 	}
 };
 
 exports.getSingleItemInWishlist = async (userId, bookId) => {
-
-	const singleItem = await Wishlist.findOne({ userId: userId }, {
-		wishlist: {
-			$elemMatch: { "bookId": bookId }
-		},
-	})
+	const singleItem = await Wishlist.findOne(
+		{ userId: userId },
+		{
+			wishlist: {
+				$elemMatch: { bookId: bookId },
+			},
+		}
+	);
 	if (singleItem.wishlist.length === 0) {
-		return false
+		return false;
 	}
-	return singleItem
-
-}
+	return singleItem;
+};
 exports.deleteWishlistItems = async (userId) => {
-
-	const deletedItems = await Wishlist.updateOne({ userId: userId }, { $set: { "wishlist": [] } })
-	return deletedItems
-}
+	const deletedItems = await Wishlist.updateOne({ userId: userId }, { $set: { wishlist: [] } });
+	return deletedItems;
+};
 
 /**
  *
@@ -438,13 +439,15 @@ exports.deleteWishlistItems = async (userId) => {
 exports.addBookToWishlist = async (userId, bookId) => {
 	try {
 		this.getSingleItemInWishlist(userId, bookId).then(async (result) => {
-
-			if (!(result)) {
-				const addedBook = await Wishlist.updateOne({ userId: userId }, { $addToSet: { "wishlist": { "bookId": bookId } } }).exec()
-				return addedBook
+			if (!result) {
+				const addedBook = await Wishlist.updateOne(
+					{ userId: userId },
+					{ $addToSet: { wishlist: { bookId: bookId } } }
+				).exec();
+				return addedBook;
 			}
-		})
-		return false
+		});
+		return false;
 		// const bookExistsInWishlist = await Wishlist.exists({
 		// 	userId: userId,
 		// 	"wishlist.bookId": mngoosbookId,
@@ -473,18 +476,37 @@ exports.addBookToWishlist = async (userId, bookId) => {
 };
 
 exports.deleteSingleItemFromWishlist = async (userId, bookId) => {
-
 	try {
-
-		const deletedItem = await Wishlist.updateOne({ userId: userId }, { $pull: { "wishlist": { "bookId": bookId } } }).exec()
-		return deletedItem
+		const deletedItem = await Wishlist.updateOne(
+			{ userId: userId },
+			{ $pull: { wishlist: { bookId: bookId } } }
+		).exec();
+		return deletedItem;
 	} catch (error) {
-		return error
+		return error;
 	}
-
-}
+};
 
 // ***** USER HELPERS ***** //
+
+exports.createUser = async (username, email, password) => {
+	try {
+
+		new User({
+			username: username,
+			email: email,
+			password: password,
+		}).save((error, data) => {
+			if (error) {
+				return error
+			}
+			return data
+		});
+
+	} catch (error) {
+		return error;
+	}
+};
 
 /**
  *
@@ -493,7 +515,13 @@ exports.deleteSingleItemFromWishlist = async (userId, bookId) => {
  */
 exports.getUser = async (userId) => {
 	try {
-		return await User.findById({ _id: userId }).lean().exec();
+		const userExists = await User.exists({ _id: userId });
+		if (userExists) {
+			const foundUser = await User.findById({ _id: userId }).lean().exec();
+			return foundUser;
+		} else {
+			return false;
+		}
 	} catch (err) {
 		console.log(err);
 		return err;
@@ -630,8 +658,6 @@ exports.deleteOrderDocument = async (userId) => {
 		return error;
 	}
 };
-
-
 
 // This is used to create a record in the database of all the orders that the user has completed
 // This is not used to create a new order
@@ -792,19 +818,23 @@ exports.createPostageType = async (postageName, price) => {
 
 exports.getSinglePostageType = async (postageTypeId) => {
 	try {
+		const postageTypeExists = await Postage.exists({ "postageTypes._id": postageTypeId });
 
-		const postageTypeExists = await Postage.exists({ "postageTypes._id": postageTypeId })
-
-		if (!(postageTypeExists)) {
-			return false
+		if (!postageTypeExists) {
+			return false;
 		}
 
-		const postageType = await Postage.findOne({}, { "postageTypes": { $elemMatch: { _id: postageTypeId } } }).lean().exec()
-		return postageType
+		const postageType = await Postage.findOne(
+			{},
+			{ postageTypes: { $elemMatch: { _id: postageTypeId } } }
+		)
+			.lean()
+			.exec();
+		return postageType;
 	} catch (error) {
-		return error
+		return error;
 	}
-}
+};
 
 exports.updatePostageType = async (postageTypeId, updateData) => {
 	try {
@@ -904,3 +934,18 @@ exports._formatBookSkuResultForBasket = async (bookResult) => {
 	return combinedResult;
 };
 
+
+exports._vaildateEmail = async (email) => {
+
+	const userEmailExists = await User.exists({ email: email })
+	console.log("Email already exists?", userEmailExists)
+	return userEmailExists
+}
+
+exports._vaildateUsername = async (username) => {
+
+	const userUsernameExists = await User.exists({ username: username })
+	console.log("Username already exists?", userUsernameExists)
+	return userUsernameExists
+
+}

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongooseHelpers = require("../config/mongooseHelpers");
 const apiHelpers = require("../config/apiHelpers");
-const { application } = require("express");
+
 
 // get postage document
 router.get("/", (req, res) => {

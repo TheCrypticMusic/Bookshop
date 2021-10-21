@@ -1,45 +1,62 @@
 const User = require("../models/user");
 const passport = require("passport");
 const crypto = require("crypto");
-const Basket = require("../models/basket")
+const mongooseHelpers = require("../config/mongooseHelpers");
 
 const generateAuthToken = () => {
-    return crypto.randomBytes(30).toString("hex");
+	return crypto.randomBytes(30).toString("hex");
 };
 
-exports.register = async (req, res) => {
+exports.validateEmail = (req, res, next) => {
+	const { email } = req.body;
 
-    const { username, email, password, passwordConfirm } = req.body;
-    if (!email || !password) {
-        return res.status(400).render("register");
-    }
-    if (password !== passwordConfirm) {
-        return res.render("register", { message: "Passwords do not match" });
-    }
+	mongooseHelpers._vaildateEmail(email).then((emailExists) => {
+		if (emailExists) {
+			console.log("Email already taken:", emailExists);
+			return res.render("register", { message: "Email already taken" });
+		}
+		next();
+	});
+};
 
-    await User.findOne({ email: email }, function (err, docs) {
-        if (docs) {
-            console.log("Email already taken:", docs);
-            return res.render("register", { message: "Email already taken" });
-        }
+exports.validateUsername = (req, res, next) => {
+	const { username } = req.body;
 
-        new User({
-            username: username,
-            email: email,
-            password: password,
-        }).save((error, data) => {
-            console.log(data)
-            return res.render("register", { message: "Account Created" });
-        });
-    });
+	mongooseHelpers._vaildateUsername(username).then((usernameExists) => {
+		if (usernameExists) {
+			console.log("Username already taken");
+			return res.render("register", { message: "Username already taken" });
+		}
+		next();
+	});
+};
+
+exports.checkPasswords = (req, res, next) => {
+	const { password, passwordConfirm } = req.body;
+
+	if (password !== passwordConfirm) {
+		console.log("Passwords don't match");
+		return res.render("register", { message: "Passwords do not match" });
+	}
+	next()
+};
+
+exports.registerUser = async (req, res, next) => {
+
+	const { username, email, password, } = req.body
+
+	mongooseHelpers.createUser(username, email, password).then((result) => {
+		console.log(result)
+		return res.render("register", { message: "Account created" })
+	})
 };
 
 exports.login = (req, res, next) => {
-    res.cookie("token", generateAuthToken(), { maxAge: 60000 });
+	res.cookie("token", generateAuthToken(), { maxAge: 60000 });
 
-    passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/login",
-        failureFlash: true,
-    })(req, res, next);
+	passport.authenticate("local", {
+		successRedirect: "/",
+		failureRedirect: "/login",
+		failureFlash: true,
+	})(req, res, next);
 };

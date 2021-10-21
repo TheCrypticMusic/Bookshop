@@ -13,13 +13,15 @@ exports.addItemToBasket = async (req, res, next) => {
     const bookId = req.params.id;
 
     const { bookSkuId, quantity } = req.body;
-    try {
-        // const userBasket = mongooseHelpers.getUserBasket(userId)
-        const selectFilter = ["title", "author", "imagePath", "genre", "price"]
-        mongooseHelpers.addBookToBasket(userId, bookId, bookSkuId, quantity);
-    } catch (err) {
-        return err;
-    }
 
-    res.redirect("/");
+    mongooseHelpers.getUserBasket(userId).then((result) => {
+        if (!(result)) {
+            return mongooseHelpers.createUserBasket(userId)
+        }
+    })
+
+    mongooseHelpers.addBookToBasket(userId, bookId, bookSkuId, quantity).then(() => {
+        res.redirect("/");
+    })
+
 };

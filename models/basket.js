@@ -21,6 +21,7 @@ const basketSchema = new mongoose.Schema({
 basketSchema.post("updateOne", async function (doc, next) {
 
     const docToUpdate = await this.model.findOne(this.getQuery())
+
     docToUpdate.items.map(x => {
         x.total = x.price * x.quantity
     })
