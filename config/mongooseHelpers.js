@@ -13,8 +13,9 @@ exports.createUserBasket = async (userId) => {
 
 	if (!userBasketExists) {
 		await Basket.create({ userId: userId, items: [] });
+		return true;
 	}
-	return userBasketExists;
+	return false;
 };
 
 exports.deleteUserBasket = async (userId) => {
@@ -381,14 +382,14 @@ exports.deleteBook = async (bookId) => {
 // ***** WISHLIST HELPERS ***** //
 
 exports.createWishlist = async (userId) => {
-	const userWishListExists = await Wishlist.exists({ userId: userId });
+	const userWishlistExists = await Wishlist.exists({ userId: userId });
 
-	if (userWishListExists) {
+	if (!userWishlistExists) {
+		const userWishlist = await Wishlist.create({ userId: userId });
+		console.log(userWishlist);
 		return true;
-	} else {
-		await Wishlist.create({ userId: userId });
-		return false;
 	}
+	return false;
 };
 
 /**
@@ -491,18 +492,16 @@ exports.deleteSingleItemFromWishlist = async (userId, bookId) => {
 
 exports.createUser = async (username, email, password) => {
 	try {
-
 		new User({
 			username: username,
 			email: email,
 			password: password,
 		}).save((error, data) => {
 			if (error) {
-				return error
+				return error;
 			}
-			return data
+			return data;
 		});
-
 	} catch (error) {
 		return error;
 	}
@@ -528,72 +527,14 @@ exports.getUser = async (userId) => {
 	}
 };
 
-/**
- *
- * @param {String} userId
- * @param {String} newUsername
- * @returns {Boolean}
- */
-exports.updateUsername = async (userId, newUsername) => {
-	const userInDatabase = await User.findOne({ username: newUsername }).exec();
-	if (!userInDatabase) {
-		await User.findOne({ _id: userId })
-			.exec()
-			.then((result) => {
-				result.username = newUsername;
-				result.save();
-			});
-		return true;
-	}
-	return false;
-};
+exports.updateUser = async (userId, updateData) => {
+	try {
+		const updatedUserResult = await User.updateOne({ _id: userId }, updateData).exec();
 
-/**
- *
- * @param {String} userId
- * @param {String} newEmail
- * @returns {Boolean}
- */
-exports.updateEmail = async (userId, newEmail, password) => {
-	const userInDatabase = await User.findOne({ email: newEmail }).exec();
-	if (!userInDatabase) {
-		await User.findOne({ _id: userId })
-			.exec()
-			.then(async (result) => {
-				await result.comparePassword(password, (err, isMatch) => {
-					if (err) {
-						return err;
-					}
-					result.email = newEmail;
-					result.save();
-					return isMatch;
-				});
-			});
-		return true;
+		return updatedUserResult;
+	} catch (error) {
+		return error;
 	}
-	return false;
-};
-
-/**
- *
- * @param {String} userId
- * @param {String} oldPassword
- * @param {String} newPassword
- * @param {String} newPasswordConfirm
- * @returns {Boolean}
- */
-exports.updatePassword = async (userId, newPassword, newPasswordConfirm) => {
-	if (newPassword != newPasswordConfirm) {
-		return false;
-	}
-	//  using mongoose.pre hook here to hash the password when I edit the password field and I call save
-	await User.findOne({ _id: userId })
-		.exec()
-		.then(async (userInDatabase) => {
-			userInDatabase.password = newPassword;
-			userInDatabase.save();
-		});
-	return true;
 };
 
 // ***** ORDER HELPERS ***** //
@@ -934,18 +875,32 @@ exports._formatBookSkuResultForBasket = async (bookResult) => {
 	return combinedResult;
 };
 
-
 exports._vaildateEmail = async (email) => {
-
-	const userEmailExists = await User.exists({ email: email })
-	console.log("Email already exists?", userEmailExists)
-	return userEmailExists
-}
+	const userEmailExists = await User.exists({ email: email });
+	console.log("Email already exists?", userEmailExists);
+	return userEmailExists;
+};
 
 exports._vaildateUsername = async (username) => {
+	const userUsernameExists = await User.exists({ username: username });
+	console.log("Username already exists?", userUsernameExists);
+	return userUsernameExists;
+};
 
-	const userUsernameExists = await User.exists({ username: username })
-	console.log("Username already exists?", userUsernameExists)
-	return userUsernameExists
+exports._validateUserBasket = async (userId) => {
+	const userBasketExists = await Basket.exists({ userId: userId });
+	console.log("User has basket?", userBasketExists);
+	return userBasket;
+};
 
-}
+exports._validatePassword = async (userId, password) => {
+	const user = await User.findOne({ _id: userId }).exec();
+
+	const passwordResult = user.comparePassword(password, (err, isMatch) => {
+		if (err) {
+			return err;
+		}
+		return isMatch;
+	});
+	return passwordResult;
+};

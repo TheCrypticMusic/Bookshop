@@ -422,6 +422,27 @@ hr.personal-divider {
 	.content-container {
 		padding-left: 0 !important;
 	}
+
+	.basket-price {
+		display: none;
+		width: 100%;
+	}
+
+	.book-author {
+		top: 3.2rem !important;
+	}
+
+	.book-type {
+		top: 4.4rem !important;
+	}
+
+	.book-price {
+		top: 5.6rem !important;
+	}
+
+	.basket {
+		top: 7.5rem !important;
+	}
 }
 
 .header-row {
@@ -538,6 +559,18 @@ hr.personal-divider {
 
 	.book-cover-basket {
 		height: 200px !important;
+	}
+
+	.table-checkout-price {
+		display: block !important;
+	}
+
+	.book-basket-container {
+		display: block !important;
+	}
+
+	.book-info-basket {
+		width: 100% !important;
 	}
 }
 

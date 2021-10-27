@@ -1,7 +1,4 @@
-const express = require("express");
-const router = express.Router();
 const mongooseHelpers = require("../config/mongooseHelpers")
-const authControler = require("../controllers/auth")
 
 
 exports.createTitleCaseQuery = (query) => {

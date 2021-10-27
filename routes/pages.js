@@ -234,7 +234,12 @@ router.get("/order-history", isAuthenticated, async (req, res, next) => {
 })
 
 router.get("/amendments/email", isAuthenticated, (req, res, next) => {
-    return res.render("email", { layout: "account-layout" });
+    const userId = req.session.passport.user;
+
+    mongooseHelpers.getUser(userId).then(result => {
+        const email = result.email
+        res.render("email", { layout: "account-layout", "email": email });
+    })
     // { csrfToken: req.csrfToken() });
 });
 

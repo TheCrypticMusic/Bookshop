@@ -1,4 +1,3 @@
-const User = require("../models/user");
 const passport = require("passport");
 const crypto = require("crypto");
 const mongooseHelpers = require("../config/mongooseHelpers");
