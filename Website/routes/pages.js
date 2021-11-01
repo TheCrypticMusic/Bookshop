@@ -1,8 +1,8 @@
 const express = require("express");
 const csrf = require("csurf");
 const router = express.Router();
-const Wishlist = require("../models/wishlist");
-const mongooseHelpers = require("../config/mongooseHelpers");
+const Wishlist = require("../../models/wishlist");
+const mongooseHelpers = require("../../config/mongooseHelpers");
 
 
 
@@ -22,8 +22,6 @@ const allowedToAccessPaymentScreen = async (req, res, next) => {
     mongooseHelpers.getUserBasket(userId).then((userBasket) => {
         userBasket.items.length > 0 ? next() : res.redirect("/basket")
     })
-
-
 };
 
 // router.use(csrfProtection);
@@ -205,14 +203,16 @@ router.get("/user-wishlist", isAuthenticated, async (req, res, next) => {
 
 router.get("/address", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;
-    const userDetails = await mongooseHelpers.getUser(userId);
+    mongooseHelpers.getUser(userId).then((userDetails) => {
 
-    const userAddress = userDetails.address;
+        const userAddress = userDetails.address;
 
-    return res.render("address", {
-        layout: "account-layout",
-        user: userAddress,
+        return res.render("address", {
+            layout: "account-layout",
+            user: userAddress,
+        });
     });
+
 });
 
 router.get("/order-history", isAuthenticated, async (req, res, next) => {

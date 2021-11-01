@@ -1,9 +1,9 @@
-const Basket = require("../models/basket");
+const Basket = require("../../models/basket");
 const router = require("../routes/pages");
 require("dotenv").config({ path: "./config/.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const express = require("express");
-const Postage = require("../models/postageCosts");
+const Postage = require("../../models/postageCosts");
 const { compareSync } = require("bcryptjs");
 
 const basketItems = async (basketId) => {

@@ -83,6 +83,22 @@ exports.userOrderDocumentExists = async (req, res, next) => {
 	});
 };
 
+exports.addressExists = async (req, res, next) => {
+
+	const userId = req.params.userid
+	mongooseHelpers.getUserAddress(userId).then((result) => {
+
+		if (req.method === "POST") {
+			if (result["address"] !== undefined && result["shippingAddress"] !== undefined) {
+				this.sendStatus(409, "error", null, "Cannot create anymore addresses for this user", req, res)
+			}
+		}
+		next()
+	})
+
+}
+
+
 exports.bookExists = (req, res, next) => {
 	const bookId = req.method !== "POST" ? req.body.bookId : req.params.bookId
 
@@ -154,9 +170,67 @@ exports.wishlistExists = (req, res, next) => {
 	})
 }
 
+/**
+ * 
+ * @param {Array} query 
+ * @returns 
+ */
+exports.createCamelCaseDatabaseEnquiry = (query) => {
+
+	const camelCaseWord = []
+
+	for (const index in query) {
+		const newWord = query[index].replace(/\-[a-z]/g, (word) => {
+			return word.toUpperCase()
+		})
+
+		camelCaseWord.push(newWord.split("-").join(""))
+	}
+
+	return camelCaseWord
+	// 	if (splitWord.length > 1) {
+
+	// 		for (const index in splitWord) {
+	// 			const newWord = index > 0 ? splitWord[index].replace(/[a-z]/, (word) => {
+	// 				return word[0].toUpperCase()
+	// 			}) : splitWord[index]
+	// 			console.log(newWord)
+	// 			camelCaseWord.push(newWord)
+	// 		}
+
+	// 	}
+	// }
+	// console.log(camelCaseWord)
+}
+
+
+/**
+ * 
+ * @param {Array} fieldsRequired 
+ * @returns 
+ */
+exports.validQueryChecker = (fieldsRequired) => {
+	return (req, res, next) => {
+
+		const queryFields = Object.keys(req.query)
+		const numberOfQueryPresent = queryFields.length
+		const numberOfRequiredFieldsPresent = fieldsRequired.length
+
+		const checker = (arr1, arr2) => arr2.every(elem => arr1.includes(elem))
+
+		if (numberOfRequiredFieldsPresent != numberOfQueryPresent) {
+			this.sendStatus(400, "error", null, `Invalid number of query fields sent. Expected amount: ${numberOfRequiredFieldsPresent}`, req, res)
+		} else if (!(checker(fieldsRequired, queryFields))) {
+			this.sendStatus(400, "error", null, `Invalid query fields sent. Expected fields: ${fieldsRequired} Data sent: ${queryFields}`, req, res)
+		} else {
+			next()
+		}
+	}
+}
+
 exports.userExists = (req, res, next) => {
 
-	const userId = req.method !== "POST" ? req.params.userid : req.body.userid
+	const userId = req.params.userid
 
 	mongooseHelpers.getUser(userId).then((result) => {
 		if (!(result)) {

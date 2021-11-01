@@ -1,4 +1,4 @@
-const mongooseHelpers = require("../config/mongooseHelpers");
+const mongooseHelpers = require("../../config/mongooseHelpers");
 
 
 exports.userHasWishlist = (req, res, next) => {
@@ -7,8 +7,9 @@ exports.userHasWishlist = (req, res, next) => {
 
     mongooseHelpers.getUserWishlist(userId).then((userWishlistExists) => {
         if (!(userWishlistExists)) {
-            mongooseHelpers.createWishlist(userId)
-            next()
+            mongooseHelpers.createWishlist(userId).then(() => {
+                next()
+            })
         } else {
             next()
         }

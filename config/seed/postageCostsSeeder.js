@@ -1,4 +1,4 @@
-const Postage = require("../models/postageCosts")
+const Postage = require("../../models/postageCosts")
 const mongoose = require("mongoose");
 
 const Costs = [

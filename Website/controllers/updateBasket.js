@@ -1,4 +1,4 @@
-const mongooseHelpers = require("../config/mongooseHelpers")
+const mongooseHelpers = require("../../config/mongooseHelpers")
 
 
 exports.updateBasket = async (req, res, next) => {

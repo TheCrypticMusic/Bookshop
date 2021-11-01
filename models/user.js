@@ -16,12 +16,20 @@ const shippingAddressSchema = new mongoose.Schema({
 	postcode: { type: String },
 });
 
+const roleSchema = new mongoose.Schema({
+	title: { type: String, required: true },
+	readAccess: { type: Boolean, required: true },
+	writeAccess: { type: Boolean, required: true },
+})
+
 const userSchema = new mongoose.Schema({
 	username: { type: String, required: true },
 	email: { type: String, required: true },
 	password: { type: String, required: true },
 	address: addressSchema,
 	shippingAddress: shippingAddressSchema,
+	role: roleSchema
+
 });
 
 // hook to encrypt the password

@@ -1,6 +1,6 @@
 const passport = require("passport");
 const crypto = require("crypto");
-const mongooseHelpers = require("../config/mongooseHelpers");
+const mongooseHelpers = require("../../config/mongooseHelpers");
 
 const generateAuthToken = () => {
 	return crypto.randomBytes(30).toString("hex");
@@ -44,7 +44,7 @@ exports.registerUser = async (req, res, next) => {
 
 	const { username, email, password, } = req.body
 
-	mongooseHelpers.createUser(username, email, password).then((result) => {
+	mongooseHelpers.createUser(username, email, password, "User", false, false).then((result) => {
 		console.log(result)
 		return res.render("register", { message: "Account created" })
 	})

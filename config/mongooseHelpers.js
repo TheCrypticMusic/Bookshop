@@ -34,13 +34,17 @@ exports.deleteUserBasket = async (userId) => {
  * @returns {JSON}
  */
 exports.getUserBasket = async (userId) => {
-	const basketExists = await Basket.exists({ userId: userId });
-
-	if (basketExists) {
-		const userBasket = await Basket.findOne({ userId: userId }).lean().exec();
-		return userBasket;
-	} else {
-		return false;
+	try {
+		const basketExists = await Basket.exists({ userId: userId });
+		console.log(basketExists)
+		if (basketExists) {
+			const userBasket = await Basket.findOne({ userId: userId }).lean().exec();
+			return userBasket;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return error
 	}
 };
 
@@ -149,6 +153,8 @@ exports.addBookToBasket = async (userId, bookId, bookSkuId, quantity) => {
 						userId: userId,
 						"items.bookSkuId": formattedResult.bookSkuId,
 					});
+
+
 
 					if (bookExistsInBasket) {
 						const bookAddedToBasket = await Basket.updateOne(
@@ -449,27 +455,7 @@ exports.addBookToWishlist = async (userId, bookId) => {
 			}
 		});
 		return false;
-		// const bookExistsInWishlist = await Wishlist.exists({
-		// 	userId: userId,
-		// 	"wishlist.bookId": mngoosbookId,
-		// });
-		// if (bookExistsInWishlist) {
-		// 	await Wishlist.updateOne(
-		// 		{ userId: userId },
-		// 		{ $pull: { wishlist: { bookId: bookId } } }
-		// 	);
-		// } else {
-		// 	const updateData = {
-		// 		wishlist: {
-		// 			bookId: bookId,
-		// 		},
-		// 	};
-		// 	await Wishlist.updateOne(
-		// 		{ userId: userId },
-		// 		{ $addToSet: updateData },
-		// 		{ upsert: true }
-		// 	).exec();
-		// }
+
 	} catch (err) {
 		console.log(err);
 		return err;
@@ -490,12 +476,17 @@ exports.deleteSingleItemFromWishlist = async (userId, bookId) => {
 
 // ***** USER HELPERS ***** //
 
-exports.createUser = async (username, email, password) => {
+exports.createUser = async (username, email, password, roleTitle, writeAccess, readAccess) => {
 	try {
 		new User({
 			username: username,
 			email: email,
 			password: password,
+			role: {
+				title: roleTitle,
+				writeAccess: writeAccess,
+				readAccess: readAccess,
+			}
 		}).save((error, data) => {
 			if (error) {
 				return error;
@@ -527,15 +518,35 @@ exports.getUser = async (userId) => {
 	}
 };
 
+exports.getUserAddress = async (userId, selectFilter) => {
+	try {
+
+		const userAddress = await User.findOne({ _id: userId }).select(selectFilter)
+		return userAddress
+	} catch (error) {
+		return error
+	}
+}
+
 exports.updateUser = async (userId, updateData) => {
 	try {
 		const updatedUserResult = await User.updateOne({ _id: userId }, updateData).exec();
-
 		return updatedUserResult;
 	} catch (error) {
 		return error;
 	}
 };
+
+exports.createAddressForUser = async (userId, updateData) => {
+	try {
+
+		const updateAddressResult = await User.updateOne({ _id: userId }, { $set: updateData }).exec()
+		return updateAddressResult
+
+	} catch (error) {
+		return error
+	}
+}
 
 // ***** ORDER HELPERS ***** //
 

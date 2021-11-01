@@ -1,4 +1,4 @@
-const mongooseHelpers = require("../config/mongooseHelpers");
+const mongooseHelpers = require("../../config/mongooseHelpers");
 
 exports.userHasBasket = async (req, res, next) => {
 	const userId = req.session.passport.user;
@@ -10,8 +10,10 @@ exports.userHasBasket = async (req, res, next) => {
 			mongooseHelpers.createUserBasket(userId).then((basketCreationSuccessful) => {
 				if (basketCreationSuccessful) {
 					next();
+				} else {
+					res.status(404).send("An error occurred");
 				}
-				res.status(404).send("An error occurred");
+
 			});
 		}
 	});

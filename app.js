@@ -31,12 +31,12 @@ db.once("open", function () {
     console.log("Database Opened Succcesfully")
 });
 
-const publicDirectory = path.join(__dirname, "./public");
-const scriptDirectory = path.join(__dirname, "./scripts")
+const websitePublicDirectory = path.join(__dirname, "./Website/public");
+const websiteScriptDirectory = path.join(__dirname, "./Website/scripts")
 
 // Allow nodejs to use styles, js, html in the public folder
-app.use(express.static(publicDirectory));
-app.use(express.static(scriptDirectory))
+app.use(express.static(websitePublicDirectory));
+app.use(express.static(websiteScriptDirectory))
 
 // Parse URL-Encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: false }));
@@ -71,8 +71,8 @@ app.use(passport.session());
 
 const hbs = expressHbs.create({
     defaultLayout: "layout",
-    layoutsDir: path.join(__dirname, "views/layouts"),
-    partialsDir: path.join(__dirname, "views/partials"),
+    layoutsDir: path.join(__dirname, "./Website/views/layouts"),
+    partialsDir: path.join(__dirname, "./Website/views/partials"),
     helpers: require("./config/handlebars-helpers"),
 
 });
@@ -81,10 +81,12 @@ const hbs = expressHbs.create({
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 app.set("views", [
-    path.join(__dirname, "views"),
-    path.join(__dirname, "views/account")
+    path.join(__dirname, "./Website/views"),
+    path.join(__dirname, "./Website/views/account")
 ]
 )
+
+
 
 
 
@@ -97,18 +99,15 @@ app.use("/api/wishlists", require("./API/wishlists"))
 app.use("/api/users", require("./API/users"))
 
 
-//Define Routes
-app.use("/", require("./routes/pages"));
-
-app.use("/auth", require("./routes/auth"));
-
-app.use("/amendments", require("./routes/updateUserDetails"))
-
-app.use("/add-to-basket", require("./routes/addToBasket"))
-app.use("/delete-from-basket", require("./routes/deleteFromBasket"))
-app.use("/update-basket", require("./routes/updateBasket"))
-app.use("/stripe-checkout-session", require("./routes/checkoutSession"))
-app.use("/wishlist", require("./routes/wishlist"))
+// Website Routes
+app.use("/", require("./Website/routes/pages"));
+app.use("/auth", require("./Website/routes/auth"));
+app.use("/amendments", require("./Website/routes/updateUserDetails"))
+app.use("/add-to-basket", require("./Website/routes/addToBasket"))
+app.use("/delete-from-basket", require("./Website/routes/deleteFromBasket"))
+app.use("/update-basket", require("./Website/routes/updateBasket"))
+app.use("/stripe-checkout-session", require("./Website/routes/checkoutSession"))
+app.use("/wishlist", require("./Website/routes/wishlist"))
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const event = req.body;
