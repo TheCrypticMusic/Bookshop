@@ -14,7 +14,7 @@ passport.use(
                     return done(err);
                 }
                 if (!user) {
-                    console.log("user not found");
+                    console.log("User not found");
                     return done(err);
                 }
 

@@ -6,14 +6,14 @@
         <section class="details">
             <div class="form-section">
                 
-                {{#each userOrders}}
+                {{#each orders}}
                     <div class="order-details">
                         <div class="address1-label" id="account-form">
                             <h2>Order #{{this._id}}</h2>
                         </div>
                         {{#each this.items}}
                             <div class="order-item">
-                                <img class="order-img" src="{{ this.bookImage }}">
+                                <img class="order-img" src="/{{ this.bookImage }}">
 
                                 <div class="order-book-details">
                                     <h4 class="order-book-title">

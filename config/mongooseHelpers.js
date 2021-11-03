@@ -36,7 +36,7 @@ exports.deleteUserBasket = async (userId) => {
 exports.getUserBasket = async (userId) => {
 	try {
 		const basketExists = await Basket.exists({ userId: userId });
-		console.log(basketExists)
+
 		if (basketExists) {
 			const userBasket = await Basket.findOne({ userId: userId }).lean().exec();
 			return userBasket;
@@ -102,7 +102,6 @@ exports.deleteItemFromBasket = async (userId, bookSkuId) => {
 		}).exec();
 		return deletedBook;
 	} catch (err) {
-		console.log(err);
 		return err;
 	}
 };
@@ -123,7 +122,6 @@ exports.updateBasketItemQuantity = async (userId, basketItemIds, quantity) => {
 			).exec();
 		});
 	} catch (err) {
-		console.log(err);
 		return err;
 	}
 };
@@ -181,7 +179,6 @@ exports.addBookToBasket = async (userId, bookId, bookSkuId, quantity) => {
 
 exports.getAllItemsInUserBasket = async (userId) => {
 	const itemsInUserBasket = await Basket.findOne({ userId: userId }, "items");
-	console.log(itemsInUserBasket);
 	return itemsInUserBasket;
 };
 
@@ -200,7 +197,7 @@ exports.updateBasketItem = async (userId, bookSkuId, updateData) => {
 		{ userId: userId, "items.bookSkuId": bookSkuId },
 		{ $set: updateData }
 	);
-	console.log(updatedItem);
+
 	return updatedItem;
 };
 
@@ -392,7 +389,6 @@ exports.createWishlist = async (userId) => {
 
 	if (!userWishlistExists) {
 		const userWishlist = await Wishlist.create({ userId: userId });
-		console.log(userWishlist);
 		return true;
 	}
 	return false;
@@ -457,7 +453,6 @@ exports.addBookToWishlist = async (userId, bookId) => {
 		return false;
 
 	} catch (err) {
-		console.log(err);
 		return err;
 	}
 };
@@ -513,7 +508,7 @@ exports.getUser = async (userId) => {
 			return false;
 		}
 	} catch (err) {
-		console.log(err);
+
 		return err;
 	}
 };
@@ -570,7 +565,7 @@ exports.getAllOrders = async () => {
  */
 exports.getUserOrders = async (userId) => {
 	try {
-		console.log(userId);
+
 		const completedOrders = await Order.findOne({ userId: userId }).lean().exec();
 		return completedOrders;
 	} catch (err) {
@@ -604,7 +599,7 @@ exports.deleteOrderDocument = async (userId) => {
 		const deletedOrderDocument = await Order.deleteOne({
 			userId: userId,
 		}).exec();
-		console.log(deletedOrderDocument);
+
 		return deletedOrderDocument;
 	} catch (error) {
 		return error;
@@ -718,7 +713,7 @@ exports.updateSingleOrderItemDetails = async (userId, basketId, itemId, updateDa
 				arrayFilters: compiledUpdate[1],
 			}
 		).exec();
-		console.log(updatedOrderItem);
+
 		return updatedOrderItem;
 	} catch (error) {
 		return error;
@@ -888,7 +883,6 @@ exports._formatBookSkuResultForBasket = async (bookResult) => {
 
 exports._vaildateEmail = async (email) => {
 	const userEmailExists = await User.exists({ email: email });
-	console.log("Email already exists?", userEmailExists);
 	return userEmailExists;
 };
 
@@ -905,13 +899,23 @@ exports._validateUserBasket = async (userId) => {
 };
 
 exports._validatePassword = async (userId, password) => {
-	const user = await User.findOne({ _id: userId }).exec();
+	try {
+		const user = await User.findOne({ _id: userId }).exec();
+		if (user) {
+			const passwordResult = user.comparePassword(password, (err, isMatch) => {
+				console.log("Password's Match?", isMatch)
+				if (err) {
+					return err;
+				}
+				return isMatch;
+			});
 
-	const passwordResult = user.comparePassword(password, (err, isMatch) => {
-		if (err) {
-			return err;
+			return passwordResult;
 		}
-		return isMatch;
-	});
-	return passwordResult;
+
+	} catch (error) {
+		console.log("ERROR:", error)
+		return error
+	}
+
 };

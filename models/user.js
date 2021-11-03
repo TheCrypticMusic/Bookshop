@@ -58,6 +58,7 @@ userSchema.pre("updateOne", async function (next) {
 });
 
 userSchema.methods.comparePassword = function (password, cb) {
+
 	return cb(null, bcrypt.compareSync(password, this.password));
 };
 

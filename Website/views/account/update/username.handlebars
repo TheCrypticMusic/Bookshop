@@ -10,11 +10,11 @@
                         <div class="username-label" id="account-form">
                             <h3>Old Username</h3>
                         </div>
-                        <form action="/amendments/username" method="POST">
+
                             <div class="flex-box">
                                 <div class="username-value" id="account-form">
                                     <input type="text" class="form-control mb-4" id="oldUsername" name="oldUsername"
-                                        placeholder="{{username}}" disabled="true">
+                                        value="{{username}}" disabled="true">
 
                                 </div>
                             </div>
@@ -31,11 +31,11 @@
                             </div>
                             <div class="btn-flex">
                                 {{!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}"> --}}
-                                <button class="btn btn-primary" id="submit-btn account-change" type="submit">Update
+                                <button class="btn btn-primary account-username-update" id="submit-btn account-change" type="submit">Update
                                     Username</button>
                                 <a class="cancel-change" href="/account">Cancel</a>
                             </div>
-                        </form>
+                
                         {{#if error }}
                         <h4 class="alert alert-danger mt-4">{{ error }}</h4>
                         {{/if}}

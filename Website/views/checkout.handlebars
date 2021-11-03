@@ -9,12 +9,12 @@
                     <h3 class="checkout-section">1) Address Details</h3>
                 </div>
                 <div class="container-address" id="checkout-container">
-                    <p class="address-text" id="checkout-info-address">{{user.username}}</p>
-                    <small class="address-text" id="checkout-info-address">{{userAddress.addressLine1}}</small>
-                    <small class="address-text" id="checkout-info-address">{{userAddress.addressLine2}}</small>
-                    <small class="address-text" id="checkout-info-address">{{userAddress.addressLine3}}</small>
-                    <small class="address-text" id="checkout-info-address">{{userAddress.town}}</small>
-                    <small class="address-text" id="checkout-info-address">{{userAddress.postcode}}</small>
+                    <p class="address-text" id="checkout-info-address">{{username}}</p>
+                    <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine1}}</small>
+                    <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine2}}</small>
+                    <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine3}}</small>
+                    <small class="address-text" id="checkout-info-address">{{shippingAddress.town}}</small>
+                    <small class="address-text" id="checkout-info-address">{{shippingAddress.postcode}}</small>
                 </div>
             </div>
             <div class="delivery-container">
@@ -52,6 +52,7 @@
 
                 </div>
             </div>
+
             <button class="checkout-button" id="{{basketId}}">Checkout</button>
         </div>
 

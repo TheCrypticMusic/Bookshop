@@ -4,11 +4,14 @@ const router = express.Router();
 const Wishlist = require("../../models/wishlist");
 const mongooseHelpers = require("../../config/mongooseHelpers");
 
+const expressHelpers = require("../../config/expressHelpers")
+
 
 
 // const csrfProtection = csrf();
 
 const isAuthenticated = (req, res, next) => {
+
     if (req.isAuthenticated()) {
         next();
     } else {
@@ -27,6 +30,7 @@ const allowedToAccessPaymentScreen = async (req, res, next) => {
 // router.use(csrfProtection);
 
 router.use(async (req, res, next) => {
+
     res.locals.isAuthenticated = req.isAuthenticated();
     if (req.isAuthenticated()) {
         res.locals.user = req.user.username;
@@ -55,54 +59,54 @@ router.use(async (req, res, next) => {
     next();
 });
 
-router.get("/", async (req, res, next) => {
+// router.get("/", async (req, res, next) => {
 
-    console.log("Is User Authenticated?", req.isAuthenticated());
-    mongooseHelpers.getBooks({}).then(books => {
-        return res.render("index", { title: "Bookstore", books: books });
-    })
+//     console.log("Is User Authenticated?", req.isAuthenticated());
+//     mongooseHelpers.getBooks({}).then(books => {
+//         return res.render("index", { title: "Bookstore", books: books });
+//     })
 
-});
+// });
 
-router.get("/register", (req, res, next) => {
-    res.render("register");
-    // { csrfToken: req.csrfToken() };
-});
+// router.get("/register", (req, res, next) => {
+//     res.render("register");
+//     // { csrfToken: req.csrfToken() };
+// });
 
-router.get("/login", (req, res, next) => {
-    res.render("login");
-    // { csrfToken: req.csrfToken() });
-});
+// router.get("/login", (req, res, next) => {
+//     res.render("login");
+//     // { csrfToken: req.csrfToken() });
+// });
 
-router.get("/logout", (req, res, next) => {
-    req.session.destroy();
-    res.redirect("/");
-});
+// router.get("/logout", (req, res, next) => {
+//     req.session.destroy();
+//     res.redirect("/");
+// });
 
-router.get("/basket", isAuthenticated, async (req, res, next) => {
-    const userId = req.session.passport.user;
-    const userBasket = await mongooseHelpers.getUserBasket(userId);
-    if (userBasket) {
-        const [basketItems, subTotal, basketId] = [
-            userBasket.items,
-            userBasket.subTotal,
-            userBasket._id,
-        ];
+// router.get("/basket", isAuthenticated, async (req, res, next) => {
+//     const userId = req.session.passport.user;
+//     const userBasket = await mongooseHelpers.getUserBasket(userId);
+//     if (userBasket) {
+//         const [basketItems, subTotal, basketId] = [
+//             userBasket.items,
+//             userBasket.subTotal,
+//             userBasket._id,
+//         ];
 
-        return res.render("basket", {
-            basketItems: basketItems,
-            subTotal: subTotal,
-            basketId: basketId,
-        });
-    }
-    return res.render("basket", { basketItems: 0 });
-});
+//         return res.render("basket", {
+//             basketItems: basketItems,
+//             subTotal: subTotal,
+//             basketId: basketId,
+//         });
+//     }
+//     return res.render("basket", { basketItems: 0 });
+// });
 
 router.get("/genre/:genre", async (req, res, next) => {
     const genre = req.params.genre;
 
     mongooseHelpers.getBookGenre(genre).then(books => {
-        console.log(books)
+
         const pageHeader = books[0].genre;
 
         return res.render("genre", { books: books, genre: pageHeader });
@@ -110,70 +114,70 @@ router.get("/genre/:genre", async (req, res, next) => {
 
 });
 
-router.get("/add-to-basket/:id", (req, res, next) => {
-    return res.render(
-        "index"
-        // { csrfToken: req.csrfToken()})
-    );
-});
+// router.get("/add-to-basket/:id", (req, res, next) => {
+//     return res.render(
+//         "index"
+//         // { csrfToken: req.csrfToken()})
+//     );
+// });
 
-router.get("/delete-from-basket/:id", (req, res) => {
-    return res.render("basket")
-})
+// router.get("/delete-from-basket/:id", (req, res) => {
+//     return res.render("basket")
+// })
 
 
-router.get("/update-basket/:id", (req, res, next) => {
-    return res.render(
-        "/basket"
-        // { csrfToken: req.csrfToken()})
-    );
-});
+// router.get("/update-basket/:id", (req, res, next) => {
+//     return res.render(
+//         "/basket"
+//         // { csrfToken: req.csrfToken()})
+//     );
+// });
 
-router.get(
-    "/stripe-checkout-session/:id",
-    isAuthenticated,
-    (req, res, next) => {
-        return res.render("/checkout");
-    }
-);
+// router.get(
+//     "/stripe-checkout-session/:id",
+//     isAuthenticated,
+//     (req, res, next) => {
+//         return res.render("/checkout");
+//     }
+// );
 
-router.get("/account", isAuthenticated, async (req, res, next) => {
-    const userId = req.session.passport.user;
+// router.get("/account", isAuthenticated, async (req, res, next) => {
+//     const userId = req.session.passport.user;
 
-    const userDetails = await mongooseHelpers.getUser(userId);
+//     const userDetails = await mongooseHelpers.getUser(userId);
 
-    return res.render("account", { layout: "account-layout", user: userDetails });
-});
+//     return res.render("account", { layout: "account-layout", user: userDetails });
+// });
 
-router.get(
-    "/checkout",
-    isAuthenticated,
-    allowedToAccessPaymentScreen,
-    async (req, res, next) => {
-        const userId = req.session.passport.user;
+// router.get(
+//     "/checkout",
+//     isAuthenticated,
+//     allowedToAccessPaymentScreen,
+//     async (req, res, next) => {
+//         const userId = req.session.passport.user;
 
-        const postage = await mongooseHelpers.getPostagePrices();
-        const userDetails = await mongooseHelpers.getUser(userId);
-        const userAddress = userDetails.address;
+//         const postage = await mongooseHelpers.getPostagePrices();
+//         const userDetails = await mongooseHelpers.getUser(userId);
+//         const userAddress = userDetails.address;
 
-        const userBasket = await mongooseHelpers.getUserBasket(userId);
+//         const userBasket = await mongooseHelpers.getUserBasket(userId);
 
-        const [basketItems, subTotal, basketId] = [
-            userBasket.items,
-            userBasket.subTotal,
-            userBasket._id,
-        ];
+//         const [basketItems, subTotal, basketId] = [
+//             userBasket.items,
+//             userBasket.subTotal,
+//             userBasket._id,
+//         ];
 
-        return res.render("checkout", {
-            user: userDetails,
-            userAddress: userAddress,
-            items: basketItems,
-            subTotal: subTotal,
-            basketId: basketId,
-            postage: postage,
-        });
-    }
-);
+//         return res.render("checkout", {
+//             user: userDetails,
+//             userAddress: userAddress,
+//             items: basketItems,
+//             subTotal: subTotal,
+//             basketId: basketId,
+//             postage: postage,
+//         });
+//     }
+// );
 
 router.get("/book/:bookId/:skuId", async (req, res, next) => {
     const bookId = req.params.bookId;
@@ -190,30 +194,30 @@ router.get("/book/:bookId/:skuId", async (req, res, next) => {
 });
 
 
-router.get("/user-wishlist", isAuthenticated, async (req, res, next) => {
-    const userId = req.session.passport.user;
+// router.get("/user-wishlist", isAuthenticated, async (req, res, next) => {
+//     const userId = req.session.passport.user;
 
-    const bookInfo = await mongooseHelpers.getUserWishlist(userId);
+//     const bookInfo = await mongooseHelpers.getUserWishlist(userId);
 
-    return res.render("user-wishlist", {
-        layout: "account-layout",
-        bookInfo: bookInfo,
-    });
-});
+//     return res.render("user-wishlist", {
+//         layout: "account-layout",
+//         bookInfo: bookInfo,
+//     });
+// });
 
-router.get("/address", isAuthenticated, async (req, res, next) => {
-    const userId = req.session.passport.user;
-    mongooseHelpers.getUser(userId).then((userDetails) => {
+// router.get("/address", isAuthenticated, async (req, res, next) => {
+//     const userId = req.session.passport.user;
+//     mongooseHelpers.getUser(userId).then((userDetails) => {
 
-        const userAddress = userDetails.address;
+//         const userAddress = userDetails.address;
 
-        return res.render("address", {
-            layout: "account-layout",
-            user: userAddress,
-        });
-    });
+//         return res.render("address", {
+//             layout: "account-layout",
+//             user: userAddress,
+//         });
+//     });
 
-});
+// });
 
 router.get("/order-history", isAuthenticated, async (req, res, next) => {
     const userId = req.session.passport.user;

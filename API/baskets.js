@@ -149,7 +149,7 @@ router.delete("/:userid/items/:itemid", apiHelpers.basketExists, apiHelpers.bask
 
     const userId = req.params.userid
     const itemId = req.params.itemid
-    console.log(userId, itemId)
+
     mongooseHelpers.deleteItemFromBasket(userId, itemId).then((result) => {
         apiHelpers.sendStatus(200, "success", result, "Item deleted from basket", req, res)
     })

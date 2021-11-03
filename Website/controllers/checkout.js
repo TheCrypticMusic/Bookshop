@@ -1,10 +1,9 @@
 const Basket = require("../../models/basket");
-const router = require("../routes/pages");
+const mongooseHelpers = require("../../config/mongooseHelpers")
 require("dotenv").config({ path: "./config/.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const express = require("express");
-const Postage = require("../../models/postageCosts");
-const { compareSync } = require("bcryptjs");
+
+
 
 const basketItems = async (basketId) => {
     return Basket.findById(basketId);
@@ -13,6 +12,43 @@ const basketItems = async (basketId) => {
 const convertToPence = (basketItemPrice) => {
     return Math.round(basketItemPrice * 100);
 };
+
+
+exports.checkoutBasket = (req, res, next) => {
+    const userId = req.session.passport.user;
+
+    const userDetails = mongooseHelpers.getUser(userId);
+    const userAddress = userDetails.address;
+
+    const userBasket = mongooseHelpers.getUserBasket(userId);
+
+    const [basketItems, subTotal, basketId] = [
+        userBasket.items,
+        userBasket.subTotal,
+        userBasket._id,
+    ];
+
+    return res.render("checkout", {
+        user: userDetails,
+        userAddress: userAddress,
+        items: basketItems,
+        subTotal: subTotal,
+        basketId: basketId,
+        postage: postage,
+    });
+}
+
+
+
+exports.getPostagePrices = (req, res, next) => {
+
+    mongooseHelpers.getPostagePrices().then((postage) => {
+        res.postagePrices = postage
+        next()
+    })
+}
+
+
 
 exports.session = async (req, res, next) => {
     const basketId = req.params.id

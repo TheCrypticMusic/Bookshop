@@ -41,7 +41,6 @@ exports.filterBuilder = (filter) => {
 exports.basketExists = (req, res, next) => {
 	const userId = req.params.userid;
 
-	console.log(userId)
 	mongooseHelpers.getUserBasket(userId).then((userBasket) => {
 		if (!(userBasket)) {
 			this.sendStatus(404, "error", null, "No basket found", req, res);
@@ -87,7 +86,6 @@ exports.addressExists = async (req, res, next) => {
 
 	const userId = req.params.userid
 	mongooseHelpers.getUserAddress(userId).then((result) => {
-
 		if (req.method === "POST") {
 			if (result["address"] !== undefined && result["shippingAddress"] !== undefined) {
 				this.sendStatus(409, "error", null, "Cannot create anymore addresses for this user", req, res)
@@ -188,19 +186,7 @@ exports.createCamelCaseDatabaseEnquiry = (query) => {
 	}
 
 	return camelCaseWord
-	// 	if (splitWord.length > 1) {
 
-	// 		for (const index in splitWord) {
-	// 			const newWord = index > 0 ? splitWord[index].replace(/[a-z]/, (word) => {
-	// 				return word[0].toUpperCase()
-	// 			}) : splitWord[index]
-	// 			console.log(newWord)
-	// 			camelCaseWord.push(newWord)
-	// 		}
-
-	// 	}
-	// }
-	// console.log(camelCaseWord)
 }
 
 
@@ -245,8 +231,6 @@ exports.userExists = (req, res, next) => {
 exports.vaildateRegisterData = (req, res, next) => {
 
 	const { username, email, password } = req.body
-
-	console.log("Username:", username, "Email:", email, "Password:", password)
 
 	mongooseHelpers._vaildateEmail(email).then((emailExists) => {
 		if (emailExists) {

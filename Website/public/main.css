@@ -92,9 +92,21 @@ div.personal-details-header {
 	padding-top: 0.5rem;
 }
 
-#active {
-	background: #d7d7d732;
+.checkbox-section {
+	display: flex;
+	padding-bottom: 1rem;
+	padding-top: 1rem;
 }
+.error {
+	padding-bottom: 1rem;
+	position: static;
+	color: red;
+}
+
+.checkbox-input-shipping {
+	padding-left: 1rem;
+}
+
 .account-svg {
 	margin-right: 1rem;
 }
@@ -470,7 +482,6 @@ hr.personal-divider {
 
 #account-form {
 	padding-top: 0.5rem;
-	padding-bottom: 0.5rem;
 }
 
 .flex-box {

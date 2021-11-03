@@ -4,10 +4,11 @@
 
 		<li class="nav-item"><a href="/basket" class="nav-link">Basket</a></li>
 		<li class="nav-item"><a href="/account" class="nav-link">Account</a></li>
+
 		{{#if isAuthenticated}}
-			<li class="nav-item"><a href="/logout" class="nav-link">Log Out</a></li>
+			<li class="nav-item"><a href="/account/logout" class="nav-link">Log Out</a></li>
 		{{else}}
-			<li class="nav-item"><a href="/login" class="nav-link">Sign In</a></li>
+			<li class="nav-item"><a href="/account/login" class="nav-link">Sign In</a></li>
 		{{/if}}
 	</ul>
 </nav>
