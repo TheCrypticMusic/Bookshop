@@ -15,7 +15,9 @@ passport.use(
                 }
                 if (!user) {
                     console.log("User not found");
-                    return done(err);
+                    return done(null, false, {
+                        message: "Incorrect email or password.",
+                    });
                 }
 
                 user.comparePassword(password, (err, isMatch) => {
