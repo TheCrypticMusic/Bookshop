@@ -130,7 +130,7 @@ $("input[name=delivery-method]").change(function () {
 const button = document.querySelector("button");
 
 $(".checkout-button").click(function () {
-	console.log(button);
+
 	const dbShippingCost = $("#delivery-method:checked").val();
 	const basket = $(".checkout-button").attr("id");
 	fetch("http://localhost:5002/checkout/" + basket, {

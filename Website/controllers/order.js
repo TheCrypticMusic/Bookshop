@@ -15,7 +15,6 @@ exports.createOrder = (req, res, next) => {
     const userId = res.user
 
     mongooseHelpers.createUserOrder(userId).then(result => {
-
         next()
     })
 }

@@ -8,6 +8,7 @@ const expressHelpers = require("../../config/expressHelpers");
 router.get(
     "/",
     expressHelpers.isAuthenticated,
+    expressHelpers.allowedToAccessPaymentScreen,
     basketController.userHasBasket,
     basketController.getUserBasket,
     checkoutController.getPostagePrices,

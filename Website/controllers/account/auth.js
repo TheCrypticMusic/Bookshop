@@ -27,7 +27,7 @@ exports.validateUsername = (req, res, next) => {
 	const { username } = req.body;
 
 	mongooseHelpers._vaildateUsername(username).then((usernameExists) => {
-		console.log(usernameExists)
+
 		if (usernameExists) {
 			req.error = req.flash("error", "Username already taken");
 

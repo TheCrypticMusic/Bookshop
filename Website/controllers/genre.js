@@ -4,7 +4,7 @@ exports.getGenre = (req, res, next) => {
     const genre = req.params.genre;
 
     mongooseHelpers.getBookGenre(genre).then(books => {
-        console.log(books)
+
         const pageHeader = books[0].genre;
 
         return res.render("genre", { books: books, genre: pageHeader });

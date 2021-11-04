@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router(); 1
-const mongooseHelpers = require("../config/mongooseHelpers");
-const apiHelpers = require("../config/apiHelpers");
+const mongooseHelpers = require("../../config/mongooseHelpers")
+const apiHelpers = require("../../config/apiHelpers");
 
 
 // get all books or can specify a filter in the url query
@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
     mongooseHelpers.getBooks(urlQuery).then((books) => {
         if (books.length > 0) {
             apiHelpers.sendStatus(
-                201,
+                200,
                 "success",
                 { books: books },
                 "Books found",
@@ -65,12 +65,13 @@ router.post("/", (req, res) => {
 });
 
 // get a single book
-router.get("/:id", (req, res) => {
-    const bookId = req.params.id;
-    mongooseHelpers.getSingleBook(bookId).then((book) => {
+router.get("/:bookid", apiHelpers.bookExists, (req, res) => {
+    
+
+    mongooseHelpers.getSingleBook(res.bookid).then((book) => {
         if (book !== null) {
             apiHelpers.sendStatus(
-                201,
+                200,
                 "success",
                 { book: book },
                 "Book found",
@@ -94,12 +95,12 @@ router.get("/:id", (req, res) => {
 // title
 // author
 // genre
-router.put("/:id", apiHelpers.bookExists, (req, res) => {
+router.put("/:bookid", apiHelpers.bookExists, (req, res) => {
     const bodyContent = req.body;
-    const bookId = req.params.id;
+
 
     mongooseHelpers
-        .updateBookDetails(bookId, bodyContent)
+        .updateBookDetails(res.bookid, bodyContent)
         .then((updateSuccessful) => {
             if (updateSuccessful.nModified > 0) {
                 apiHelpers.sendStatus(
@@ -125,8 +126,9 @@ router.put("/:id", apiHelpers.bookExists, (req, res) => {
 
 // delete single book
 router.delete("/:id", apiHelpers.bookExists, (req, res) => {
-    const bookId = req.params.id;
-    mongooseHelpers.deleteBook(bookId).then((deletedBookResult) => {
+
+
+    mongooseHelpers.deleteBook(res.bookid).then((deletedBookResult) => {
         if (deletedBookResult.deletedCount > 0) {
             apiHelpers.sendStatus(
                 200,
@@ -142,10 +144,10 @@ router.delete("/:id", apiHelpers.bookExists, (req, res) => {
 
 // add sku to existing book
 router.post("/:id/skus", apiHelpers.bookExists, (req, res) => {
-    const bookId = req.params.id;
+
     const { category, quantity, price, type } = req.body;
 
-    mongooseHelpers.createSkuForBook(bookId, category, quantity, price, type).then((newSku) => {
+    mongooseHelpers.createSkuForBook(res.bookid, category, quantity, price, type).then((newSku) => {
         if (newSku) {
             apiHelpers.sendStatus(201, "success", null, "Sku created for book", req, res)
         } else {
@@ -157,9 +159,8 @@ router.post("/:id/skus", apiHelpers.bookExists, (req, res) => {
 
 // get skus related to book
 router.get("/:id/skus", apiHelpers.bookExists, (req, res) => {
-    const bookId = req.params.id;
 
-    mongooseHelpers.getAllSkusOfBook(bookId).then((bookSkus) => {
+    mongooseHelpers.getAllSkusOfBook(res.bookid).then((bookSkus) => {
         if (bookSkus != null) {
             apiHelpers.sendStatus(200, "success", { skus: bookSkus }, "Skus found", req, res)
         } else {
@@ -171,9 +172,7 @@ router.get("/:id/skus", apiHelpers.bookExists, (req, res) => {
 // delete all skus from book
 router.delete("/:id/skus", apiHelpers.bookExists, (req, res) => {
 
-    const bookId = req.params.id
-
-    mongooseHelpers.deleteAllSkusFromBook(bookId).then((result) => {
+    mongooseHelpers.deleteAllSkusFromBook(res.bookid).then((result) => {
         if (result.nModified > 0) {
             apiHelpers.sendStatus(200, "success", null, "All skus deleted from book", req, res)
         } else {
@@ -187,10 +186,10 @@ router.delete("/:id/skus", apiHelpers.bookExists, (req, res) => {
 
 // Delete a specific sku from a book
 router.delete("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
-    const bookId = req.params.id
+
     const skuId = req.params.sku
 
-    mongooseHelpers.deleteBookSku(bookId, skuId).then((result) => {
+    mongooseHelpers.deleteBookSku(res.bookid, skuId).then((result) => {
         if (result.nModified > 0) {
             apiHelpers.sendStatus(200, "success", null, "Sku deleted from book", req, res)
         } else {
@@ -207,12 +206,12 @@ router.delete("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
 // imagePath
 
 router.get("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
-    const bookId = req.params.id;
+
     const skuId = req.params.sku;
 
     const filter = apiHelpers.filterBuilder(req.query);
 
-    mongooseHelpers.getSingleSkuOfBook(bookId, skuId, filter).then((book) => {
+    mongooseHelpers.getSingleSkuOfBook(res.bookid, skuId, filter).then((book) => {
         apiHelpers.sendStatus(
             200,
             "success",
@@ -232,13 +231,13 @@ router.get("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
 // sku
 router.put("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
 
-    const bookId = req.params.id
+
     const skuId = req.params.sku
 
     const bodyContent = req.body
     const newUpdate = mongooseHelpers._updateZeroDepthSubdocumentBuilder("skus", bodyContent)
 
-    mongooseHelpers.updateSkuForBook(bookId, skuId, newUpdate).then((result => {
+    mongooseHelpers.updateSkuForBook(res.bookid, skuId, newUpdate).then((result => {
         if (result.nModified > 0) {
             apiHelpers.sendStatus(200, "success", null, "Book sku updated", req, res)
         } else {

@@ -98,9 +98,15 @@ exports.addressExists = async (req, res, next) => {
 
 
 exports.bookExists = (req, res, next) => {
-	const bookId = req.method !== "POST" ? req.body.bookId : req.params.bookId
 
-	mongooseHelpers.getSingleBook(bookId).then((book) => {
+	if (req.body.bookid === undefined) {
+	
+		res.bookid = req.params.bookid
+	} else {
+		res.bookid = req.body.bookid
+	}
+
+	mongooseHelpers.getSingleBook(res.bookid).then((book) => {
 		if (book === null) {
 			this.sendStatus(404, "error", null, "Incorrect book id provided", req, res)
 		}

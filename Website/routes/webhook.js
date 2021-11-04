@@ -10,6 +10,8 @@ router.post(
     webhookController.checkEventType,
     basketController.getUserBasket,
     orderController.getUserOrder,
-    orderController.createOrder)
+    orderController.createOrder, (req, res, next) => {
+        return res.sendStatus(200)
+    })
 
 module.exports = router;
