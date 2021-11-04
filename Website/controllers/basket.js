@@ -37,7 +37,8 @@ exports.addItemToBasket = (req, res, next) => {
 
 
 exports.getUserBasket = (req, res, next) => {
-    const userId = req.session.passport.user;
+    const userId = res.checkoutComplete === true ? res.user : req.session.passport.user;
+
     mongooseHelpers.getUserBasket(userId).then((userBasket) => {
 
         if (userBasket) {

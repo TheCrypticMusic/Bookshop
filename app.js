@@ -127,7 +127,9 @@ websiteApp.use("/basket", require("./Website/routes/basket"))
 websiteApp.use("/account", require("./Website/routes/account"))
 websiteApp.use("/checkout", require("./Website/routes/checkout"))
 websiteApp.use("/wishlist", require("./Website/routes/wishlist"))
-
+websiteApp.use("/book", require("./Website/routes/book"))
+websiteApp.use("/webhook", require("./Website/routes/webhook"))
+websiteApp.use("/genre", require("./Website/routes/genre"))
 
 // API Setup (I will be moving website, CMS, API into separate files)
 
@@ -149,50 +151,6 @@ apiApp.use("/api/users", require("./API/users"))
 // CMS Setup (I will be moving website, CMS, API into separate files)
 
 cmsApp.use(express.json());
-
-
-
-// TODO: MOVE THIS INTO CONTROLLER FOLDER
-websiteApp.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-    const event = req.body;
-    if (event.type === "charge.succeeded") {
-        console.log("Logging to Database")
-
-    } else if (event.type === "checkout.session.completed") {
-        const { userId, basketId } = event.data.object.metadata
-        await Basket.findOne({ userId: userId }, (err, userBasket) => {
-            Order.findOne({ userId: userId }, (err, userOrder) => {
-                if (userOrder) {
-                    userOrder.basketIds.push({
-                        basketId: userBasket._id,
-                        subTotal: userBasket.subTotal,
-                        items: userBasket.items.map(x => x)
-                    })
-                    userOrder.save().then(() => {
-                        userBasket.remove()
-                    })
-                } else {
-                    Order.create(
-                        {
-                            userId: userBasket.userId,
-                            basketIds: [
-                                {
-                                    basketId: userBasket._id,
-                                    subTotal: userBasket.subTotal,
-                                    order: userBasket.items.map(x => x)
-                                }
-                            ]
-                        }
-                    ).then(() => {
-                        userBasket.remove()
-                    })
-                }
-            })
-        })
-    }
-    return res.json({ received: true })
-})
-
 
 const websitePortNumber = 5002
 const apiPortNumber = 5003
