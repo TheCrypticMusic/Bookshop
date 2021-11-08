@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongooseHelpers = require("../../config/mongooseHelpers");
 const apiHelpers = require("../../config/apiHelpers");
+const { query } = require("express");
 
 //create new user
 router.post("/", apiHelpers.vaildateRegisterData, (req, res) => {
@@ -13,6 +14,14 @@ router.post("/", apiHelpers.vaildateRegisterData, (req, res) => {
 			apiHelpers.sendStatus(200, "success", null, "User created", req, res);
 		});
 });
+
+router.get("/", apiHelpers.filterBuilderForFind(), (req, res) => {
+
+	mongooseHelpers.getAllUsers(res.filter).then(result => {
+		apiHelpers.sendStatus(200, "success", result, "All users", req, res)
+	})
+})
+
 
 router.get("/:userid", apiHelpers.userExists, (req, res) => {
 	apiHelpers.sendStatus(200, "success", req.result, "User found", req, res);

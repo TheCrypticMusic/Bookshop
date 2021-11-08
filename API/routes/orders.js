@@ -3,26 +3,29 @@ const router = express.Router();
 const mongooseHelpers = require("../../config/mongooseHelpers");
 const apiHelpers = require("../../config/apiHelpers");
 
-
-
-
 // get all orders that have been processed on the website
-router.get("/", (req, res) => {
-	mongooseHelpers.getAllOrders().then((orders) => {
-		if (orders.length > 0) {
-			apiHelpers.sendStatus(
-				200,
-				"success",
-				{ orders: orders },
-				"All orders found",
-				req,
-				res
-			);
+router.get("/",
+	apiHelpers.filterBuilderForFind("basketIds"),
+	async (req, res) => {
+		const obj = { orders: {} }
+		if ("basketIds.created" in res.filter) {
+			const result = await mongooseHelpers.getAllOrdersInDateRange(res.filter["basketIds.created"]["$lte"], res.filter["basketIds.created"]["$gte"])
+			obj.orders = result
+
 		} else {
-			apiHelpers.sendStatus(404, "error", null, "No orders found", req, res);
+			const result = await mongooseHelpers.getAllOrders(res.filter)
+			obj.orders = result
 		}
+		Object.keys(obj).map(x => {
+
+			if (obj[x].length > 0) {
+				apiHelpers.sendStatus(200, "success", obj, "All orders found", req, res);
+			} else {
+				apiHelpers.sendStatus(404, "error", null, "No orders found", req, res);
+			}
+		})
+
 	});
-});
 
 // get a specfic user and their associated completed orders
 router.get("/:userid", apiHelpers.userOrderDocumentExists, (req, res) => {
@@ -31,8 +34,9 @@ router.get("/:userid", apiHelpers.userOrderDocumentExists, (req, res) => {
 	mongooseHelpers.getUserOrders(userId).then((userOrders) => {
 		apiHelpers.sendStatus(
 			200,
-			"success",
-			{ user_orders: userOrders },
+			"success", {
+			user_orders: userOrders
+		},
 			"User orders found",
 			req,
 			res
@@ -55,14 +59,7 @@ router.post("/:userid", (req, res) => {
 				res
 			);
 		} else {
-			apiHelpers.sendStatus(
-				404,
-				"error",
-				null,
-				"Document already exists",
-				req,
-				res
-			);
+			apiHelpers.sendStatus(404, "error", null, "Document already exists", req, res);
 		}
 	});
 });
@@ -73,44 +70,35 @@ router.delete("/:userid", apiHelpers.userOrderDocumentExists, (req, res) => {
 
 	mongooseHelpers.deleteOrderDocument(userId).then((result) => {
 		if (result.deletedCount > 0) {
-			apiHelpers.sendStatus(
-				200,
-				"success",
-				null,
-				"Order document deleted",
-				req,
-				res
-			);
+			apiHelpers.sendStatus(200, "success", null, "Order document deleted", req, res);
 		}
 	});
 });
 
 // create a new order
-router.post("/:userid/baskets", apiHelpers.userOrderDocumentExists, apiHelpers.basketExists, (req, res) => {
-	const userId = req.params.userid;
+router.post(
+	"/:userid/baskets",
+	apiHelpers.userOrderDocumentExists,
+	apiHelpers.basketExists,
+	(req, res) => {
+		const userId = req.params.userid;
 
-	mongooseHelpers.createUserOrder(userId).then((result) => {
-		if (!result) {
-			apiHelpers.sendStatus(
-				201,
-				"success",
-				result,
-				"New order created",
-				req,
-				res
-			);
-		} else {
-			apiHelpers.sendStatus(
-				404,
-				"error",
-				null,
-				"Basket found but zero items in basket",
-				req,
-				res
-			);
-		}
-	});
-});
+		mongooseHelpers.createUserOrder(userId).then((result) => {
+			if (!result) {
+				apiHelpers.sendStatus(201, "success", result, "New order created", req, res);
+			} else {
+				apiHelpers.sendStatus(
+					404,
+					"error",
+					null,
+					"Basket found but zero items in basket",
+					req,
+					res
+				);
+			}
+		});
+	}
+);
 
 // delete all orders
 router.delete("/:userid/baskets", apiHelpers.userOrderDocumentExists, (req, res) => {
@@ -181,18 +169,10 @@ router.delete(
 		const basketId = req.params.basketid;
 
 		mongooseHelpers.deleteSingleOrder(userId, basketId).then((result) => {
-			apiHelpers.sendStatus(
-				200,
-				"success",
-				null,
-				"Completed order deleted",
-				req,
-				res
-			);
+			apiHelpers.sendStatus(200, "success", null, "Completed order deleted", req, res);
 		});
 	}
 );
-
 
 // Update a single order item details
 router.put(

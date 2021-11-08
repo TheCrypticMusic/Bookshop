@@ -5,11 +5,13 @@ const Wishlist = require("../models/wishlist");
 const Postage = require("../models/postageCosts");
 const Order = require("../models/completedOrders");
 const mongoose = require("mongoose");
+const { exists } = require("../models/user");
 
 // ***** BASKET HELPERS ***** //
 
 exports.createUserBasket = async (userId) => {
-	const userBasketExists = await Basket.exists({ userId: userId });
+
+	const userBasketExists = await Basket.exists({ "userId": userId });
 
 	if (!userBasketExists) {
 		await Basket.create({ userId: userId, items: [] });
@@ -493,12 +495,27 @@ exports.createUser = async (username, email, password, roleTitle, writeAccess, r
 	}
 };
 
+
+exports.getAllUsers = async (filter) => {
+
+	try {
+
+		const allUsers = await User.find(filter).lean().exec()
+
+		return allUsers
+	} catch (error) {
+		return error
+	}
+}
+
+
 /**
  *
  * @param {String} userId
  * @returns {JSON}
  */
 exports.getUser = async (userId) => {
+
 	try {
 		const userExists = await User.exists({ _id: userId });
 		if (userExists) {
@@ -512,6 +529,45 @@ exports.getUser = async (userId) => {
 		return err;
 	}
 };
+
+exports.getNumberOfUsers = async () => {
+
+	try {
+
+		const userCount = await User.countDocuments()
+		return userCount
+
+	} catch (error) {
+		return err
+	}
+}
+
+exports.getUsersCreatedToday = async () => {
+
+	try {
+
+		const todayCount = await User.countDocuments({ "createdAt": { $gte: this._getDate() } })
+
+		return todayCount
+
+	} catch (error) {
+
+		return error
+
+	}
+
+}
+
+exports.getUserRoleTitle = async (userId) => {
+	try {
+
+		const user = await User.findOne({ _id: userId }).select("role")
+
+		return user.role.title
+	} catch (error) {
+		return error
+	}
+}
 
 exports.getUserAddress = async (userId, selectFilter) => {
 	try {
@@ -549,14 +605,57 @@ exports.createAddressForUser = async (userId, updateData) => {
  *
  * @returns {JSON}
  */
-exports.getAllOrders = async () => {
+exports.getAllOrders = async (filter) => {
 	try {
-		const allOrders = await Order.find().lean().exec();
+
+		const allOrders = await Order.find(filter).lean().exec();
 		return allOrders;
 	} catch (error) {
 		return error;
 	}
 };
+
+
+exports.getAllOrdersInDateRange = async (to, from) => {
+	try {
+
+		const orders = await Order.aggregate([
+			{
+				'$project': {
+					'basketIds': {
+						'$filter': {
+							'input': '$basketIds',
+							'as': 'index',
+							'cond': {
+								'$and': [
+									{
+										'$gte': [
+											'$$index.created', new Date(new Date(from).setHours(0, 0, 0, 0))
+										]
+									}, {
+										'$lte': [
+											'$$index.created', new Date(new Date(to).setHours(23, 59, 59))
+										]
+									}
+								]
+							}
+						}
+					}
+				}
+			}, {
+				'$match': {
+					'basketIds': {
+						'$ne': []
+					}
+				}
+			}
+		]).exec()
+
+		return orders
+	} catch (error) {
+		return error
+	}
+}
 
 /**
  *
@@ -919,3 +1018,19 @@ exports._validatePassword = async (userId, password) => {
 	}
 
 };
+
+
+exports._getDate = () => {
+
+	const today = new Date()
+
+	const todayYear = today.getFullYear()
+	const todayMonth = today.getMonth() + 1
+	const todayDay = today.getDate() < 10 ? "0" + today.getDate() : today.getDate()
+
+
+	const filterDate = `${todayYear}-${todayMonth}-${todayDay}`
+	return filterDate
+}
+
+

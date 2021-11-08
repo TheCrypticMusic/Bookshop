@@ -66,7 +66,7 @@ router.post("/", (req, res) => {
 
 // get a single book
 router.get("/:bookid", apiHelpers.bookExists, (req, res) => {
-    
+
 
     mongooseHelpers.getSingleBook(res.bookid).then((book) => {
         if (book !== null) {

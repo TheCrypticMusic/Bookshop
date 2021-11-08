@@ -28,9 +28,10 @@ const userSchema = new mongoose.Schema({
 	password: { type: String, required: true },
 	address: addressSchema,
 	shippingAddress: shippingAddressSchema,
-	role: roleSchema
-
-});
+	role: roleSchema,
+},
+	{ timestamps: { createdAt: "created", updatedAt: "updated" } }
+);
 
 // hook to encrypt the password
 userSchema.pre("save", async function (next) {

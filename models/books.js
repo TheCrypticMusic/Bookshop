@@ -32,9 +32,10 @@ const bookSchema = new mongoose.Schema({
     title: { type: String, required: true },
     author: { type: String, required: true },
     genre: { type: String, required: true },
-
     skus: [skuSchema],
-});
+},
+    { timestamps: true }
+);
 
 bookSchema.post("updateOne", async function (doc, next) {
 

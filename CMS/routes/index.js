@@ -1,9 +1,13 @@
 const express = require("express");
-const mongooseHelpers = require("../../config/mongooseHelpers");
+const authController = require("../controllers/auth")
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-    return res.render("index")
+router.get("/", (req, res, next) => {
+    return res.render("index", { layout: "login-layout" })
+})
+
+router.post("/", authController.login, authController.checkUserRoleTitle, (req, res, next) => {
+    return res.redirect("/dashboard")
 })
 
 

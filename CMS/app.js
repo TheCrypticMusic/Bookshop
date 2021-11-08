@@ -11,12 +11,24 @@ require("../config/passport");
 const cmsApp = express();
 const dbConnection = require("../config/dbConnection")
 
+
 dbConnection.connectToBookshopServer("CMS")
+
+cmsApp.use(express.json());
+cmsApp.use(express.urlencoded({ extended: false }))
+
+const cmsPublicDirectory = path.join(__dirname, "./public");
+const cmsScriptDirectory = path.join(__dirname, "./scripts");
+
+
+cmsApp.use(express.static(cmsPublicDirectory));
+cmsApp.use(express.static(cmsScriptDirectory))
+
 
 cmsApp.use(cookieParser());
 
-cmsApp.use(express.json());
-cmsApp.use(express.urlencoded({ extended: false }));
+// cmsApp.use(express.json());
+// cmsApp.use(express.urlencoded({ extended: false }));
 
 cmsApp.use(
     session({
@@ -56,8 +68,18 @@ cmsApp.set("views", [
 ]
 )
 
+cmsApp.use((req, res, next) => {
+
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    // res.locals.userEmail = req.user.email
+    next()
+
+})
+
 // cms routes
 cmsApp.use("/", require("./routes/index"))
+cmsApp.use("/dashboard", require("./routes/dashboard"))
 
 const cmsPortNumber = 5004
 

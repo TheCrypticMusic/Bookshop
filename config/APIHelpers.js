@@ -98,12 +98,11 @@ exports.addressExists = async (req, res, next) => {
 
 
 exports.bookExists = (req, res, next) => {
+	if (req.body.bookId === undefined) {
 
-	if (req.body.bookid === undefined) {
-	
 		res.bookid = req.params.bookid
 	} else {
-		res.bookid = req.body.bookid
+		res.bookid = req.body.bookId
 	}
 
 	mongooseHelpers.getSingleBook(res.bookid).then((book) => {
@@ -117,11 +116,13 @@ exports.bookExists = (req, res, next) => {
 };
 
 exports.skuExists = (req, res, next) => {
-	const bookSkuId = req.method !== "POST" ? req.body.bookSkuId : req.params.bookSkuId
-	const bookId = req.method !== "POST" ? req.body.bookId : req.params.bookId
+	const bookSkuId = req.method === "POST" ? req.body.bookSkuId : req.params.bookSkuId
+	const bookId = req.method === "POST" ? req.body.bookId : req.params.bookId
+
 
 
 	mongooseHelpers.getSingleSkuOfBook(bookId, bookSkuId).then((sku) => {
+
 		if (!(sku.hasOwnProperty("skus"))) {
 			this.sendStatus(404, "error", null, "Incorrect book sku id provided", req, res)
 		} else {
@@ -184,9 +185,12 @@ exports.createCamelCaseDatabaseEnquiry = (query) => {
 	const camelCaseWord = []
 
 	for (const index in query) {
+
 		const newWord = query[index].replace(/\-[a-z]/g, (word) => {
+
 			return word.toUpperCase()
 		})
+
 
 		camelCaseWord.push(newWord.split("-").join(""))
 	}
@@ -250,6 +254,95 @@ exports.vaildateRegisterData = (req, res, next) => {
 		})
 
 	})
+}
 
 
-}	
+
+exports.filterType = (req, res, next) => {
+
+
+	if (/orders/.test(req.originalUrl)) {
+		res.filterOrder = true
+	}
+
+	next()
+}
+
+exports.filterCreatedQueryBuilder = (req, res, next) => {
+
+	if (req.query.created === "true") {
+		const data = this.filterQueryDate(req.query)
+		res.filter = data
+	}
+	next()
+}
+
+
+exports.filterBuilderForFind = (subDocumentName, filterAction) => {
+	return (req, res, next) => {
+
+		if (subDocumentName !== undefined) {
+			res.filter = {}
+			const filter = {}
+			Object.keys(req.query).map(keyNames => {
+				if (req.query[keyNames] === "true") {
+					const newField = subDocumentName + "." + keyNames
+					delete req.query[keyNames]
+					filter[newField] = req.query
+					if (keyNames === "created") {
+						const data = this.filterQueryDate(req.query, filter)
+						res.filter = data
+
+					}
+
+
+				}
+			})
+		} else {
+			Object.keys(req.query).map(keyNames => {
+				if (req.query[keyNames] === "true") {
+					const newField = keyNames
+					delete req.query[keyNames]
+					const data = this.filterQueryDate(req.query, { [newField]: req.query })
+					res.filter = data
+				}
+			})
+			// if (req.query.created === "true") {
+			// 	const data = this.filterQueryDate(req.query)
+			// }
+		}
+		next()
+	}
+}
+
+
+exports.filterQueryDate = (reqQuery, obj) => {
+
+
+	const filterTerm = Object.keys(obj)[0]
+	for (const key in reqQuery) {
+		if (key === "from") {
+			obj[filterTerm]["$gte"] = new Date(reqQuery[key]).setHours(0, 0, 0, 0)
+			delete obj[filterTerm][key]
+		} else {
+			obj[filterTerm]["$lte"] = new Date(reqQuery[key]).setHours(23, 59, 59)
+			delete obj[filterTerm][key]
+		}
+	}
+
+
+	return obj
+
+}
+
+
+
+// exports._updateZeroDepthSubdocumentBuilder = (subdocumentName, updateFields) => {
+// 	const changeFieldsName = Object.keys(updateFields).map((fieldName) => {
+// 		const newField = subdocumentName + ".$." + fieldName;
+// 		return { [newField]: updateFields[fieldName] };
+// 	});
+// 	const newUpdate = changeFieldsName.reduce((a, b) => Object.assign({}, a, b));
+
+// 	return newUpdate;
+// };

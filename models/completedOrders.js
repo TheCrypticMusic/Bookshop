@@ -15,7 +15,9 @@ const basketIdSchema = new mongoose.Schema({
     basketId: { type: mongoose.Schema.Types.ObjectId, ref: "Basket" },
     subTotal: { type: Number, required: true },
     items: [orderItemSchema]
-});
+},
+    { timestamps: { createdAt: "created", updatedAt: "updated" } }
+);
 
 
 const completedOrderSchema = new mongoose.Schema({
