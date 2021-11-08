@@ -3,6 +3,8 @@ $(".date").click(function () {
 
     const dateButtons = document.getElementsByClassName("date")
 
+    const dbFilter = {}
+
     for (let item of dateButtons) {
 
 
