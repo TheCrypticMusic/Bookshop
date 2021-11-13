@@ -18,11 +18,11 @@ Using the above I have managed to create the following for the website:
 
 • Headless CMS which uses the REST API to GET/PUT/DELETE/POST data.
 
-• User Accounts - the ability for the user to amend current details, E.g email, password and username 
+• User Accounts - the ability to amend current details, E.g email, password and username 
 
 <img width="400" alt="Screenshot 2021-11-13 at 12 03 49" src="https://user-images.githubusercontent.com/44878496/141643082-ba5ebecb-a7f0-4bfc-b6db-ab6cc03886c9.png">
 
-• User Accounts - the ability for to view previous transactions 
+• User Accounts - the ability to view previous transactions 
 
 <img width="400" alt="Screenshot 2021-11-13 at 11 57 02" src="https://user-images.githubusercontent.com/44878496/141642892-9abdd192-12ee-4f81-b0db-1e1041142fc4.png">
 
@@ -47,7 +47,7 @@ Using the above I have managed to create the following for the website:
 
 • Unique ids url and webpage for each book 
 
-• Breakdowns within the CMS for books solds, accounts created and orders placed with ChartJS
+• Breakdowns within the CMS for books sold, accounts created and orders placed with ChartJS
 
 <img width="400" alt="Screenshot 2021-11-13 at 11 54 01" src="https://user-images.githubusercontent.com/44878496/141642772-88bcfac1-879c-41d1-a270-65155e83d6fa.png">
 
