@@ -1,33 +1,29 @@
-# Bookshop
+This project uses the following:
 
-Bookshop project that features a functioning front-end and backend. Built with:
+• Node.js 
 
-• Node.js
+• Express.js 
 
-• Express.js
+• MongoDB in conjunction with Mongoose 
 
-• MongoDB in conjunction with Mongoose
-
-• Handlebars
+• Handlebars 
 
 • JQUERY
 
-**Features:**
+Using the above I have managed to create the following for the website:
 
-• User Accounts - the ability for the user to amend current details, E.g email, password and username
+• REST API 
 
-• Login & Register Page
+• Headless CMS 
 
-• Cookie Implemetation
+• User Accounts - the ability for the user to amend current details, E.g email, password and username 
 
-• MongoDB
+• Login & Register Page 
 
-• Basket/ Cart system
+• Cookie Implemetation via passport.js 
 
-• Basket view
+• Basket/ Cart system • Basket view • Fake payments using Stripe/ Stripe Webhook • Wishlist 
 
-• Fake payments
+• Unique ids url and webpage for each book 
 
-• Wishlist
-
-• Unique ids url and webpage for each book
+• Breakdowns
