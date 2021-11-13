@@ -98,6 +98,9 @@ exports.addressExists = async (req, res, next) => {
 
 
 exports.bookExists = (req, res, next) => {
+	
+
+	
 	if (req.body.bookId === undefined) {
 
 		res.bookid = req.params.bookid
@@ -257,45 +260,25 @@ exports.vaildateRegisterData = (req, res, next) => {
 }
 
 
-
-exports.filterType = (req, res, next) => {
-
-
-	if (/orders/.test(req.originalUrl)) {
-		res.filterOrder = true
-	}
-
-	next()
-}
-
-exports.filterCreatedQueryBuilder = (req, res, next) => {
-
-	if (req.query.created === "true") {
-		const data = this.filterQueryDate(req.query)
-		res.filter = data
-	}
-	next()
-}
-
-
 exports.filterBuilderForFind = (subDocumentName, filterAction) => {
 	return (req, res, next) => {
-
+		res.filter = {}
 		if (subDocumentName !== undefined) {
-			res.filter = {}
-			const filter = {}
+
+			const filterBuliderObject = {}
 			Object.keys(req.query).map(keyNames => {
 				if (req.query[keyNames] === "true") {
 					const newField = subDocumentName + "." + keyNames
+
 					delete req.query[keyNames]
-					filter[newField] = req.query
+
+					filterBuliderObject[newField] = req.query
+
 					if (keyNames === "created") {
-						const data = this.filterQueryDate(req.query, filter)
+						const data = this.filterQueryDate(req.query, filterBuliderObject)
 						res.filter = data
 
 					}
-
-
 				}
 			})
 		} else {
@@ -307,9 +290,6 @@ exports.filterBuilderForFind = (subDocumentName, filterAction) => {
 					res.filter = data
 				}
 			})
-			// if (req.query.created === "true") {
-			// 	const data = this.filterQueryDate(req.query)
-			// }
 		}
 		next()
 	}
@@ -334,15 +314,3 @@ exports.filterQueryDate = (reqQuery, obj) => {
 	return obj
 
 }
-
-
-
-// exports._updateZeroDepthSubdocumentBuilder = (subdocumentName, updateFields) => {
-// 	const changeFieldsName = Object.keys(updateFields).map((fieldName) => {
-// 		const newField = subdocumentName + ".$." + fieldName;
-// 		return { [newField]: updateFields[fieldName] };
-// 	});
-// 	const newUpdate = changeFieldsName.reduce((a, b) => Object.assign({}, a, b));
-
-// 	return newUpdate;
-// };

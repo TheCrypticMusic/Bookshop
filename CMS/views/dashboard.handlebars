@@ -5,8 +5,18 @@
 				<h3>Snapshots</h3>
 			</div>
 			<div class="range-selector" id="range">
-				<button id="date-today" class="date" value="0" disabled="disabled">Today</button>
-				<button id="date-month" class="date" value="30" type="button">Last 30 Days</button>
+				<button
+					id="snapshot-date-today"
+					class="snapshot-date date"
+					value="0"
+					disabled="disabled"
+				>Today</button>
+				<button
+					id="snapshot-date-month"
+					class="snapshot-date date"
+					value="30"
+					type="button"
+				>Last 30 Days</button>
 			</div>
 		</div>
 	</div>
@@ -16,7 +26,7 @@
 				<div class="box-title">
 					<p><b>Books sold <b class="sold">today</b>:</b></p>
 					<div class="box-num" id="book-num">
-						<h2>{{numberOfBooks}}</h2>
+						<h2 class="date-range-books">{{dateRangeBooks}}</h2>
 					</div>
 				</div>
 				<hr />
@@ -30,7 +40,7 @@
 				<div class="box-title">
 					<p><b>Number of accounts created <b class="sold">today</b>:</b></p>
 					<div class="box-num" id="user-num">
-						<h2>{{dateRangeUsers}}</h2>
+						<h2 class="date-range-users">{{dateRangeUsers}}</h2>
 					</div>
 				</div>
 				<hr />
@@ -47,7 +57,7 @@
 					</p>
 				</div>
 				<div class="box-num" id="order-num">
-					<h2>{{numberOfOrders}}</h2>
+					<h2 class="date-range-orders">{{dateRangeOrders}}</h2>
 				</div>
 				<hr />
 				<div class="t-stats" id="t-orders">
@@ -56,7 +66,70 @@
 			</div>
 		</div>
 	</div>
+	<div class="dashboard-header-section">
+		<div class="header-flex">
+			<div class="header-title">
+				<h3>Breakdowns</h3>
+			</div>
+			<div class="range-selector" id="range">
+				<button
+					id="breakdown-date-month"
+					class="breakdown-date date breakdown-orders"
+					value="30"
+					disabled="disabled"
+				>Last 30 days</button>
+				<button
+					id="breakdown-date-year"
+					class="breakdown-date date breakdown-orders"
+					value="365"
+					type="button"
+				>Last year</button>
+			</div>
+		</div>
+	</div>
 	<div class="chart-container">
-		<canvas id="myChart"></canvas>
+		<canvas id="order-chart"></canvas>
+	</div>
+	<div class="dashboard-header-section">
+		<div class="header-flex">
+			<div class="range-selector" id="range">
+				<button
+					id="breakdown-date-month"
+					class="breakdown-date date breakdown-books"
+					value="30"
+					disabled="disabled"
+				>Last 30 days</button>
+				<button
+					id="breakdown-date-year"
+					class="breakdown-date date breakdown-books"
+					value="365"
+					type="button"
+				>Last year</button>
+			</div>
+		</div>
+	</div>
+	<div class="chart-container">
+		<canvas id="book-chart"></canvas>
+	</div>
+	<div class="dashboard-header-section">
+		<div class="header-flex">
+			<div class="range-selector" id="range">
+				<button
+					id="breakdown-date-month"
+					class="breakdown-date date breakdown-account"
+					value="30"
+					disabled="disabled"
+				>Last 30 days</button>
+				<button
+					id="breakdown-date-year"
+					class="breakdown-date date breakdown-account"
+					value="365"
+					type="button"
+				>Last year</button>
+			</div>
+		</div>
+	</div>
+	<div class="chart-container">
+		<canvas id="account-chart"></canvas>
 	</div>
 </div>

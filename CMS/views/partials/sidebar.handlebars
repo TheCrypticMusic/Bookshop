@@ -3,9 +3,9 @@
 		<p>Bookstore CMS</p>
 	</div>
 	<div class="sidebar-sections">
-		<a href="#" class="section">Dashboard</a>
-		<a href="#" class="section">Books</a>
-		<a href="#" class="section">Users</a>
-		<a href="#" class="section">Orders</a>
+		<a href="/dashboard" class="section"{{#ifEquals section "/dashboard"}} id="active" {{/ifEquals}}>Dashboard</a>
+		<a href="/books" class="section"{{#ifEquals section "/books"}} id="active" {{/ifEquals}}>Books</a>
+		<a href="/users" class="section"{{#ifEquals section "/users"}} id="active" {{/ifEquals}}>Users</a>
+		<a href="/orders" class="section"{{#ifEquals section "/orders"}} id="active" {{/ifEquals}}>Orders</a>
 	</div>
 </div>

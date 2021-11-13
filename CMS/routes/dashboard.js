@@ -11,19 +11,71 @@ router.get(
 	dashboardController.getTotalOrdersCount,
 	dashboardController.getTotalNumberOfBooksSoldCount,
 	dashboardController.getBooksInDateRangeCount,
-	(req, res, next) => {
 
+	(req, res, next) => {
 		return res.render("dashboard", {
+			title: "Dashboard",
 			dateRangeUsers: res.dateRangeUsers,
 			totalUserCount: res.totalUserCount,
-			numberOfOrders: res.numberOfOrders,
+			dateRangeOrders: res.numberOfOrders,
 			totalNumberOfOrders: res.totalNumberOfOrders,
 			totalNumberOfBooks: res.totalNumberOfBooks,
-			numberOfBooks: res.numberOfBooks
+			dateRangeBooks: res.numberOfBooks,
+			active: {	}
+		});
+	}
+);
+router.get(
+	"/snapshots",
+	dashboardController.configDateSettings,
+	dashboardController.getUsersInDateRangeCount,
+	dashboardController.getOrdersInDateRangeCount,
+	dashboardController.getBooksInDateRangeCount,
+
+	(req, res, next) => {
+		return res.send({
+			dateRangeUsers: res.dateRangeUsers,
+			dateRangeOrders: res.numberOfOrders,
+			dateRangeBooks: res.numberOfBooks,
 		});
 	}
 );
 
-// router.post("/", dashboardController.getTotalAccounts)
+router.get(
+	"/breakdown/orders",
+	dashboardController.configDateSettings,
+	dashboardController.getOrdersInDateRangeCount,
+	dashboardController.orderChartSetup,
+	(req, res, next) => {
+		return res.send({
+			data: res.dates,
+		});
+	}
+);
+
+router.get(
+	"/breakdown/books",
+	dashboardController.configDateSettings,
+	dashboardController.getBooksInDateRangeCount,
+	dashboardController.bookChartSetup,
+	(req, res, next) => {
+		return res.send({
+			data: res.dates,
+		});
+	}
+);
+
+router.get(
+	"/breakdown/accounts",
+	dashboardController.configDateSettings,
+	dashboardController.getUsersInDateRangeCount,
+	dashboardController.accountChartSetup,
+	(req, res, next) => {
+		return res.send({
+			data: res.dates,
+		});
+	}
+);
+
 
 module.exports = router;

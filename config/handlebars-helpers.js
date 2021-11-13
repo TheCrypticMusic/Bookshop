@@ -63,6 +63,9 @@ module.exports = {
         } else {
             return options.inverse(this);
         }
-    }
+    },
+    lowercase: function (arg1) {
+        return arg1.toLowerCase()
+    }   
 }
 

@@ -18,7 +18,7 @@ router.post("/", apiHelpers.vaildateRegisterData, (req, res) => {
 router.get("/", apiHelpers.filterBuilderForFind(), (req, res) => {
 
 	mongooseHelpers.getAllUsers(res.filter).then(result => {
-		apiHelpers.sendStatus(200, "success", result, "All users", req, res)
+		apiHelpers.sendStatus(200, "success", {users: result}, "All users", req, res)
 	})
 })
 

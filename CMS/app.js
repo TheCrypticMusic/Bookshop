@@ -27,9 +27,6 @@ cmsApp.use(express.static(cmsScriptDirectory))
 
 cmsApp.use(cookieParser());
 
-// cmsApp.use(express.json());
-// cmsApp.use(express.urlencoded({ extended: false }));
-
 cmsApp.use(
     session({
         secret: "test123",
@@ -72,7 +69,7 @@ cmsApp.use((req, res, next) => {
 
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error')
-    // res.locals.userEmail = req.user.email
+    res.locals.section = req.url
     next()
 
 })
@@ -80,6 +77,7 @@ cmsApp.use((req, res, next) => {
 // cms routes
 cmsApp.use("/", require("./routes/index"))
 cmsApp.use("/dashboard", require("./routes/dashboard"))
+cmsApp.use("/books", require("./routes/books"))
 
 const cmsPortNumber = 5004
 

@@ -185,7 +185,7 @@ router.delete("/:id/skus", apiHelpers.bookExists, (req, res) => {
 
 
 // Delete a specific sku from a book
-router.delete("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
+router.delete("/:bookid/skus/:skuid", apiHelpers.bookExists, (req, res) => {
 
     const skuId = req.params.sku
 
@@ -205,12 +205,12 @@ router.delete("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
 // author
 // imagePath
 
-router.get("/:id/skus/:sku", apiHelpers.bookExists, (req, res) => {
+router.get("/:bookid/skus/:skuid", apiHelpers.bookExists, (req, res) => {
 
-    const skuId = req.params.sku;
+    const skuId = req.params.skuid;
 
     const filter = apiHelpers.filterBuilder(req.query);
-
+    
     mongooseHelpers.getSingleSkuOfBook(res.bookid, skuId, filter).then((book) => {
         apiHelpers.sendStatus(
             200,

@@ -1,0 +1,53 @@
+<div class="dashboard-container">
+    <div class="dashboard-header-section">
+        <div class="header-flex">
+            <div class="header-title">
+                <h3>Books</h3>
+            </div>
+            <div id="book-box">
+                <a href="/books/create" class="book-button">Create Book</a>
+            </div>
+        </div>
+    </div>
+    <div class="book-list">
+        <table style="width: 100%" border="1">
+            <thead>
+                <tr class="test">
+                    <div class="stick">
+                        <td><input type="checkbox" id="check-all-books"></td>
+                        <td>Product Name</td>
+                        <td>Type</td>
+                        <td>Genre</td>
+                        <td>Quanity</td>
+                        <td>Price</td>
+                    </div>
+                </tr>
+            <thead>
+                <tbody>
+                {{#each books}}
+                <tr id="{{this._id}}" class="book">
+                    <td>
+                        <input type="checkbox" id="check-single-book">
+                        <img class="book-cover" src="{{this.imagePath }}">
+                    </td>
+                    <td>{{this.title}}</td>
+                    <td>
+                        <select class="book-type">
+                            {{#each this.skus}}
+                            <option id="{{this._id}}" class="type" value="{{lowercase this.type}}">{{this.type}}</option>
+                            {{/each}}
+                        </select>
+                    </td>
+                    <td>{{this.genre}}</td>
+                
+                    <td class="book-stock">{{this.skus.0.quantity}}</td>
+                    {{!-- id="{{lowercase this.skus.0.type}}" --}}
+                  
+                    <td class="book-price">£{{this.skus.0.price}}</td>
+      
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
