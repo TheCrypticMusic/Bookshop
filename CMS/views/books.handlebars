@@ -9,7 +9,7 @@
             </div>
         </div>
     </div>
-    <div class="book-list">
+    <div class="book-list" id="list">
         <table style="width: 100%" border="1">
             <thead class="sticky-header">
                 <tr>
@@ -39,7 +39,6 @@
                         </select>
                     </td>
                     <td>{{this.genre}}</td>
-                
                     <td class="book-stock">{{this.skus.0.quantity}}</td>
                     {{!-- id="{{lowercase this.skus.0.type}}" --}}
                   

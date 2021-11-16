@@ -1,0 +1,34 @@
+<div class="dashboard-container">
+    <div class="dashboard-header-section">
+        <div class="header-flex">
+            <div class="header-title">
+                <h3>Users</h3>
+            </div>
+        </div>
+    </div>
+    <div class="book-list" id="list">
+        <table style="width: 100%" border="1">
+            <thead class="sticky-header">
+                <tr>
+                    <td>Username</td>
+                    <td>Email</td>
+                    <td>Role Title</td>
+                    <td>Read?</td>  
+                    <td>Write?</td>
+                </tr>
+                <thead>
+                <tbody>
+                   {{#each users}}
+                    <tr id="{{this._id}}" class="book">
+                        <td>{{this.username }}</td>
+               
+                        <td>{{this.email}}</td>
+                        <td>{{this.role.title}}</td>
+                        <td>{{this.role.readAccess}}</td>
+                        <td>{{this.role.writeAccess}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+        </table>
+    </div>
+</div>
