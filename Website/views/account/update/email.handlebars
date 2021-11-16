@@ -7,41 +7,42 @@
             <p>To change the email linked to your account, please enter a new email address</p>
             <div class="form-section">
                 <div class="email-field">
-                       <div class="email-label" id="account-form">
-                            <h3>Old Email Address</h3>
+                    <div class="email-label" id="account-form">
+                        <h3>Old Email Address</h3>
+                    </div>
+                    <div class="flex-box">
+                        <div class="email-value" id="account-form">
+                            <input type="email" class="form-control mb-4" id="oldEmail" name="oldEmail"
+                                placeholder={{email}} disabled=true>
                         </div>
-                        <div class="flex-box">
-                            <div class="email-value" id="account-form">
-                                <input type="email" class="form-control mb-4" id="oldEmail" name="oldEmail"
-                                    placeholder={{email}} disabled=true>
-                            </div>
 
-                        </div>
+                    </div>
                     <div class="email-label" id="account-form">
                         <h3>New Email Address</h3>
                     </div>
-                        <div class="flex-box">
-                            <div class="email-value" id="account-form">
-                                <input type="email" class="form-control mb-4" id="email" name="email"
-                                    placeholder="New Email Address">
-                            </div>
+                    <div class="flex-box">
+                        <div class="email-value" id="account-form">
+                            <input type="email" class="form-control mb-4" id="email" name="email"
+                                placeholder="New Email Address">
                         </div>
-                        <hr class="personal-divider">
-                        <div class="email-label" id="account-form">
-                            <h3>Password</h3>
+                    </div>
+                    <hr class="personal-divider">
+                    <div class="email-label" id="account-form">
+                        <h3>Password</h3>
+                    </div>
+                    <div class="flex-box">
+                        <div class="email-value" id="account-form">
+                            <input type="password" class="form-control mb-4" id="password" name="password"
+                                placeholder="Password">
                         </div>
-                        <div class="flex-box">
-                            <div class="email-value" id="account-form">
-                                <input type="password" class="form-control mb-4" id="password" name="password"
-                                    placeholder="Password">
-                            </div>
 
-                        </div>
-                        <div class="btn-flex">
-                            {{!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}"> --}}
-                            <button class="btn btn-primary account-email-update" id="submit-btn account-change" type="submit">Update Email</button>
-                            <a class="cancel-change" href="/account">Cancel</a>
-                        </div>
+                    </div>
+                    <div class="btn-flex">
+                        {{!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}"> --}}
+                        <button class="btn btn-primary account-email-update" id="submit-btn account-change"
+                            type="submit">Update Email</button>
+                        <a class="cancel-change" href="/account">Cancel</a>
+                    </div>
                 </div>
             </div>
             </form>

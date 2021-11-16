@@ -13,40 +13,41 @@
         <table style="width: 100%" border="1">
             <thead class="sticky-header">
                 <tr>
-                        <td><input type="checkbox" id="check-all-books"></td>
-                        <td>Product Name</td>
-                        <td>Type</td>
-                        <td>Genre</td>
-                        <td>Quanity</td>
-                        <td>Price</td>
+                    <td><input type="checkbox" id="check-all-books"></td>
+                    <td>Product Name</td>
+                    <td>Type</td>
+                    <td>Genre</td>
+                    <td>Quanity</td>
+                    <td>Price</td>
                 </tr>
-            <thead>
+                <thead>
                 <tbody>
-                {{#each books}}
-                <tr id="{{this._id}}" class="book">
-                    <td>
-                        <input type="checkbox" id="check-single-book">
-                        <a href="/books/edit/{{this._id}}">
-                        <img class="book-cover" src="{{this.imagePath }}">
-                        </a>
-                    </td>
-                    <td>{{this.title}}</td>
-                    <td>
-                        <select class="book-type">
-                            {{#each this.skus}}
-                            <option id="{{this._id}}" class="type" value="{{lowercase this.type}}">{{this.type}}</option>
-                            {{/each}}
-                        </select>
-                    </td>
-                    <td>{{this.genre}}</td>
-                    <td class="book-stock">{{this.skus.0.quantity}}</td>
-                    {{!-- id="{{lowercase this.skus.0.type}}" --}}
-                  
-                    <td class="book-price">£{{this.skus.0.price}}</td>
-      
-                </tr>
-                {{/each}}
-            </tbody>
+                    {{#each books}}
+                    <tr id="{{this._id}}" class="book">
+                        <td>
+                            <input type="checkbox" id="check-single-book">
+                            <a href="/books/edit/{{this._id}}">
+                                <img class="book-cover" src="{{this.imagePath }}">
+                            </a>
+                        </td>
+                        <td>{{this.title}}</td>
+                        <td>
+                            <select class="book-type">
+                                {{#each this.skus}}
+                                <option id="{{this._id}}" class="type" value="{{lowercase this.type}}">{{this.type}}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </td>
+                        <td>{{this.genre}}</td>
+                        <td class="book-stock">{{this.skus.0.quantity}}</td>
+                        {{!-- id="{{lowercase this.skus.0.type}}" --}}
+
+                        <td class="book-price">£{{this.skus.0.price}}</td>
+
+                    </tr>
+                    {{/each}}
+                </tbody>
         </table>
     </div>
 </div>

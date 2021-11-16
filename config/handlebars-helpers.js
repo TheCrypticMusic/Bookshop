@@ -66,6 +66,6 @@ module.exports = {
     },
     lowercase: function (arg1) {
         return arg1.toLowerCase()
-    }   
+    }
 }
 

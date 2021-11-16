@@ -6,9 +6,9 @@
 		<li class="nav-item"><a href="/account" class="nav-link">Account</a></li>
 
 		{{#if isAuthenticated}}
-			<li class="nav-item"><a href="/account/logout" class="nav-link">Log Out</a></li>
+		<li class="nav-item"><a href="/account/logout" class="nav-link">Log Out</a></li>
 		{{else}}
-			<li class="nav-item"><a href="/account/login" class="nav-link">Sign In</a></li>
+		<li class="nav-item"><a href="/account/login" class="nav-link">Sign In</a></li>
 		{{/if}}
 	</ul>
 </nav>
@@ -20,13 +20,8 @@
 			</a>
 		</div>
 		<div class="search-bar">
-			<input
-				type="text"
-				class="form-control"
-				id="book-search"
-				name="book-search"
-				placeholder="Search by Title..."
-			/>
+			<input type="text" class="form-control" id="book-search" name="book-search"
+				placeholder="Search by Title..." />
 		</div>
 
 	</div>

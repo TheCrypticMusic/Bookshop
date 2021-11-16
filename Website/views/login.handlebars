@@ -4,24 +4,11 @@
 			<form action="/account/login" method="POST">
 				<h1 class="h3 mb-3 font-weight-normal">Login</h1>
 				<div class="entry" id="entry-form">
-					<input
-						type="email"
-						class="form-control"
-						id="email"
-						name="email"
-						placeholder="Email Address"
-						autofocus
-						required
-					/>
+					<input type="email" class="form-control" id="email" name="email" placeholder="Email Address"
+						autofocus required />
 				</div>
 				<div class="entry" id="entry-form">
-					<input
-						type="password"
-						class="form-control"
-						id="password"
-						name="password"
-						placeholder="Password"
-					/>
+					<input type="password" class="form-control" id="password" name="password" placeholder="Password" />
 				</div>
 				<div class="checkbox mb-3" id="checkbox">
 					<label>
@@ -35,18 +22,14 @@
 					</div>
 				</div>
 				<input type="hidden" name="_csrf" value="{{csrfToken}}" />
-				<button
-					class="btn btn-lg btn-primary btn-block"
-					id="submit-btn"
-					type="submit"
-				>Login</button>
+				<button class="btn btn-lg btn-primary btn-block" id="submit-btn" type="submit">Login</button>
 
 			</form>
 			{{#if error}}
-				<h4 class="alert alert-danger mt-4">{{error}}</h4>
+			<h4 class="alert alert-danger mt-4">{{error}}</h4>
 			{{/if}}
 			{{#if success}}
-				<h4 class="alert alert-success mt-4">{{success}}</h4>
+			<h4 class="alert alert-success mt-4">{{success}}</h4>
 			{{/if}}
 		</div>
 	</div>

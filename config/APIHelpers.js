@@ -98,11 +98,11 @@ exports.addressExists = async (req, res, next) => {
 
 
 exports.bookExists = (req, res, next) => {
-	
+
 
 
 	if (req.body.bookId === undefined) {
-		
+
 		res.bookid = req.params.bookid
 	} else {
 		res.bookid = req.body.bookId

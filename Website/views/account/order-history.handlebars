@@ -5,35 +5,35 @@
         </div>
         <section class="details">
             <div class="form-section">
-                
-                {{#each orders}}
-                    <div class="order-details">
-                        <div class="address1-label" id="account-form">
-                            <h2>Order #{{this._id}}</h2>
-                        </div>
-                        {{#each this.items}}
-                            <div class="order-item">
-                                <img class="order-img" src="/{{ this.bookImage }}">
 
-                                <div class="order-book-details">
-                                    <h4 class="order-book-title">
-                                        <b>{{this.bookTitle}}</b>
-                                    </h4>
-                                    <div class="order-author">
-                                        <small>{{this.bookAuthor}}</small>
-                                    </div>
-                                    <div class="order-quantity">
-                                        <small>Quantity: {{this.quantity}}</small>
-                                    </div>
-                                    <div class="order-total">
-                                        <small>Total: £{{this.total}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr class="order-divider">
-                        {{/each}}
-                        <h3><b>Subtotal: £{{this.subTotal}}</b></h3>
+                {{#each orders}}
+                <div class="order-details">
+                    <div class="address1-label" id="account-form">
+                        <h2>Order #{{this._id}}</h2>
                     </div>
+                    {{#each this.items}}
+                    <div class="order-item">
+                        <img class="order-img" src="/{{ this.bookImage }}">
+
+                        <div class="order-book-details">
+                            <h4 class="order-book-title">
+                                <b>{{this.bookTitle}}</b>
+                            </h4>
+                            <div class="order-author">
+                                <small>{{this.bookAuthor}}</small>
+                            </div>
+                            <div class="order-quantity">
+                                <small>Quantity: {{this.quantity}}</small>
+                            </div>
+                            <div class="order-total">
+                                <small>Total: £{{this.total}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="order-divider">
+                    {{/each}}
+                    <h3><b>Subtotal: £{{this.subTotal}}</b></h3>
+                </div>
                 {{/each}}
             </div>
             </form>

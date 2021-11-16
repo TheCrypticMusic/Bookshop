@@ -13,15 +13,15 @@
                     <td>Username</td>
                     <td>Email</td>
                     <td>Role Title</td>
-                    <td>Read?</td>  
+                    <td>Read?</td>
                     <td>Write?</td>
                 </tr>
                 <thead>
                 <tbody>
-                   {{#each users}}
+                    {{#each users}}
                     <tr id="{{this._id}}" class="book">
                         <td>{{this.username }}</td>
-               
+
                         <td>{{this.email}}</td>
                         <td>{{this.role.title}}</td>
                         <td>{{this.role.readAccess}}</td>

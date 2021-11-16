@@ -3,16 +3,16 @@ const router = express.Router();
 const booksController = require("../controllers/books")
 
 router.get("/", booksController.getAllBooks, (req, res, next) => {
-  
+
     return res.render("books", { "books": res.books })
 })
 
 router.get("/get-sku", booksController.getSku, (req, res, next) => {
-    res.send({"price": res.currentPrice, "stock": res.currentStockLevel})
+    res.send({ "price": res.currentPrice, "stock": res.currentStockLevel })
 })
 
 router.get("/edit/:bookId", booksController.getBook, (req, res, next) => {
-    res.render("edit-books", {"book": res.book})
+    res.render("edit-books", { "book": res.book })
 })
 
 router.put("/edit/book/:bookId", booksController.updateBook)

@@ -1,6 +1,5 @@
 html {
 	height: 100%;
-
 }
 
 body {
@@ -8,7 +7,7 @@ body {
 	background-color: #f8f5f2;
 	color: #414040;
 	position: relative;
-    min-height: 100vh;
+	min-height: 100vh;
 }
 
 input.login {
@@ -101,7 +100,6 @@ p.error {
 
 .sidebar-container {
 	display: flex;
-	
 }
 
 .outer-page-container {
@@ -158,9 +156,6 @@ p.error {
 	flex-direction: column;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 6px;
 	height: 100%;
-	
-	
-
 }
 
 .sidebar-title {
@@ -421,9 +416,9 @@ td {
 .sticky-header {
 	position: sticky;
 	top: 0px;
-	background: white	;
-	 z-index: 1;
-	 width: 100%;
+	background: white;
+	z-index: 1;
+	width: 100%;
 }
 
 .book-cover {
@@ -440,15 +435,14 @@ td {
 
 .book-edit-box {
 	padding: 1.5rem;
-
 }
 
 .edit-box {
 	height: 100%;
 }
 
-input, edit {
-
+input,
+edit {
 	padding: 5px;
 	text-decoration: none;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -469,7 +463,6 @@ input, edit {
 #add-sku {
 	margin-right: 2rem;
 }
-
 
 /* 
 create page */

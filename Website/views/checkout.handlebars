@@ -1,68 +1,69 @@
 <div class="container">
-<div class="main-content-container">
-    <header class="header-row">
-        <h2 class="header-title">Checkout</h2>
-    </header>
-    <div class="container" id="flex">
-        <div class="checkout-container">
-            <div class="address-container">
-                <div class="address-title" id="checkout-section-title">
-                    <h3 class="checkout-section">1) Address Details</h3>
+    <div class="main-content-container">
+        <header class="header-row">
+            <h2 class="header-title">Checkout</h2>
+        </header>
+        <div class="container" id="flex">
+            <div class="checkout-container">
+                <div class="address-container">
+                    <div class="address-title" id="checkout-section-title">
+                        <h3 class="checkout-section">1) Address Details</h3>
+                    </div>
+                    <div class="container-address" id="checkout-container">
+                        <p class="address-text" id="checkout-info-address">{{username}}</p>
+                        <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine1}}</small>
+                        <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine2}}</small>
+                        <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine3}}</small>
+                        <small class="address-text" id="checkout-info-address">{{shippingAddress.town}}</small>
+                        <small class="address-text" id="checkout-info-address">{{shippingAddress.postcode}}</small>
+                    </div>
                 </div>
-                <div class="container-address" id="checkout-container">
-                    <p class="address-text" id="checkout-info-address">{{username}}</p>
-                    <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine1}}</small>
-                    <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine2}}</small>
-                    <small class="address-text" id="checkout-info-address">{{shippingAddress.addressLine3}}</small>
-                    <small class="address-text" id="checkout-info-address">{{shippingAddress.town}}</small>
-                    <small class="address-text" id="checkout-info-address">{{shippingAddress.postcode}}</small>
-                </div>
-            </div>
-            <div class="delivery-container">
-                <div class="delivery-title" id="checkout-section-title">
-                    <h3 class="checkout-section">2) Delivery Method</h3>
-                </div>
-                <div class="container-postage" id="checkout-container">
-                    {{#each postage}}
-                    <div class="methods">
-                        <div class="checkout-delivery-method" id="method-with-border">
+                <div class="delivery-container">
+                    <div class="delivery-title" id="checkout-section-title">
+                        <h3 class="checkout-section">2) Delivery Method</h3>
+                    </div>
+                    <div class="container-postage" id="checkout-container">
+                        {{#each postage}}
+                        <div class="methods">
+                            <div class="checkout-delivery-method" id="method-with-border">
 
-                            <input type="radio" id="delivery-method" value="{{this._id}}" name="delivery-method" {{#postageOption this.postageCost}}checked="true"{{/postageOption}}>
-                            <label for="{{this.postageName}}">{{this.postageName}}</label>
-                            <div class="method-info">
-                                <small class="delivery-price" id="checkout-info">£{{this.postageCost}}</small>
+                                <input type="radio" id="delivery-method" value="{{this._id}}" name="delivery-method"
+                                    {{#postageOption this.postageCost}}checked="true" {{/postageOption}}>
+                                <label for="{{this.postageName}}">{{this.postageName}}</label>
+                                <div class="method-info">
+                                    <small class="delivery-price" id="checkout-info">£{{this.postageCost}}</small>
+                                </div>
                             </div>
                         </div>
+                        {{/each}}
                     </div>
-                    {{/each}}
                 </div>
-            </div>
-            <div class="delivery-container">
-                <div class="delivery-title" id="checkout-section-title">
-                    <h3 class="checkout-section">3) Payment Method</h3>
-                </div>
-                <div class="container" id="checkout-container">
-                    <div class="checkout-payment-method" id="method-with-border">
-                        <input type="radio" id="payment-method" value="payment-method" name="payment-method"
-                               checked="true">
-                        <label for="payment-method">Credit Card Payment</label>
-                        <div class="method-info">
-                            <small id="checkout-info">Mastercard/ VISA</small>
+                <div class="delivery-container">
+                    <div class="delivery-title" id="checkout-section-title">
+                        <h3 class="checkout-section">3) Payment Method</h3>
+                    </div>
+                    <div class="container" id="checkout-container">
+                        <div class="checkout-payment-method" id="method-with-border">
+                            <input type="radio" id="payment-method" value="payment-method" name="payment-method"
+                                checked="true">
+                            <label for="payment-method">Credit Card Payment</label>
+                            <div class="method-info">
+                                <small id="checkout-info">Mastercard/ VISA</small>
+                            </div>
                         </div>
+
                     </div>
-
                 </div>
+
+                <button class="checkout-button" id="{{basketId}}">Checkout</button>
             </div>
 
-            <button class="checkout-button" id="{{basketId}}">Checkout</button>
-        </div>
-
-        <div class="padding-gap"></div>
-        <div class="order-sum-box">
-            <div class="address-title" id="checkout-section-title">
-                <h3 class="checkout-section">Order Summary</h3>
-            </div>
-            {{#each items}}
+            <div class="padding-gap"></div>
+            <div class="order-sum-box">
+                <div class="address-title" id="checkout-section-title">
+                    <h3 class="checkout-section">Order Summary</h3>
+                </div>
+                {{#each items}}
                 <div class="book-container">
                     <div class="checkout-book-image-cover">
                         <img class="checkout-book-image" src="{{this.bookImage}}">
@@ -77,13 +78,13 @@
                     </div>
                 </div>
                 <hr class="checkout-container-divider">
-            {{/each}}
-            <div class="checkout-subtotal-postage">
-                <h4 id="product-subtotal">Product Subtotal: £{{padNumber subTotal}}</h4>
-                <h4 id="shipping-cost">Shipping Cost: £0 </h4>
-                <h4 id="combined-cost">Combined Total: £{{padNumber subTotal}} </h4>
+                {{/each}}
+                <div class="checkout-subtotal-postage">
+                    <h4 id="product-subtotal">Product Subtotal: £{{padNumber subTotal}}</h4>
+                    <h4 id="shipping-cost">Shipping Cost: £0 </h4>
+                    <h4 id="combined-cost">Combined Total: £{{padNumber subTotal}} </h4>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>

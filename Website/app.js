@@ -12,7 +12,11 @@ require("../config/passport");
 const Wishlist = require("../models/wishlist")
 const websiteApp = express();
 
+
 connection.connectToBookshopServer("Website")
+
+
+
 
 const websitePublicDirectory = path.join(__dirname, "./public");
 const websiteScriptDirectory = path.join(__dirname, "./scripts");
@@ -46,9 +50,9 @@ websiteApp.use(
             // 1 day cookie
             maxAge: 24 * 60 * 60 * 1000,
         },
-        store: MongoStore.create({
-            mongoUrl: "mongodb://localhost:27017/shopping",
-        }),
+        // store: MongoStore.create({
+        //     mongoUrl: "mongodb://localhost:27017/shopping",
+        // }),
     })
 );
 
@@ -112,8 +116,8 @@ websiteApp.use("/book", require("./routes/book"))
 websiteApp.use("/webhook", require("./routes/webhook"))
 websiteApp.use("/genre", require("./routes/genre"))
 
-const websitePortNumber = 5002
-
-websiteApp.listen(websitePortNumber, () => {
-    console.log(`Website server started on Port ${websitePortNumber}`);
+const WEBSITEPORTNUMBER = 5002
+const HOST = '0.0.0.0';
+websiteApp.listen(WEBSITEPORTNUMBER, () => {
+    console.log(`Website server started on Port ${WEBSITEPORTNUMBER}`);
 });

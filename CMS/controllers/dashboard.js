@@ -22,10 +22,10 @@ exports.configDateSettings = (req, res, next) => {
  * @param {array} data 
  */
 const getTotalInDateRange = (data, dataName, filter) => {
-	
+
 	if (data === null) {
 		return 0;
-	} 
+	}
 	const dates = []
 	data[dataName].map(x => {
 		if (filter === "books") {
@@ -36,7 +36,7 @@ const getTotalInDateRange = (data, dataName, filter) => {
 			dates.push(x.basketIds.length)
 		}
 	})
-	
+
 	const dateRangeMapSum = dates.reduce((x, y) => x + y)
 	return dateRangeMapSum
 }
@@ -53,7 +53,7 @@ const getBreakdownWithDateRange = (data, yearOrMonth = "year", graphName) => {
 	const breakDownData = {};
 	if (data === null) {
 		return 0;
-	} 
+	}
 	if (graphName !== "books") {
 		data.map((x) => {
 			const date = createUTCDate(x, yearOrMonth)
@@ -79,7 +79,7 @@ const getBreakdownWithDateRange = (data, yearOrMonth = "year", graphName) => {
 }
 
 const getBreakdownWithDateRangeForBooks = (data, yearOrMonth = "year") => {
-	
+
 }
 
 /**
@@ -108,7 +108,7 @@ const createUTCDate = (date, monthOrYear) => {
 	const month = dateBuilder.getUTCMonth()
 	const year = dateBuilder.getUTCFullYear()
 	const formattedDate = day === 0 ? new Date(year, month) : new Date(year, month, day)
-	
+
 	return formattedDate
 
 }
@@ -129,7 +129,7 @@ const getDatesInDateRange = (data, dataName, routeToDate) => {
 			dates.push(x.created)
 		}
 	})
-	
+
 	return dates
 }
 
@@ -137,10 +137,10 @@ exports.getOrdersInDateRangeCount = (req, res, next) => {
 	fetch(`http://localhost:5003/api/orders/?created=true&from=${res.fromDate}&to=${res.toDate}`)
 		.then((res) => res.json())
 		.then((text) => {
-			
+
 			const total = getTotalInDateRange(text.data, "orders")
 			const dates = getDatesInDateRange(text.data, "orders", "basketIds")
-	
+
 
 			res.dates["orders"] = dates;
 			res.numberOfOrders = total;
@@ -152,9 +152,9 @@ exports.getTotalOrdersCount = (req, res, next) => {
 	fetch(`http://localhost:5003/api/orders/`)
 		.then((res) => res.json())
 		.then((text) => {
-			
+
 			const totalNumberOfOrders = getTotalInDateRange(text.data, "orders")
-	
+
 			res.totalNumberOfOrders = totalNumberOfOrders;
 			next();
 		});
@@ -165,12 +165,12 @@ exports.getUsersInDateRangeCount = (req, res, next) => {
 		.then((res) => res.json())
 		.then((
 			text) => {
-			
+
 			const userDates = getDatesInDateRange(text.data, "users", false)
 
 			res.dateRangeUsers = text.data.users.length;
 			res.dates["users"] = userDates
-			next();	
+			next();
 
 		});
 };
@@ -202,9 +202,9 @@ exports.getBooksInDateRangeCount = (req, res, next) => {
 		.then((text) => {
 
 			const numberOfBooksInDateRange = getTotalInDateRange(text.data, "orders", "books")
-		
+
 			res.numberOfBooks = numberOfBooksInDateRange;
-			
+
 			res.bookData = text.data
 
 			next();
@@ -242,7 +242,7 @@ exports.bookChartSetup = (req, res, next) => {
 		const yearlyBookDataArr = formatDataForChart(yearlyBookDataObj)
 		res.dates["books"] = yearlyBookDataArr
 	} else {
-		
+
 		const monthlyDataObj = getBreakdownWithDateRange(res.bookData.orders, "month", "books")
 		const monthlyDataArr = formatDataForChart(monthlyDataObj)
 		res.dates["books"] = monthlyDataArr
@@ -255,7 +255,7 @@ exports.accountChartSetup = (req, res, next) => {
 	if (req.query.created === "365") {
 		const yearlyAccountDataObj = getBreakdownWithDateRange(res.dates["users"], "year")
 		const yearlyAccountDataArr = formatDataForChart(yearlyAccountDataObj)
-	
+
 		res.dates["users"] = yearlyAccountDataArr;
 
 	} else {

@@ -7,20 +7,20 @@
             <div class="form-section">
                 <div class="row" id="wishlist-row">
                     {{#each wishlist}}
-    
-                        <div class="col" id="wishlist-col">
-                            <div class="book" id="{{this.title}}">
-                                <img class="wishlist-img" src="/{{ this.imagePath }}">
-                                <div class="wishlist-details">
-                                    <div class="wishlist-title">
-                                        <small><b>{{ this.title }}</b></small>
-                                    </div>
-                                    <div class="wishlist-author">
-                                        <small>{{ this.author }}</small>
-                                    </div>
+
+                    <div class="col" id="wishlist-col">
+                        <div class="book" id="{{this.title}}">
+                            <img class="wishlist-img" src="/{{ this.imagePath }}">
+                            <div class="wishlist-details">
+                                <div class="wishlist-title">
+                                    <small><b>{{ this.title }}</b></small>
+                                </div>
+                                <div class="wishlist-author">
+                                    <small>{{ this.author }}</small>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     {{/each}}
                 </div>
             </div>

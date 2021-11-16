@@ -75,7 +75,7 @@ $(".breakdown-orders").click(function () {
         data: dbFilter,
         dataType: "json",
         success: function (data) {
-    
+
             if (dbFilter.created === "30") {
                 updateChart(window.orderChart, data, "Orders - 30 Days", "day", "orders", 25);
             } else {
@@ -150,7 +150,7 @@ function updateChart(chart, data, label, unit, graphName, maxTicks) {
         ticks: {
             maxTicksLimit: maxTicks
         }
-    
+
 
     };
     chart.update();
@@ -231,7 +231,7 @@ function setupAccountChart() {
         },
         dataType: "json",
         success: function (data) {
-    
+
             window.accountChart.data.datasets[0].data = data.data["users"];
 
             window.accountChart.data.datasets[0].label = "Accounts Created - 30 Days";
@@ -373,14 +373,14 @@ window.onload = function () {
 $(".book-type").change(function () {
 
 
-// TODO: PARSE DATA 
+    // TODO: PARSE DATA 
     const bookSkuIdArray = $(this.options[this.selectedIndex])
     const bookSkuId = bookSkuIdArray[0].id
     const bookId = $(this).closest("tr")[0].id
 
     const bookPrice = $(this).closest("tr").find(".book-price")
     const bookStock = $(this).closest("tr").find(".book-stock")
-    
+
     const bookData = {
         "bookId": bookId,
         "bookSkuId": bookSkuId
@@ -400,10 +400,10 @@ $(".book-type").change(function () {
 
 
 $(".save-changes-book").click(function () {
-    
+
 
     const bookId = $(".book-id")[0].id
-    
+
     // $("input[id$=edit-title]").val()
 
 
@@ -411,7 +411,7 @@ $(".save-changes-book").click(function () {
     const author = $("input[id$=edit-author]").val()
     const genre = $("input[id$=edit-genre]").val()
 
-    const updateData = {"title": title, "author": author, "genre": genre}
+    const updateData = { "title": title, "author": author, "genre": genre }
 
 
     $.ajax({
@@ -438,9 +438,9 @@ $(".save-changes-sku").click(function () {
     const price = $(`input[id$=edit-price-${skuIndex}]`).val()
 
     const type = $(`input[id$=edit-type-${skuIndex}]`).val()
-    
 
-    const updateData = {"sku": sku, "category": category, "quantity": quantity, "price": price, "type": type}
+
+    const updateData = { "sku": sku, "category": category, "quantity": quantity, "price": price, "type": type }
 
     $.ajax({
         url: `/books/edit/book/${bookId}/sku/${skuId}`,
@@ -455,13 +455,13 @@ $(".save-changes-sku").click(function () {
 })
 
 $("#create-book").click(function () {
-    
+
 
     const title = $(`input[id$=create-title]`).val()
     const author = $(`input[id$=create-author]`).val()
     const genre = $(`input[id$=create-genre]`).val()
 
-    const updateData = {"title": title, "author": author, "genre": genre}
+    const updateData = { "title": title, "author": author, "genre": genre }
 
     $.ajax({
         url: `/books/create-book`,
@@ -499,11 +499,11 @@ $("#add-sku").click(function () {
     </div>
     `
     window.scrollTo(0, document.body.scrollHeight);
-    
+
     $("#create-new-sku").click(function () {
-     
+
         const bookId = $(".new-sku-box")[0].id
-        
+
         const newSku = $(`input[id$=add-sku]`).val()
         const newCategory = $(`input[id$=add-category]`).val()
         const newQuantity = $(`input[id$=add-quantity]`).val()
@@ -511,7 +511,7 @@ $("#add-sku").click(function () {
         const newType = $(`input[id$=add-type]`).val()
 
         const updateData = { "sku": newSku, "category": newCategory, "quantity": newQuantity, "price": newPrice, "type": newType }
-      
+
         $.ajax({
             url: `/books/edit/book/${bookId}/add-sku`,
             method: "POST",

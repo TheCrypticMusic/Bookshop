@@ -1,64 +1,63 @@
 <div class="container">
-<div class="main-content-container">
-   <header class="header-row">
-      <h2 class="header-title">Current Basket</h2>
-      <div class="table-checkout-price">
-         <div class="basket-price">
-            <div class="flex-price">
-            {{#if basketItems}}
-               <h4 class="currency">Total Value: £</h4>
-               <h4 class="total-value">{{padNumber subTotal}}</h4>
+   <div class="main-content-container">
+      <header class="header-row">
+         <h2 class="header-title">Current Basket</h2>
+         <div class="table-checkout-price">
+            <div class="basket-price">
+               <div class="flex-price">
+                  {{#if basketItems}}
+                  <h4 class="currency">Total Value: £</h4>
+                  <h4 class="total-value">{{padNumber subTotal}}</h4>
+               </div>
             </div>
-         </div>
-     
-         <div class="checkout">
-            <button type="submit" id="basket-to-checkout" class="btn btn-success btn">Checkout</button>
-         </div>
-         {{/if}}
-      </div>
-   </header>
-   <div id={{basketId}} class="basket-view">
-      <ul class="book-list">
-   
-         {{#each basketItems}}
- 
-             <li id={{_id}} class="single-book">
-                 <div class="book-basket-container">
-                     <div class="book-cover-basket-wrap">
-                         <img class="book-cover-basket" src="{{bookImage}}" alt="book-cover">
-                     </div>
-                     <div class="book-info-basket">
-                         <div class="book-title-basket">
-                             <h4 class="bold-book-info">{{ bookTitle }}</h4>
-                         </div>
-                         <div class="book-author-basket">
-                             <h5>{{ bookAuthor }}</h5>
-                             <h5>{{bookType}}</h5>
 
-                         </div>
+            <div class="checkout">
+               <button type="submit" id="basket-to-checkout" class="btn btn-success btn">Checkout</button>
+            </div>
+            {{/if}}
+         </div>
+      </header>
+      <div id={{basketId}} class="basket-view">
+         <ul class="book-list">
+
+            {{#each basketItems}}
+
+            <li id={{_id}} class="single-book">
+               <div class="book-basket-container">
+                  <div class="book-cover-basket-wrap">
+                     <img class="book-cover-basket" src="{{bookImage}}" alt="book-cover">
+                  </div>
+                  <div class="book-info-basket">
+                     <div class="book-title-basket">
+                        <h4 class="bold-book-info">{{ bookTitle }}</h4>
                      </div>
-                     <div class="book-qty-basket">
-                         <form action="#">
-                             <label for="quantity">Qty</label>
-                             <input type="number" class="qty" id="quantity" name="quantity" value="{{ quantity }}"
-                                    min="1"
-                                    max="99" autocomplete="off">
-                         </form>
-               </div>
-               <div class="book-basket-price">
-                  <h4 class="bold-book-info">Book price</h4>
-                  <div class="flex-price">
-                     <h5 class="currency">£</h5>
-                     <h5 class="bprice" id="book-price">{{padNumber price }}</h5>
+                     <div class="book-author-basket">
+                        <h5>{{ bookAuthor }}</h5>
+                        <h5>{{bookType}}</h5>
+
+                     </div>
                   </div>
-               </div>
-               <div class="book-basket-subtotal">
-                  <h4 class="bold-book-info">Sub-total</h4>
-                  <div class="flex-price">
-                     <h5 class="currency">£</h5>
-                     <h5 class="subtotal-price" id="subtotal-price">{{padNumber total }}</h5>
+                  <div class="book-qty-basket">
+                     <form action="#">
+                        <label for="quantity">Qty</label>
+                        <input type="number" class="qty" id="quantity" name="quantity" value="{{ quantity }}" min="1"
+                           max="99" autocomplete="off">
+                     </form>
                   </div>
-                     <button type="submit" class="btn btn-outline-danger delete-from-basket"value="{{bookSkuId}}">
+                  <div class="book-basket-price">
+                     <h4 class="bold-book-info">Book price</h4>
+                     <div class="flex-price">
+                        <h5 class="currency">£</h5>
+                        <h5 class="bprice" id="book-price">{{padNumber price }}</h5>
+                     </div>
+                  </div>
+                  <div class="book-basket-subtotal">
+                     <h4 class="bold-book-info">Sub-total</h4>
+                     <div class="flex-price">
+                        <h5 class="currency">£</h5>
+                        <h5 class="subtotal-price" id="subtotal-price">{{padNumber total }}</h5>
+                     </div>
+                     <button type="submit" class="btn btn-outline-danger delete-from-basket" value="{{bookSkuId}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                            class="feather feather-trash-2">
@@ -69,12 +68,12 @@
                         </svg>
                      </button>
 
+                  </div>
                </div>
-            </div>
-         </li>
-         {{/each}}
-   </div>
-   </ul>
+            </li>
+            {{/each}}
+      </div>
+      </ul>
 
-</div>
+   </div>
 </div>

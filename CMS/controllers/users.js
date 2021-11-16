@@ -6,6 +6,6 @@ exports.getUsers = (req, res, next) => {
         res.users = text.data.users
         next()
     })
-    
-    
+
+
 }

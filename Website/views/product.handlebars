@@ -1,37 +1,37 @@
 <div class="container">
-<div class="main-content-container" id="product-container">
-    <div class="product-wrap">
-        <div class="product-container-book">
-            <img class="product-image" src="/{{book.imagePath}}">
-        </div>
-        <div class="product-info">
-            <div class="product-title">
-                <h1 class="header-title"><b>{{book.title}} ({{sku.type}})</b></h1>
-                <h4><b>{{book.author}}</b></h4>
+    <div class="main-content-container" id="product-container">
+        <div class="product-wrap">
+            <div class="product-container-book">
+                <img class="product-image" src="/{{book.imagePath}}">
             </div>
-            <div class="product-box">
-                <div class="product-type">
-                    <small>{{sku.type}}</small>
+            <div class="product-info">
+                <div class="product-title">
+                    <h1 class="header-title"><b>{{book.title}} ({{sku.type}})</b></h1>
+                    <h4><b>{{book.author}}</b></h4>
                 </div>
-                <div class="product-price">
-                    <h3><b>£{{sku.price}}</b></h3>
+                <div class="product-box">
+                    <div class="product-type">
+                        <small>{{sku.type}}</small>
+                    </div>
+                    <div class="product-price">
+                        <h3><b>£{{sku.price}}</b></h3>
+                    </div>
+                    <div class="product-quantity">
+                        <small>Available: <b>{{sku.quantity}} left!</b></small>
+                    </div>
                 </div>
-                <div class="product-quantity">
-                    <small>Available: <b>{{sku.quantity}} left!</b></small>
-                </div>
-            </div>
 
-            <div class="product-quantity-box">
-            <form action="/basket/{{book._id}}" id="product-button-form" method="POST">
-                <div class="quantity-box">
-                    <small>Quantity</small>
-                    <input type="number" class="qty" id="quantity" name="quantity" value="1" min="1"
-                           max="{{sku.quantity}}" autocomplete="off">
-                </div>
-                <div class="product-basket">
-     
-                        <button id="product-button" role="button">Add to basket</button>
-                        <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{sku._id}}">
+                <div class="product-quantity-box">
+                    <form action="/basket/{{book._id}}" id="product-button-form" method="POST">
+                        <div class="quantity-box">
+                            <small>Quantity</small>
+                            <input type="number" class="qty" id="quantity" name="quantity" value="1" min="1"
+                                max="{{sku.quantity}}" autocomplete="off">
+                        </div>
+                        <div class="product-basket">
+
+                            <button id="product-button" role="button">Add to basket</button>
+                            <input type="hidden" id="bookTypeId" name="bookSkuId" value="{{sku._id}}">
                     </form>
                 </div>
             </div>

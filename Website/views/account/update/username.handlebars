@@ -1,52 +1,53 @@
-    <div class="content-container">
-        <div class="personal-container">
-            <div class="personal-details-header">
-                <h1>Change Username</h1>
-            </div>
-            <section class="details">
-                <p>To change the username linked to your account, please enter a new username</p>
-                <div class="form-section">
-                    <div class="email-field">
-                        <div class="username-label" id="account-form">
-                            <h3>Old Username</h3>
+<div class="content-container">
+    <div class="personal-container">
+        <div class="personal-details-header">
+            <h1>Change Username</h1>
+        </div>
+        <section class="details">
+            <p>To change the username linked to your account, please enter a new username</p>
+            <div class="form-section">
+                <div class="email-field">
+                    <div class="username-label" id="account-form">
+                        <h3>Old Username</h3>
+                    </div>
+
+                    <div class="flex-box">
+                        <div class="username-value" id="account-form">
+                            <input type="text" class="form-control mb-4" id="oldUsername" name="oldUsername"
+                                value="{{username}}" disabled="true">
+
+                        </div>
+                    </div>
+                    <hr class="personal-divider">
+                    <div class="username-label" id="account-form">
+                        <h3>New Username</h3>
+                    </div>
+                    <div class="flex-box">
+                        <div class="username-value" id="account-form">
+                            <input type="text" class="form-control mb-4" id="username" name="username"
+                                placeholder="Username">
                         </div>
 
-                            <div class="flex-box">
-                                <div class="username-value" id="account-form">
-                                    <input type="text" class="form-control mb-4" id="oldUsername" name="oldUsername"
-                                        value="{{username}}" disabled="true">
-
-                                </div>
-                            </div>
-                            <hr class="personal-divider">
-                            <div class="username-label" id="account-form">
-                                <h3>New Username</h3>
-                            </div>
-                            <div class="flex-box">
-                                <div class="username-value" id="account-form">
-                                    <input type="text" class="form-control mb-4" id="username" name="username"
-                                        placeholder="Username">
-                                </div>
-
-                            </div>
-                            <div class="btn-flex">
-                                {{!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}"> --}}
-                                <button class="btn btn-primary account-username-update" id="submit-btn account-change" type="submit">Update
-                                    Username</button>
-                                <a class="cancel-change" href="/account">Cancel</a>
-                            </div>
-                
-                        {{#if error }}
-                        <h4 class="alert alert-danger mt-4">{{ error }}</h4>
-                        {{/if}}
-                         {{#if success }}
-                        <h4 class="alert alert-success mt-4">{{ success }}</h4>
-                        {{/if}}
                     </div>
-                </div>
+                    <div class="btn-flex">
+                        {{!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}"> --}}
+                        <button class="btn btn-primary account-username-update" id="submit-btn account-change"
+                            type="submit">Update
+                            Username</button>
+                        <a class="cancel-change" href="/account">Cancel</a>
+                    </div>
 
-            </section>
-        </div>
+                    {{#if error }}
+                    <h4 class="alert alert-danger mt-4">{{ error }}</h4>
+                    {{/if}}
+                    {{#if success }}
+                    <h4 class="alert alert-success mt-4">{{ success }}</h4>
+                    {{/if}}
+                </div>
+            </div>
+
+        </section>
     </div>
+</div>
 </div>
 </div>

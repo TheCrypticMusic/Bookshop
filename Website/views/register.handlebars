@@ -4,48 +4,22 @@
 			<h1 class="h3 mb-3 font-weight-normal">Register</h1>
 			<div class="entry" id="entry-form">
 				<label for="username">Username</label>
-				<input
-					type="text"
-					class="form-control"
-					id="username"
-					name="username"
-					placeholder="Username"
-					required
-					autofocus
-				/>
+				<input type="text" class="form-control" id="username" name="username" placeholder="Username" required
+					autofocus />
 			</div>
 			<div class="entry" id="entry-form">
 				<label for="email">Email</label>
-				<input
-					type="email"
-					class="form-control"
-					id="email"
-					name="email"
-					placeholder="Email Address"
-					required
-				/>
+				<input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required />
 			</div>
 			<div class="entry" id="entry-form">
 				<label for="password">Password</label>
-				<input
-					type="password"
-					class="form-control"
-					id="password"
-					name="password"
-					placeholder="Password"
-					required
-				/>
+				<input type="password" class="form-control" id="password" name="password" placeholder="Password"
+					required />
 			</div>
 			<div class="entry" id="entry-form">
 				<label for="passwordConfirm">Confirm Password</label>
-				<input
-					type="password"
-					class="form-control"
-					id="passwordConfirm"
-					name="passwordConfirm"
-					placeholder="Password"
-					required
-				/>
+				<input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm"
+					placeholder="Password" required />
 			</div>
 			<div class="checkbox mb-3" id="checkbox">
 				<label>
@@ -54,18 +28,14 @@
 				</label>
 			</div>
 
-			<button
-				class="btn btn-lg btn-primary btn-block"
-				id="submit-btn"
-				type="submit"
-			>Register</button>
+			<button class="btn btn-lg btn-primary btn-block" id="submit-btn" type="submit">Register</button>
 			<input type="hidden" name="_csrf" value="{{csrfToken}}" />
 		</form>
 		{{#if error}}
-			<h4 class="alert alert-danger mt-4">{{error}}</h4>
+		<h4 class="alert alert-danger mt-4">{{error}}</h4>
 		{{/if}}
 		{{#if success}}
-			<h4 class="alert alert-success mt-4">{{success}}</h4>
+		<h4 class="alert alert-success mt-4">{{success}}</h4>
 		{{/if}}
 	</div>
 </div>

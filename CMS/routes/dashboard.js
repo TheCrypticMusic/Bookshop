@@ -21,7 +21,7 @@ router.get(
 			totalNumberOfOrders: res.totalNumberOfOrders,
 			totalNumberOfBooks: res.totalNumberOfBooks,
 			dateRangeBooks: res.numberOfBooks,
-			active: {	}
+			active: {}
 		});
 	}
 );
