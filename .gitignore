@@ -10,3 +10,4 @@ package-lock.json
 config/.env
 .idea/.gitignore
 CMS/public/images/
+jsconfig.json

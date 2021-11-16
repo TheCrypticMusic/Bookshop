@@ -5,22 +5,20 @@
                 <h3>Books</h3>
             </div>
             <div id="book-box">
-                <a href="/books/create" class="book-button">Create Book</a>
+                <a href="/books/create-book" class="book-button">Create Book</a>
             </div>
         </div>
     </div>
     <div class="book-list">
         <table style="width: 100%" border="1">
-            <thead>
-                <tr class="test">
-                    <div class="stick">
+            <thead class="sticky-header">
+                <tr>
                         <td><input type="checkbox" id="check-all-books"></td>
                         <td>Product Name</td>
                         <td>Type</td>
                         <td>Genre</td>
                         <td>Quanity</td>
                         <td>Price</td>
-                    </div>
                 </tr>
             <thead>
                 <tbody>
@@ -28,7 +26,9 @@
                 <tr id="{{this._id}}" class="book">
                     <td>
                         <input type="checkbox" id="check-single-book">
+                        <a href="/books/edit/{{this._id}}">
                         <img class="book-cover" src="{{this.imagePath }}">
+                        </a>
                     </td>
                     <td>{{this.title}}</td>
                     <td>

@@ -75,7 +75,7 @@ $(".breakdown-orders").click(function () {
         data: dbFilter,
         dataType: "json",
         success: function (data) {
-            console.log(data)
+    
             if (dbFilter.created === "30") {
                 updateChart(window.orderChart, data, "Orders - 30 Days", "day", "orders", 25);
             } else {
@@ -91,7 +91,7 @@ $(".breakdown-orders").click(function () {
 
 $(".breakdown-books").click(function () {
     const dbFilter = getFilterObject("breakdown-books");
-    console.log(dbFilter)
+
     changeHighlightedButton("breakdown-books");
 
     $.ajax({
@@ -393,12 +393,134 @@ $(".book-type").change(function () {
         success: function (data) {
             bookPrice.html(`£${data.price}`)
             bookStock.html(`${data.stock}`)
-            // if (dbFilter.created === "30") {
-            //     updateChart(window.accountChart, data, "Accounts Created - 30 Days", "day", "users", 25);
-            // } else {
-            //     updateChart(window.accountChart, data, "Accounts Created - Year", "month", "users");
-            // }
         },
     });
 
 })
+
+
+$(".save-changes-book").click(function () {
+    
+
+    const bookId = $(".book-id")[0].id
+    
+    // $("input[id$=edit-title]").val()
+
+
+    const title = $("input[id$=edit-title]").val()
+    const author = $("input[id$=edit-author]").val()
+    const genre = $("input[id$=edit-genre]").val()
+
+    const updateData = {"title": title, "author": author, "genre": genre}
+
+
+    $.ajax({
+        url: `/books/edit/book/${bookId}`,
+        method: "PUT",
+        dataType: "json",
+        data: updateData,
+        success: function (data) {
+
+        }
+    })
+    window.location.href = window.location;
+})
+
+$(".save-changes-sku").click(function () {
+    const skuId = $(this)[0].id.split(" ")[0]
+    const skuIndex = $(this)[0].id.split(" ")[1]
+
+    const bookId = $(".book-id")[0].id
+
+    const sku = $(`input[id$=edit-sku-${skuIndex}]`).val()
+    const category = $(`input[id$=edit-category-${skuIndex}]`).val()
+    const quantity = $(`input[id$=edit-quantity-${skuIndex}]`).val()
+    const price = $(`input[id$=edit-price-${skuIndex}]`).val()
+
+    const type = $(`input[id$=edit-type-${skuIndex}]`).val()
+    
+
+    const updateData = {"sku": sku, "category": category, "quantity": quantity, "price": price, "type": type}
+
+    $.ajax({
+        url: `/books/edit/book/${bookId}/sku/${skuId}`,
+        method: "PUT",
+        dataType: "json",
+        data: updateData,
+        success: function (data) {
+
+        }
+    })
+    window.location.href = window.location;
+})
+
+$("#create-book").click(function () {
+    
+
+    const title = $(`input[id$=create-title]`).val()
+    const author = $(`input[id$=create-author]`).val()
+    const genre = $(`input[id$=create-genre]`).val()
+
+    const updateData = {"title": title, "author": author, "genre": genre}
+
+    $.ajax({
+        url: `/books/create-book`,
+        method: "POST",
+        dataType: "json",
+        data: updateData,
+    })
+
+    window.location.href = window.location;
+
+})
+
+$("#add-sku").click(function () {
+
+    document.getElementById("sku").innerHTML = `
+     <div class="book-title" id="book-type">
+            <h3>New Sku</h3>
+        </div>
+        <div class="book-list sku edit-box"> 
+            <div class="book-edit-box sku-id edit-boxes">
+                <h5 class="edit-text">Sku</h5>
+                <input id="add-sku" class="edit-input" type="text" value="" placeholder="">
+                <h5 class="edit-text">Category</h5>
+                <input id="add-category" class="edit-input" type="text" value="" placeholder="">
+                <h5 class="edit-text">Quantity</h5>
+                <input id="add-quantity" class="edit-input" type="text" value="" placeholder="">
+                <h5 class="edit-text">Price</h5>
+                <input id="add-price" class="edit-input" type="text" value="" placeholder="">
+                <h5 class="edit-text">Type</h5>
+                <input id="add-type" class="edit-input" type="text" value="">
+                <div id="book-box">
+                <button id="create-new-sku" class="book-button">Create New Sku</button>
+            </div>
+        </div>
+    </div>
+    `
+    window.scrollTo(0, document.body.scrollHeight);
+    
+    $("#create-new-sku").click(function () {
+     
+        const bookId = $(".new-sku-box")[0].id
+        
+        const newSku = $(`input[id$=add-sku]`).val()
+        const newCategory = $(`input[id$=add-category]`).val()
+        const newQuantity = $(`input[id$=add-quantity]`).val()
+        const newPrice = $(`input[id$=add-price]`).val()
+        const newType = $(`input[id$=add-type]`).val()
+
+        const updateData = { "sku": newSku, "category": newCategory, "quantity": newQuantity, "price": newPrice, "type": newType }
+      
+        $.ajax({
+            url: `/books/edit/book/${bookId}/add-sku`,
+            method: "POST",
+            dataType: "json",
+            data: updateData,
+        })
+        window.location.href = window.location;
+    })
+
+
+})
+

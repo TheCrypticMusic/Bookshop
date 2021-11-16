@@ -260,6 +260,7 @@ exports.getAllSkusOfBook = async (bookId, selectFilter) => {
  * @returns {JSON}
  */
 exports.getSingleBook = async (bookId) => {
+
 	return await Book.findOne({ _id: bookId }).lean().exec();
 };
 
@@ -323,7 +324,7 @@ exports.deleteBookSku = async (bookId, skuId) => {
 	return deletedBookSku;
 };
 
-exports.createSkuForBook = async (bookId, category, stockLevel, price, type) => {
+exports.createSkuForBook = async (bookId, sku, category, stockLevel, price, type) => {
 	const numberOfBooks = await Book.countDocuments({ _id: bookId });
 	const numberOfTypes = await Book.countDocuments({
 		_id: bookId,
@@ -336,6 +337,7 @@ exports.createSkuForBook = async (bookId, category, stockLevel, price, type) => 
 			{
 				$addToSet: {
 					skus: {
+						sku: sku,
 						category: category,
 						quantity: stockLevel,
 						price: price,

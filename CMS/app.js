@@ -15,7 +15,7 @@ const dbConnection = require("../config/dbConnection")
 dbConnection.connectToBookshopServer("CMS")
 
 cmsApp.use(express.json());
-cmsApp.use(express.urlencoded({ extended: false }))
+cmsApp.use(express.urlencoded({ extended: true }))
 
 const cmsPublicDirectory = path.join(__dirname, "./public");
 const cmsScriptDirectory = path.join(__dirname, "./scripts");
@@ -78,6 +78,7 @@ cmsApp.use((req, res, next) => {
 cmsApp.use("/", require("./routes/index"))
 cmsApp.use("/dashboard", require("./routes/dashboard"))
 cmsApp.use("/books", require("./routes/books"))
+cmsApp.use("/users", require("./routes/users"))
 
 const cmsPortNumber = 5004
 

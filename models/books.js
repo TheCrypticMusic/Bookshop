@@ -11,7 +11,7 @@ const skuCreator = async (titleOfBook, authorOfBook, typeOfBook) => {
         .split(" ")
         .filter((x) => x[0] == x[0].toUpperCase())
         .map((x) => x[0]);
-
+    console.log(typeOfBook)
     const firstLetterAndLastLetterOfType = typeOfBook[0] + typeOfBook[typeOfBook.length - 1];
 
     const sku = (firstLettersOfTitle + firstLettersOfAuthor.join("") + firstLetterAndLastLetterOfType).toUpperCase()
@@ -37,6 +37,7 @@ const bookSchema = new mongoose.Schema({
     { timestamps: true }
 );
 
+
 bookSchema.post("updateOne", async function (doc, next) {
 
     const book = await this.model.findOne(this.getQuery());
@@ -47,15 +48,6 @@ bookSchema.post("updateOne", async function (doc, next) {
         next()
     }
 
-    const latestSku = book.skus[book.skus.length - 1]
-
-    skuCreator(book.title, book.author, latestSku.type).then(sku => {
-        latestSku.set({ "sku": sku })
-        book.save().then(() => {
-            next();
-        })
-
-    })
 });
 
 const Book = mongoose.model("Book", bookSchema);

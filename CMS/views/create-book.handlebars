@@ -1,0 +1,21 @@
+<div class="dashboard-container">
+    <div class="dashboard-header-section">
+        <div class="header-flex">
+            <div class="header-title">
+                <h3>Create Book</h3>
+            </div>
+        </div>
+    </div>
+    <div id="{{book._id}}" class="book-list book-id create-box">
+        <div class="book-edit-box create-boxes">
+            <h5 class="create-text">Title</h5>
+            <input id="create-title" class="edit-input" value="{{book.title}}" type="text">
+            <h5 class="edit-text">Author</h5>
+            <input id="create-author" class="edit-input" value="{{book.author}}" type="text">
+            <h5 class="edit-text">Genre</h5>
+            <input id="create-genre" class="edit-input" type="text" value="{{book.genre}}">
+            <div id="book-box">
+                <button id="create-book" class="book-button create-book">Create Book</button>
+            </div>
+        </div>
+    </div>

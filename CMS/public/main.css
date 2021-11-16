@@ -1,12 +1,14 @@
 html {
 	height: 100%;
+
 }
 
 body {
 	font-family: "Open Sans", sans-serif;
 	background-color: #f8f5f2;
 	color: #414040;
-	height: 100%;
+	position: relative;
+    min-height: 100vh;
 }
 
 input.login {
@@ -99,10 +101,12 @@ p.error {
 
 .sidebar-container {
 	display: flex;
+	
 }
 
 .outer-page-container {
 	display: flex;
+	min-height: 100vh;
 }
 
 .main-content-container {
@@ -153,6 +157,10 @@ p.error {
 	text-align: center;
 	flex-direction: column;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 6px;
+	height: 100%;
+	
+	
+
 }
 
 .sidebar-title {
@@ -359,7 +367,7 @@ div.header-title > h3 {
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 	padding-bottom: 1rem;
 	overflow: auto;
-	height: 100vh;
+	/* height: 100vh; */
 }
 
 hr {
@@ -410,8 +418,58 @@ td {
 	padding: 1rem;
 }
 
+.sticky-header {
+	position: sticky;
+	top: 0px;
+	background: white	;
+	 z-index: 1;
+	 width: 100%;
+}
+
 .book-cover {
 	height: 100px;
 	width: 60px;
 }
 
+/* book edit */
+
+.book-title {
+	margin-left: 2rem;
+	color: #4b4b4b;
+}
+
+.book-edit-box {
+	padding: 1.5rem;
+
+}
+
+.edit-box {
+	height: 100%;
+}
+
+input, edit {
+
+	padding: 5px;
+	text-decoration: none;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+	border: #ccc 1px solid;
+	border-radius: 5px;
+	width: 100%;
+	padding-left: 4px;
+}
+
+.edit-box::placeholder {
+	color: #5e5e5e;
+}
+
+.edit-text {
+	padding-top: 1rem;
+}
+
+#add-sku {
+	margin-right: 2rem;
+}
+
+
+/* 
+create page */
